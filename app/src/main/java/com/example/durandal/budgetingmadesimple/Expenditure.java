@@ -1,14 +1,18 @@
+package com.example.durandal.budgetingmadesimple;
+
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.util.LinkedList;
 
 enum ReoccurringRate {
     NONE, WEEKLY, MONTHLY;
 }
 
 public class Expenditure {
+
+
 
 
     public Instant getTimeStamp() {
@@ -47,11 +51,11 @@ public class Expenditure {
 
 
     public boolean isReocurring() {
-        return bIsReocurring;
+        return bIsReoccurring;
     }
 
     // Controls if this expenditure is reoccurring.
-    private final boolean bIsReocurring;
+    private final boolean bIsReoccurring;
 
 
 
@@ -69,18 +73,18 @@ public class Expenditure {
         timeStamp = Instant.now();
         value = inValue;
         category = inCategory;
-        bIsReocurring = false;
+        bIsReoccurring = false;
         rate = ReoccurringRate.NONE;
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    Expenditure(float inValue, String inCategory, boolean inReocurring,ReoccurringRate inRate) {
+    Expenditure(float inValue, String inCategory, boolean inReoccurring,ReoccurringRate inRate) {
 
         timeStamp = Instant.now();
         value = inValue;
         category = inCategory;
-        bIsReocurring = inReocurring;
+        bIsReoccurring = inReoccurring;
         rate = inRate;
 
     }
