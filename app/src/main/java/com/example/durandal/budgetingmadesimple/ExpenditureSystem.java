@@ -13,6 +13,10 @@ public final class ExpenditureSystem {
 
     private LinkedList<Expenditure> expenditures;
 
+
+    /**
+     * Does some shit need to go here? Not entriely sure.
+     */
     ExpenditureSystem() {
 
     }
