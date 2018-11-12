@@ -1,19 +1,60 @@
 package com.example.durandal.budgetingmadesimple;
 
-
-import android.provider.ContactsContract;
-
-import java.time.Instant;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * This is an intermediatary level between firebase and the
+ * This is an intermediary level between the database and the application
  */
-public class Database {
+public class Database extends SQLiteOpenHelper {
 
-    // Add all member fields that are needed for proper interaction with firebase.
+    // Add all member fields that are needed for proper interaction with the database
+    public static final String DATABASE_NAME = "bms.db";
+    public static final String TABLE_NAME = "User";
+    public static final String COL_1 = "Id";
+    public static final String COL_2 = "Username";
 
-    public Database() {
 
+    public Database(Context context) {
+        super(context, DATABASE_NAME, null, 1);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(new StringBuilder()
+                .append(String.format("create table %s (", TABLE_NAME))
+                .append(String.format("%s INTEGER PRIMARY KEY AUTOINCREMENT", COL_1))
+                .append(String.format(", %s TEXT", COL_2))
+                .append(")")
+                .toString()
+        );
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        onCreate(db);
+    }
+
+    // Temporary
+    public boolean insertData(String username) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COL_2, username);
+        long result = db.insert(TABLE_NAME, null, contentValues);
+        if(result == -1)
+            return false;
+        return true;
+    }
+
+    // Temporary
+    public Cursor getData() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        return res;
     }
 
     /**
@@ -58,4 +99,5 @@ public class Database {
     public boolean login(String userName, String password, Account inAccount) {
         return true;
     }
+
 }
