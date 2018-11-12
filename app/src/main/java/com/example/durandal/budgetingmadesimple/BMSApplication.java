@@ -18,10 +18,13 @@ public class BMSApplication extends Application {
 
     public static ExpenditureSystem expSystem;
 
+    public static Database database;
+
     @Override
     public void onCreate() {
         super.onCreate();
         singleton = this;
         expSystem = new ExpenditureSystem();
+        database = new Database();
     }
 }
