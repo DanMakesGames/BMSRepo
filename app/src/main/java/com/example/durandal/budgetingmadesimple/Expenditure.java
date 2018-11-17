@@ -29,7 +29,7 @@ public class Expenditure {
 
 
 
-    // Monitary value of the expenditure. This is the Money ($) spent.
+    // Monetary value of the expenditure. This is the Money ($) spent.
     private final float value;
 
     public String getCategory() {
