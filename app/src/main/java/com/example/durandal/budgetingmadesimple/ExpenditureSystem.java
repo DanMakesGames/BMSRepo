@@ -107,7 +107,12 @@ public final class ExpenditureSystem {
      * @return true is successful, false if not.
      */
     public boolean addExpenditure(float inValue, String inCategory, boolean inReoccurring, ReoccurringRate inRate) {
-        return true;
+        Expenditure newExpen = new Expenditure(inValue, inCategory, inReoccurring, inRate);
+        if (BMSApplication.database.createExpOnDB(newExpen)) {
+            expenditures.addFirst(newExpen);
+            return true;
+        }
+        return false;
 
     }
 
@@ -118,7 +123,16 @@ public final class ExpenditureSystem {
      * @return true is successful, false if not.
      */
     public boolean deleteExpenditure(Expenditure inExpenditure) {
-        return true;
+        if (!BMSApplication.database.deleteExpOnDB(inExpenditure)) {
+            return false;
+        }
+        for (int i = 0; i < expenditures.size(); i++) {
+            if (expenditures.get(i).equals(inExpenditure)) {
+                expenditures.remove(i);
+                return true;
+            }
+        }
+        return false;
     }
 
 
