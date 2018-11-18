@@ -17,6 +17,7 @@ import java.util.LinkedList;
 public final class ExpenditureSystem {
 
     private LinkedList<Expenditure> expenditures;
+    private LinkedList<Category> categories;
 
 
     /**
