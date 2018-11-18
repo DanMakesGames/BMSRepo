@@ -29,7 +29,7 @@ public class Expenditure {
 
 
 
-    // Monitary value of the expenditure. This is the Money ($) spent.
+    // Monetary value of the expenditure. This is the Money ($) spent.
     private final float value;
 
     public String getCategory() {
@@ -89,5 +89,15 @@ public class Expenditure {
 
     }
 
+    public boolean equals(Expenditure expen) {
+        if (expen.bIsReoccurring == this.bIsReoccurring &&
+                expen.category == this.category &&
+                expen.rate == this.rate &&
+                expen.timeStamp == this.timeStamp &&
+                expen.value == this.value) {
+            return true;
+        }
+        return false;
+    }
 
 }
