@@ -1,6 +1,11 @@
 package com.example.durandal.budgetingmadesimple;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+
 import java.time.ZonedDateTime;
+import java.time.Instant;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -12,6 +17,7 @@ import java.util.LinkedList;
 public final class ExpenditureSystem {
 
     private LinkedList<Expenditure> expenditures;
+    private LinkedList<Category> categories;
 
 
     /**
@@ -35,7 +41,6 @@ public final class ExpenditureSystem {
         return true;
     }
 
-
     /**
      * Populates expenditure data structure from the expenditures saved on the device (cached so
      * that the app doesn't have to pull from the database every time start up occurs.)
@@ -45,6 +50,7 @@ public final class ExpenditureSystem {
      * unimplemented.
      */
     public boolean populateFromDevice() {
+
         return true;
     }
 
@@ -55,8 +61,20 @@ public final class ExpenditureSystem {
      * @param end
      * @return expenditures in order newest to oldest from start to end.
      */
+
     public final LinkedList<Expenditure> getExpendituresByDate(ZonedDateTime start, ZonedDateTime end) {
-        return null;
+        LinkedList<Expenditure> return_list = new LinkedList<>();
+        Iterator expenditures_it = expenditures.iterator();
+        Instant start_instant = start.toInstant();
+        Instant end_instant = end.toInstant();
+        while(expenditures_it.hasNext()) {
+            Expenditure exp = (Expenditure)expenditures_it.next();
+            Instant time = exp.getTimeStamp();
+            if(time.isAfter(start_instant) &&
+                    time.isBefore(end_instant))
+                return_list.add(exp);
+        }
+        return return_list;
     }
 
 
@@ -66,7 +84,16 @@ public final class ExpenditureSystem {
      * @return
      */
     public final LinkedList<Expenditure> getExpendituresByCategory (String categoryName) {
-        return null;
+        LinkedList<Expenditure> return_list = new LinkedList<Expenditure>();
+        Iterator expenditures_it = expenditures.iterator();
+        while(expenditures_it.hasNext()) {
+            Expenditure  exp = (Expenditure)expenditures_it.next();
+            if(exp.getCategory().equals(categoryName)) {
+                return_list.add(exp);
+            }
+        }
+        return return_list;
+
     }
 
 
@@ -80,7 +107,12 @@ public final class ExpenditureSystem {
      * @return true is successful, false if not.
      */
     public boolean addExpenditure(float inValue, String inCategory, boolean inReoccurring, ReoccurringRate inRate) {
-        return true;
+        Expenditure newExpen = new Expenditure(inValue, inCategory, inReoccurring, inRate);
+        if (BMSApplication.database.createExpOnDB(newExpen)) {
+            expenditures.addFirst(newExpen);
+            return true;
+        }
+        return false;
 
     }
 
@@ -91,7 +123,16 @@ public final class ExpenditureSystem {
      * @return true is successful, false if not.
      */
     public boolean deleteExpenditure(Expenditure inExpenditure) {
-        return true;
+        if (!BMSApplication.database.deleteExpOnDB(inExpenditure)) {
+            return false;
+        }
+        for (int i = 0; i < expenditures.size(); i++) {
+            if (expenditures.get(i).equals(inExpenditure)) {
+                expenditures.remove(i);
+                return true;
+            }
+        }
+        return false;
     }
 
 

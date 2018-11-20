@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BudgetingMadeSimple</string>
+    <string name="back">back</string>
 </resources>
