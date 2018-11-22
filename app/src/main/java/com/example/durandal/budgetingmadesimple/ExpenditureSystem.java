@@ -5,6 +5,7 @@ import android.os.Build;
 
 import java.time.ZonedDateTime;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -17,14 +18,16 @@ import java.util.LinkedList;
 public final class ExpenditureSystem {
 
     private LinkedList<Expenditure> expenditures;
-    private LinkedList<Category> categories;
+    private HashMap<String,Category> categories;
+
 
 
     /**
      * Does some shit need to go here? Not entriely sure.
      */
     ExpenditureSystem() {
-
+        expenditures = new LinkedList<Expenditure>();
+        categories = new HashMap<String, Category>();
     }
 
 
@@ -135,6 +138,33 @@ public final class ExpenditureSystem {
         return false;
     }
 
+
+    /**
+     * Creates and adds an new category to the list of categories. Needs to check
+     * @param bIsBudgeted
+     * @param budget
+     * @param name
+     * @return true if added. False if a category with that name already existed and thus the category was not added.
+     */
+    public boolean addCategory(boolean bIsBudgeted, float budget, String name) {
+
+        // check if key already in hashtable
+        if( categories.containsKey(name) )
+            return false;
+
+        // insert
+        categories.put(name, new Category(bIsBudgeted, budget, name));
+        return true;
+    }
+
+    /**
+     * Finds category if it exists in the app's storage and returns it's reference.
+     * @param name
+     * @return the category object or NULL if not found.
+     */
+    public Category getCategory(String name){
+        return categories.get(name);
+    }
 
 
 }

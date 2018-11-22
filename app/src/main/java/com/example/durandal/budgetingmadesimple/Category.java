@@ -2,7 +2,21 @@ package com.example.durandal.budgetingmadesimple;
 
 public class Category {
     private float budget;
+
+
+
+    private boolean bIsBudgeted;
     private String name;
+
+
+    public boolean isbIsBudgeted() {
+        return bIsBudgeted;
+    }
+
+    public void setbIsBudgeted(boolean bIsBudgeted) {
+        this.bIsBudgeted = bIsBudgeted;
+    }
+
 
     /**
      * getBudget
@@ -41,8 +55,9 @@ public class Category {
      * @param b - budget value
      * @param n - name of the category
      */
-    public Category(float b, String n) {
+    public Category(boolean inBBudget, float b, String n) {
         name = n;
         budget = b;
+        bIsBudgeted = inBBudget;
     }
 }
