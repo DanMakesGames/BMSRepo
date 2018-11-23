@@ -57,6 +57,9 @@ public final class ExpenditureSystem {
         return true;
     }
 
+    public final LinkedList<Expenditure> getExpendituresAll() {
+        return expenditures;
+    }
 
     /**
      * One getter of expenditures.

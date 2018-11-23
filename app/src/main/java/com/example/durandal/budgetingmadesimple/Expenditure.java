@@ -100,4 +100,10 @@ public class Expenditure {
         return false;
     }
 
+
+    @Override
+    public String toString() {
+        return "Category: " + category + "\tValue: " + value ;
+
+    }
 }

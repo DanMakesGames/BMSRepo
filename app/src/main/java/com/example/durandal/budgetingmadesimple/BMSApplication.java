@@ -27,5 +27,8 @@ public class BMSApplication extends Application {
         super.onCreate();
         singleton = this;
 
+        //expSystem.addExpenditure(100,"food", false, ReoccurringRate.NONE);
+        //expSystem.addExpenditure(600,"video games", false, ReoccurringRate.NONE);
+
     }
 }
