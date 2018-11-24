@@ -2,6 +2,7 @@ package com.example.durandal.budgetingmadesimple;
 
 import android.annotation.TargetApi;
 import android.os.Build;
+import android.util.Log;
 
 import java.time.ZonedDateTime;
 import java.time.Instant;
@@ -77,12 +78,13 @@ public final class ExpenditureSystem {
 
     /**
      * One getter of expenditures.
-     * @param start
-     * @param end
+     * @param start all times after this time (older)
+     * @param end all times before this time (more recent)
      * @return expenditures in order newest to oldest from start to end.
      */
 
     public final LinkedList<Expenditure> getExpendituresByDate(ZonedDateTime start, ZonedDateTime end) {
+
         LinkedList<Expenditure> return_list = new LinkedList<>();
         Iterator expenditures_it = expenditures.iterator();
         Instant start_instant = start.toInstant();
@@ -90,8 +92,9 @@ public final class ExpenditureSystem {
         while(expenditures_it.hasNext()) {
             Expenditure exp = (Expenditure)expenditures_it.next();
             Instant time = exp.getTimeStamp();
-            if(time.isAfter(start_instant) &&
-                    time.isBefore(end_instant))
+
+            // removing time.isBefore is the only way i COUld get this shit to work
+            if(time.isAfter(start_instant) /*&& time.isBefore(end_instant) */)
                 return_list.add(exp);
         }
         return return_list;
@@ -133,23 +136,23 @@ public final class ExpenditureSystem {
     public final LinkedList<Expenditure> getExpendituresTimeAndCat ( ZonedDateTime start, ZonedDateTime end, String categoryName) {
 
 
-        // handel null cat.
-        if (categoryName.equals(ALL_CATEGORY))
-            return getExpendituresByDate(start, end);
 
-        LinkedList<Expenditure> return_list = new LinkedList<>();
-        Iterator expenditures_it = expenditures.iterator();
-        Instant start_instant = start.toInstant();
-        Instant end_instant = end.toInstant();
+        LinkedList<Expenditure> dateExps = getExpendituresByDate(start, end);
+        LinkedList<Expenditure> return_list = new LinkedList<Expenditure>();
+        Iterator expenditures_it = dateExps.iterator();
+
+
+        if (categoryName.equals(ALL_CATEGORY))
+            return dateExps;
         while(expenditures_it.hasNext()) {
             Expenditure exp = (Expenditure)expenditures_it.next();
-            Instant time = exp.getTimeStamp();
 
-
-
-            if(time.isAfter(start_instant) && time.isBefore(end_instant) && exp.getCategory().equals(categoryName))
+            if(exp.getCategory().equals(categoryName))
                 return_list.add(exp);
         }
+
+
+
         return return_list;
     }
 

@@ -33,7 +33,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Test Expenditure.
+        //Test Expenditure adding and filtering.
+        /*
         BMSApplication.expSystem.addExpenditure(100,"food", false, ReoccurringRate.NONE);
         BMSApplication.expSystem.addExpenditure(600,"video games", false, ReoccurringRate.NONE);
         BMSApplication.expSystem.addExpDEBUG(0, "food", ZonedDateTime.now());
@@ -45,10 +46,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         BMSApplication.expSystem.addExpDEBUG(60, "food", ZonedDateTime.now().minusDays(6));
         BMSApplication.expSystem.addExpDEBUG(70, "food", ZonedDateTime.now().minusDays(7));
         BMSApplication.expSystem.addExpDEBUG(80, "food", ZonedDateTime.now().minusDays(8));
-        BMSApplication.expSystem.addExpDEBUG(1000, "Really old", ZonedDateTime.now().minusDays(100));
+        BMSApplication.expSystem.addExpDEBUG(1000, "video games", ZonedDateTime.now().minusDays(100));
+        BMSApplication.expSystem.addExpDEBUG(80085, "food", ZonedDateTime.now().minusDays(100));
         BMSApplication.expSystem.addCategory(false,0,"food");
         BMSApplication.expSystem.addCategory(false,0,"video games");
-
+        */
 
 
         // Set up list of expenditures.
@@ -71,8 +73,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Set up category drop down
         catDropdown = (Spinner) findViewById(R.id.category_dropdown);
-        ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.our_spinner_item, ArrayUtils.concat(categoryDropdownDefault, BMSApplication.expSystem.getCategoryNames()));
-        //ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.our_spinner_item, categoryDropdownDefault);
+        ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.our_spinner_item,
+                ArrayUtils.concat(categoryDropdownDefault,
+                        BMSApplication.expSystem.getCategoryNames()));
 
         catAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         catDropdown.setAdapter(catAdapter);
@@ -88,61 +91,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
 
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
 
-        //Log.e("Debug: ","onItemSelected called.");
 
         // determine which drop down was being used.
         switch(parent.getId()){
             case R.id.category_dropdown:
-
+                filterExpenditures(expList, timeDropdown, catDropdown);
                 break;
             case R.id.time_dropdown:
-
-                String select = (String) timeDropdown.getSelectedItem();
-                ArrayAdapter adapter = null;
-                // only sort by category.
-                if (select.equals("all times")) {
-
-                    // NO sorting at all
-                    if(catDropdown.getSelectedItem().equals(ExpenditureSystem.ALL_CATEGORY)) {
-                        // all expenditures.
-                        adapter = new ArrayAdapter(this, R.layout.activity_listview,
-                                BMSApplication.expSystem.getExpendituresAll());
-                        Log.e("Debug: ","all times");
-
-                    }
-                    // sort by category, not time
-                    else {
-                        adapter = new ArrayAdapter(this, R.layout.activity_listview,
-                                BMSApplication.expSystem.getExpendituresByCategory((String)catDropdown.getSelectedItem()));
-                        Log.e("Debug: ","all time");
-                    }
-
-                }
-                // last 7 days.
-                else if(select.equals("last 7 days")) {
-                    adapter =  new ArrayAdapter(this, R.layout.activity_listview,
-                            BMSApplication.expSystem.getExpendituresTimeAndCat(
-                                    ZonedDateTime.now().minusDays( 7 ),
-                                    ZonedDateTime.now(),
-                                    (String) catDropdown.getSelectedItem()));
-                    Log.e("Debug: ","last 7 days");
-                }
-                // this month
-                else if(select.equals("this month")) {
-                    adapter =  new ArrayAdapter(this, R.layout.activity_listview,
-                            BMSApplication.expSystem.getExpendituresTimeAndCat(
-                                    ZonedDateTime.now().minusDays(ZonedDateTime.now().getDayOfMonth()),
-                                    ZonedDateTime.now(),
-                                    (String) catDropdown.getSelectedItem()));
-                    Log.e("Debug: ","this month");
-                }
-
-                //Log.e("Debug: ","Time spinner changed.");
-                expList.setAdapter(adapter);
-
+                filterExpenditures(expList, timeDropdown, catDropdown);
                 break;
         }
 
@@ -150,5 +107,38 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
+    }
+
+    public void filterExpenditures(ListView target, Spinner timeDD, Spinner catDD) {
+        final String allTime = "all times";
+        // get time
+        ZonedDateTime now = ZonedDateTime.now();
+        ArrayAdapter adapter = null;
+
+
+        String timeSelection = (String) timeDD.getSelectedItem();
+        String catSelection = (String) catDD.getSelectedItem();
+
+        // Filter by time.
+        if(timeSelection.equals("all times")) {
+            adapter = new ArrayAdapter(this, R.layout.activity_listview,
+                    BMSApplication.expSystem.getExpendituresByCategory(catSelection));
+        }
+        else if(timeSelection.equals("last 7 days")) {
+            adapter =  new ArrayAdapter(this, R.layout.activity_listview,
+                    BMSApplication.expSystem.getExpendituresTimeAndCat(
+                            now.minusDays( 7 ), now, catSelection));
+
+        }
+        else if(timeSelection.equals("this month")) {
+            adapter =  new ArrayAdapter(this, R.layout.activity_listview,
+                    BMSApplication.expSystem.getExpendituresTimeAndCat(
+                            now.minusDays(now.getDayOfMonth()),
+                            now,
+                            catSelection));
+        }
+
+        // Reset expenditures.
+        target.setAdapter(adapter);
     }
 }
