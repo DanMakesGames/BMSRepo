@@ -4,6 +4,7 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.LinkedList;
 
 enum ReoccurringRate {
@@ -77,6 +78,19 @@ public class Expenditure {
         rate = ReoccurringRate.NONE;
 
     }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    Expenditure(float inValue, String inCategory, ZonedDateTime time) {
+
+        timeStamp = time.toInstant();
+        value = inValue;
+        category = inCategory;
+        bIsReoccurring = false;
+        rate = ReoccurringRate.NONE;
+
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     Expenditure(float inValue, String inCategory, boolean inReoccurring,ReoccurringRate inRate) {

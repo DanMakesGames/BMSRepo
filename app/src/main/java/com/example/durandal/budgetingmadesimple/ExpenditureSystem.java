@@ -19,7 +19,7 @@ public final class ExpenditureSystem {
 
     private LinkedList<Expenditure> expenditures;
     private HashMap<String,Category> categories;
-
+    public final static String ALL_CATEGORY = "all categories";
 
 
     /**
@@ -57,6 +57,20 @@ public final class ExpenditureSystem {
         return true;
     }
 
+
+    /**
+     * Returns all of the names of the categories in an array format.
+     * @return
+     */
+    public String[] getCategoryNames() {
+        String[] stringArray = {};
+        return categories.keySet().toArray( stringArray);
+    }
+
+    /**
+     * Unfiltered immutable get of expenditures.
+     * @return
+     */
     public final LinkedList<Expenditure> getExpendituresAll() {
         return expenditures;
     }
@@ -85,11 +99,18 @@ public final class ExpenditureSystem {
 
 
     /**
-     * Gets list of expenditures in order newest to oldest that are of the same category.
+     * Gets list of expenditures in order newest to oldest that are of the same category. If you
+     * enter ALL_CATEGORY, does not sort and returns all.
      * @param categoryName
      * @return
      */
     public final LinkedList<Expenditure> getExpendituresByCategory (String categoryName) {
+
+        // return all expenditures.
+        if(categoryName.equals(ALL_CATEGORY)) {
+            return expenditures;
+        }
+
         LinkedList<Expenditure> return_list = new LinkedList<Expenditure>();
         Iterator expenditures_it = expenditures.iterator();
         while(expenditures_it.hasNext()) {
@@ -100,6 +121,36 @@ public final class ExpenditureSystem {
         }
         return return_list;
 
+    }
+
+    /**
+     * Return Expenditures sorted by date and time.
+     * @param categoryName
+     * @param start
+     * @param end
+     * @return
+     */
+    public final LinkedList<Expenditure> getExpendituresTimeAndCat ( ZonedDateTime start, ZonedDateTime end, String categoryName) {
+
+
+        // handel null cat.
+        if (categoryName.equals(ALL_CATEGORY))
+            return getExpendituresByDate(start, end);
+
+        LinkedList<Expenditure> return_list = new LinkedList<>();
+        Iterator expenditures_it = expenditures.iterator();
+        Instant start_instant = start.toInstant();
+        Instant end_instant = end.toInstant();
+        while(expenditures_it.hasNext()) {
+            Expenditure exp = (Expenditure)expenditures_it.next();
+            Instant time = exp.getTimeStamp();
+
+
+
+            if(time.isAfter(start_instant) && time.isBefore(end_instant) && exp.getCategory().equals(categoryName))
+                return_list.add(exp);
+        }
+        return return_list;
     }
 
 
@@ -114,6 +165,24 @@ public final class ExpenditureSystem {
      */
     public boolean addExpenditure(float inValue, String inCategory, boolean inReoccurring, ReoccurringRate inRate) {
         Expenditure newExpen = new Expenditure(inValue, inCategory, inReoccurring, inRate);
+        if (BMSApplication.database.createExpOnDB(newExpen)) {
+            expenditures.addFirst(newExpen);
+            return true;
+        }
+        return false;
+
+    }
+
+    /**
+     * Sepcial Add function that allows date to be set manually. Used for debug.
+     * @param inValue
+     * @param inCategory
+     * @param time
+
+     * @return
+     */
+    public boolean addExpDEBUG(float inValue, String inCategory, ZonedDateTime time) {
+        Expenditure newExpen = new Expenditure(inValue, inCategory, time);
         if (BMSApplication.database.createExpOnDB(newExpen)) {
             expenditures.addFirst(newExpen);
             return true;

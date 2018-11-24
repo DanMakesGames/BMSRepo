@@ -2,6 +2,11 @@
     <string name="app_name">BudgetingMadeSimple</string>
     <string name="back">back</string>
 
+    <string-array name="time_array">
+        <item>all times</item>
+        <item>last 7 days</item>
+        <item>this month</item>
+    </string-array>
 </resources>
 
 
