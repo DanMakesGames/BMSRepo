@@ -16,15 +16,16 @@ public class BMSApplication extends Application {
 
     public static BMSApplication singleton;
 
-    public static ExpenditureSystem expSystem;
+    public static ExpenditureSystem expSystem = new ExpenditureSystem();
 
-    public static Database database;
+    public static Database database = new Database();
+
+    public static Account account = new Account();
 
     @Override
     public void onCreate() {
         super.onCreate();
         singleton = this;
-        expSystem = new ExpenditureSystem();
-        database = new Database();
+
     }
 }
