@@ -22,10 +22,11 @@ public class BMSApplication extends Application {
 
     public static Account account = new Account();
 
+    public static Database database;
+
     @Override
     public void onCreate() {
         super.onCreate();
         singleton = this;
-
     }
 }
