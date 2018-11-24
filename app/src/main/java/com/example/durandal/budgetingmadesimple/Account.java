@@ -1,18 +1,32 @@
 package com.example.durandal.budgetingmadesimple;
 
-/**
- * Todo define
- * Stores all data related to the account we logged into locally:
- * User Name
- * Profile Picture
- * Supervised/Supervisor accounts.
- * ect.
+/*
  *
- * Singleton, lives in BMSApplication.
+ * Stores general account information.
+ * Including user id, user name and user email.
  *
- * This is a simple class, more or less jsut local storage. It stores all the fields in the database schema under User (user Id, username, password, ect.) for the currently logged in account.
- * Additionally this is where the IDs for the accounts that this class supervises (so that they can be displayed and edited in AccountSettings page) and methods to edit them.
  */
 public class Account {
+    private int userID;
+    private String userName;
+    private String userEmail;
+
+    public Account(int userID, String userName, String userEmail) {
+        this.userID = userID;
+        this.userName = userName;
+        this.userEmail = userEmail;
+    }
+
+    public int getUserID() {
+        return userID;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
 
 }
