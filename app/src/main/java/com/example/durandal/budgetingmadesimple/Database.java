@@ -46,7 +46,7 @@ public class Database extends SQLiteOpenHelper {
     public static final String EXP_COL_4 = "Amount";
     public static final String EXP_COL_4_TYPE = "FLOAT";
     public static final String EXP_COL_5 = "Date";
-    public static final String EXP_COL_5_TYPE = "DATETIME";
+    public static final String EXP_COL_5_TYPE = "STRING";
     public static final String EXP_COL_6 = "IsRecurring";
     public static final String EXP_COL_6_TYPE = "BOOLEAN";
 
@@ -200,8 +200,30 @@ public class Database extends SQLiteOpenHelper {
     //TODO
     public boolean deleteUser() { return true; }
 
-    //TODO
-    public boolean createExpenditure() { return true; }
+    /**
+     * Creates an expenditure
+     * @param userId User Id of user who the expenditure belongs
+     * @param categoryId Category Id to which the expenditure belongs
+     * @param amount Amount of expenditure in dollars
+     * @param date Date of when expenditure was made
+     * @param isRecurring Whether this expenditure is to occur again in the future
+     * @return true if successful, false if not
+     */
+    public boolean createExpenditure(int userId, int categoryId, float amount, String date, boolean isRecurring) { 
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(EXP_COL_2, userId);
+        contentValues.put(EXP_COL_3, categoryId);
+        contentValues.put(EXP_COL_4, amount);
+        contentValues.put(EXP_COL_5, date);
+        contentValues.put(EXP_COL_6, isRecurring);
+
+        long result = db.insert(EXP_TABLE_NAME, null, contentValues);
+        if(result == -1)
+            return false;
+        return true; 
+    }
 
     //TODO
     public boolean getExpenditure() { return true; }
