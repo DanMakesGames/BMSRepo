@@ -1,25 +1,22 @@
 package com.example.durandal.budgetingmadesimple;
 
+import android.content.Intent;
 import android.database.Cursor;
-import android.support.v4.content.res.TypedArrayUtils;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
-import java.lang.Object;
-//import org.apache.commons.lang3.ArrayUtils;
 
 import com.google.android.gms.common.util.ArrayUtils;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import java.util.Arrays;
+
 import java.time.ZonedDateTime;
+
+//import org.apache.commons.lang3.ArrayUtils;
 
 
 /**
@@ -95,6 +92,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         catDropdown.setSelection(0);
         catDropdown.setOnItemSelectedListener(this);
 
+
+        FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.addExpenditureButton);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, addExpenditurePrompt.class));
+            }
+        });
 
 
         //loop adding
