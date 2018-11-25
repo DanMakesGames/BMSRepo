@@ -184,7 +184,7 @@ public class Database extends SQLiteOpenHelper {
     /**
      * Get user account data corresponding to a specific username
      * @param username
-     * @return
+     * @return Cursor object, which can be used access data
      */
     public Cursor getUser(String username) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -225,8 +225,19 @@ public class Database extends SQLiteOpenHelper {
         return true; 
     }
 
-    //TODO
-    public boolean getExpenditure() { return true; }
+    /**
+    * Get expenditures corresponding to a specific user
+    * @param username of user
+    * @return Cursor object, which can be used to acess data
+    */
+    public boolean getExpenditures(username) { 
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = new StringBuilder().append(String.format(
+                "SELECT * FROM %s JOIN %s ON UserId WHERE username = \"%s\"", 
+                EXP_TABLE_NAME, USER_TABLE_NAME, username)).toString();
+        Cursor res = db.rawQuery(query, null);
+        return res;
+    }
 
     //TODO
     public boolean updateExpenditure() { return true; }
