@@ -18,14 +18,15 @@ public class BMSApplication extends Application {
 
     public static ExpenditureSystem expSystem = new ExpenditureSystem();
 
-    public static Database database = new Database();
+    // null at startup, instance created during setup process.
+    public static Database database = null;
 
-    public static Account account = new Account();
+    // null at startup, instance created during login process.
+    public static UserAccount account = null;
 
     @Override
     public void onCreate() {
         super.onCreate();
         singleton = this;
-
     }
 }
