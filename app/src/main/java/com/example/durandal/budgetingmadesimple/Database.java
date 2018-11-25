@@ -35,11 +35,38 @@ public class Database extends SQLiteOpenHelper {
     public static final String USER_COL_9 = "BankBalance";
     public static final String USER_COL_9_TYPE = "FLOAT";
 
-    // TODO: Define expenditure table
+    // Define expenditure table
+    public static final String EXP_TABLE_NAME = "Expenditure";
+    public static final String EXP_COL_1 = "ExpenditureId";
+    public static final String EXP_COL_1_TYPE = "INTEGER PRIMARY KEY AUTOINCREMENT";
+    public static final String EXP_COL_2 = "UserId";
+    public static final String EXP_COL_2_TYPE = "INTEGER";
+    public static final String EXP_COL_3 = "CategoryId";
+    public static final String EXP_COL_3_TYPE = "INTEGER";
+    public static final String EXP_COL_4 = "Amount";
+    public static final String EXP_COL_4_TYPE = "FLOAT";
+    public static final String EXP_COL_5 = "Date";
+    public static final String EXP_COL_5_TYPE = "DATETIME";
+    public static final String EXP_COL_6 = "IsRecurring";
+    public static final String EXP_COL_6_TYPE = "BOOLEAN";
 
-    // TODO: Define category table
+    // Define category table
+    public static final String CAT_TABLE_NAME = "Category";
+    public static final String CAT_COL_1 = "CategoryId";
+    public static final String CAT_COL_1_TYPE = "INTEGER PRIMARY KEY AUTOINCREMENT";
+    public static final String CAT_COL_2 = "UserId";
+    public static final String CAT_COL_2_TYPE = "INTEGER";
+    public static final String CAT_COL_3 = "Name";
+    public static final String CAT_COL_3_TYPE = "STRING";
+    public static final String CAT_COL_4 = "Budgt";
+    public static final String CAT_COL_4_TYPE = "FLOAT";
 
-    // TODO: Define supervisor relationship table
+    // Define supervisor relationship table
+    public static final String REL_TABLE_NAME = "SupervisorRelationship";
+    public static final String REL_COL_1 = "SupervisorId";
+    public static final String REL_COL_1_TYPE = "INTEGER";
+    public static final String REL_COL_2 = "SupervisoreeId";
+    public static final String REL_COL_2_TYPE = "INTEGER";
 
     /**
      * Database constructor
