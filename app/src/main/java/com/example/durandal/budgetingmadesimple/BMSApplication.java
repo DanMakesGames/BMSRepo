@@ -19,7 +19,7 @@ public class BMSApplication extends Application {
     public static ExpenditureSystem expSystem = new ExpenditureSystem();
 
     // null at startup, instance created during setup process.
-    public static Database database = null;
+    public static Database database;
 
     // null at startup, instance created during login process.
     public static UserAccount account = null;
@@ -28,5 +28,8 @@ public class BMSApplication extends Application {
     public void onCreate() {
         super.onCreate();
         singleton = this;
+
+        BMSApplication.database = new Database(getApplicationContext());
+
     }
 }

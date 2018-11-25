@@ -167,8 +167,10 @@ public final class ExpenditureSystem {
      * @return true is successful, false if not.
      */
     public boolean addExpenditure(float inValue, String inCategory, boolean inReoccurring, ReoccurringRate inRate) {
+
         Expenditure newExpen = new Expenditure(inValue, inCategory, inReoccurring, inRate);
-        if (BMSApplication.database.createExpOnDB(newExpen)) {
+
+        if (BMSApplication.database.createExpenditure()) {
             expenditures.addFirst(newExpen);
             return true;
         }
@@ -185,8 +187,9 @@ public final class ExpenditureSystem {
      * @return
      */
     public boolean addExpDEBUG(float inValue, String inCategory, ZonedDateTime time) {
+
         Expenditure newExpen = new Expenditure(inValue, inCategory, time);
-        if (BMSApplication.database.createExpOnDB(newExpen)) {
+        if (BMSApplication.database.createExpenditure()) {
             expenditures.addFirst(newExpen);
             return true;
         }
@@ -201,7 +204,7 @@ public final class ExpenditureSystem {
      * @return true is successful, false if not.
      */
     public boolean deleteExpenditure(Expenditure inExpenditure) {
-        if (!BMSApplication.database.deleteExpOnDB(inExpenditure)) {
+        if (!BMSApplication.database.deleteExpenditure()) {
             return false;
         }
         for (int i = 0; i < expenditures.size(); i++) {

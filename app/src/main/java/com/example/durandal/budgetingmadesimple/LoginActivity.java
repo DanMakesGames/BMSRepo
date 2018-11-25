@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
                 editUsername.setEnabled(false);
 
                 // login name and password are successful, move to loading expenditures activity.
-                if(BMSApplication.database.login( editUsername.getText().toString(), editPassword.getText().toString(), BMSApplication.account)) {
+                if(BMSApplication.database.login( editUsername.getText().toString(), editPassword.getText().toString())) {
                     // TODO switch to loading activity
                 }
                 else {

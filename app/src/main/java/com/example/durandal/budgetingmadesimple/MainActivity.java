@@ -1,21 +1,24 @@
 package com.example.durandal.budgetingmadesimple;
 
 import android.database.Cursor;
+import android.support.v4.content.res.TypedArrayUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-<<<<<<< HEAD
+
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import java.lang.Object;
+//import org.apache.commons.lang3.ArrayUtils;
 
 import com.google.android.gms.common.util.ArrayUtils;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
+import java.util.Arrays;
 import java.time.ZonedDateTime;
 
 
@@ -24,21 +27,25 @@ import java.time.ZonedDateTime;
  *  Spinner is the android name for a dropdown menu.
  */
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    Database bmsDb;
     private final String[] categoryDropdownDefault = {ExpenditureSystem.ALL_CATEGORY};
 
 
     private ListView expList;
     private Spinner timeDropdown;
     private Spinner catDropdown;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        testDatabase();
 
         //Test Expenditure adding and filtering.
-        /*
+
         BMSApplication.expSystem.addExpenditure(100,"food", false, ReoccurringRate.NONE);
+        /*
         BMSApplication.expSystem.addExpenditure(600,"video games", false, ReoccurringRate.NONE);
         BMSApplication.expSystem.addExpDEBUG(0, "food", ZonedDateTime.now());
         BMSApplication.expSystem.addExpDEBUG(10, "food", ZonedDateTime.now().minusDays(1));
@@ -51,16 +58,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         BMSApplication.expSystem.addExpDEBUG(80, "food", ZonedDateTime.now().minusDays(8));
         BMSApplication.expSystem.addExpDEBUG(1000, "video games", ZonedDateTime.now().minusDays(100));
         BMSApplication.expSystem.addExpDEBUG(80085, "food", ZonedDateTime.now().minusDays(100));
+        */
         BMSApplication.expSystem.addCategory(false,0,"food");
         BMSApplication.expSystem.addCategory(false,0,"video games");
-        */
 
 
         // Set up list of expenditures.
         expList = (ListView) findViewById(R.id.expList);
 
         Log.e("Debug: ","LENGTH:" + BMSApplication.expSystem.getExpendituresAll().toArray().length);
-        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.activity_listview, BMSApplication.expSystem.getExpendituresAll().toArray() );
+        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.activity_listview,
+                BMSApplication.expSystem.getExpendituresAll().toArray() );
+
         expList.setAdapter(adapter);
 
 
@@ -76,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Set up category drop down
         catDropdown = (Spinner) findViewById(R.id.category_dropdown);
+
         ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.our_spinner_item,
                 ArrayUtils.concat(categoryDropdownDefault,
                         BMSApplication.expSystem.getCategoryNames()));
@@ -143,8 +153,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Reset expenditures.
         target.setAdapter(adapter);
-=======
-        testDatabase();  // Temporary
+
+          // Temporary
     }
 
     private void testDatabase() {
@@ -177,6 +187,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Log.d("SQL Database Testing", "bankBalance: " + res.getString(8));
             }
 
->>>>>>> development
+
     }
 }

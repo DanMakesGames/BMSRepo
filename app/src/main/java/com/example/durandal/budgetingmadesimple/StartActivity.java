@@ -18,6 +18,8 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
+
+
         // link buttons
 
         loginButton = (Button) findViewById(R.id.login_button);
