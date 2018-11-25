@@ -1,6 +1,5 @@
 package com.example.durandal.budgetingmadesimple;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -14,7 +13,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.util.ArrayUtils;
 
-public class addExpenditurePrompt extends Activity {
+public class addExpenditurePrompt extends MainActivity {
 
     Spinner categories;
     TextView amount;
@@ -62,11 +61,11 @@ public class addExpenditurePrompt extends Activity {
         });
 
 
-        ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.our_spinner_item,
+        ArrayAdapter categoryAdapter = new ArrayAdapter(this,R.layout.our_spinner_item,
                 ArrayUtils.concat(selCat,
                         BMSApplication.expSystem.getCategoryNames()));
-        catAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        categories.setAdapter(catAdapter);
+        categoryAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        categories.setAdapter(categoryAdapter);
         categories.setSelection(0);
         categories.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
 

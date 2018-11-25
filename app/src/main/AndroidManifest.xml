@@ -27,7 +27,11 @@
         <activity android:name=".LoginActivity"></activity>
         <activity android:name=".SignUpActivity"></activity>
         <activity android:name=".addExpenditurePrompt"
-            android:theme="@style/AppTheme.CustomTheme">
+            android:theme="@style/AppTheme.CustomTheme"
+            android:exported="true">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
     </application>
 
