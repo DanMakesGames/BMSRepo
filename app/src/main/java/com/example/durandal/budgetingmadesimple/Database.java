@@ -61,12 +61,12 @@ public class Database extends SQLiteOpenHelper {
     public static final String CAT_COL_4 = "Budgt";
     public static final String CAT_COL_4_TYPE = "FLOAT";
 
-    // Define supervisor relationship table
-    public static final String REL_TABLE_NAME = "SupervisorRelationship";
-    public static final String REL_COL_1 = "SupervisorId";
-    public static final String REL_COL_1_TYPE = "INTEGER";
-    public static final String REL_COL_2 = "SupervisoreeId";
-    public static final String REL_COL_2_TYPE = "INTEGER";
+    // Define supervisor table
+    public static final String SUP_TABLE_NAME = "Supervisor";
+    public static final String SUP_COL_1 = "SupervisorId";
+    public static final String SUP_COL_1_TYPE = "INTEGER";
+    public static final String SUP_COL_2 = "SupervisoreeId";
+    public static final String SUP_COL_2_TYPE = "INTEGER";
 
     /**
      * Database constructor
@@ -82,6 +82,7 @@ public class Database extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
+        // Build user table
         db.execSQL(new StringBuilder()
             .append(String.format("CREATE TABLE %s (", USER_TABLE_NAME))
             .append(String.format("%s %s", USER_COL_1, USER_COL_1_TYPE))
@@ -93,6 +94,40 @@ public class Database extends SQLiteOpenHelper {
             .append(String.format(", %s %s", USER_COL_7, USER_COL_7_TYPE))
             .append(String.format(", %s %s", USER_COL_8, USER_COL_8_TYPE))
             .append(String.format(", %s %s", USER_COL_9, USER_COL_9_TYPE))
+            .append(")")
+            .toString()
+        );
+
+        // Build expenditure table
+        db.execSQL(new StringBuilder()
+            .append(String.format("CREATE TABLE %s (", EXP_TABLE_NAME))
+            .append(String.format("%s %s", EXP_COL_1, EXP_COL_1_TYPE))
+            .append(String.format(", %s %s", EXP_COL_2, EXP_COL_2_TYPE))
+            .append(String.format(", %s %s", EXP_COL_3, EXP_COL_3_TYPE))
+            .append(String.format(", %s %s", EXP_COL_4, EXP_COL_4_TYPE))
+            .append(String.format(", %s %s", EXP_COL_5, EXP_COL_5_TYPE))
+            .append(String.format(", %s %s", EXP_COL_6, EXP_COL_6_TYPE))
+            .append(")")
+            .toString()
+        );
+
+        // Build category table
+        db.execSQL(new StringBuilder()
+            .append(String.format("CREATE TABLE %s (", CAT_TABLE_NAME))
+            .append(String.format("%s %s", CAT_COL_1, CAT_COL_1_TYPE))
+            .append(String.format(", %s %s", CAT_COL_2, CAT_COL_2_TYPE))
+            .append(String.format(", %s %s", CAT_COL_3, CAT_COL_3_TYPE))
+            .append(String.format(", %s %s", CAT_COL_4, CAT_COL_4_TYPE))
+            .append(")")
+            .toString()
+        );
+
+
+        // Build supervior table
+        db.execSQL(new StringBuilder()
+            .append(String.format("CREATE TABLE %s (", SUP_TABLE_NAME))
+            .append(String.format("%s %s", SUP_COL_1, SUP_COL_1_TYPE))
+            .append(String.format(", %s %s", SUP_COL_2, SUP_COL_2_TYPE))
             .append(")")
             .toString()
         );
