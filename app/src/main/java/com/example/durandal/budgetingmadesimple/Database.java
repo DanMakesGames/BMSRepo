@@ -35,11 +35,38 @@ public class Database extends SQLiteOpenHelper {
     public static final String USER_COL_9 = "BankBalance";
     public static final String USER_COL_9_TYPE = "FLOAT";
 
-    // TODO: Define expenditure table
+    // Define expenditure table
+    public static final String EXP_TABLE_NAME = "Expenditure";
+    public static final String EXP_COL_1 = "ExpenditureId";
+    public static final String EXP_COL_1_TYPE = "INTEGER PRIMARY KEY AUTOINCREMENT";
+    public static final String EXP_COL_2 = "UserId";
+    public static final String EXP_COL_2_TYPE = "INTEGER";
+    public static final String EXP_COL_3 = "CategoryId";
+    public static final String EXP_COL_3_TYPE = "INTEGER";
+    public static final String EXP_COL_4 = "Amount";
+    public static final String EXP_COL_4_TYPE = "FLOAT";
+    public static final String EXP_COL_5 = "Date";
+    public static final String EXP_COL_5_TYPE = "STRING";
+    public static final String EXP_COL_6 = "IsRecurring";
+    public static final String EXP_COL_6_TYPE = "BOOLEAN";
 
-    // TODO: Define category table
+    // Define category table
+    public static final String CAT_TABLE_NAME = "Category";
+    public static final String CAT_COL_1 = "CategoryId";
+    public static final String CAT_COL_1_TYPE = "INTEGER PRIMARY KEY AUTOINCREMENT";
+    public static final String CAT_COL_2 = "UserId";
+    public static final String CAT_COL_2_TYPE = "INTEGER";
+    public static final String CAT_COL_3 = "Name";
+    public static final String CAT_COL_3_TYPE = "STRING";
+    public static final String CAT_COL_4 = "Budgt";
+    public static final String CAT_COL_4_TYPE = "FLOAT";
 
-    // TODO: Define supervisor relationship table
+    // Define supervisor table
+    public static final String SUP_TABLE_NAME = "Supervisor";
+    public static final String SUP_COL_1 = "SupervisorId";
+    public static final String SUP_COL_1_TYPE = "INTEGER";
+    public static final String SUP_COL_2 = "SupervisoreeId";
+    public static final String SUP_COL_2_TYPE = "INTEGER";
 
     /**
      * Database constructor
@@ -55,6 +82,7 @@ public class Database extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
+        // Build user table
         db.execSQL(new StringBuilder()
             .append(String.format("CREATE TABLE %s (", USER_TABLE_NAME))
             .append(String.format("%s %s", USER_COL_1, USER_COL_1_TYPE))
@@ -69,6 +97,40 @@ public class Database extends SQLiteOpenHelper {
             .append(")")
             .toString()
         );
+
+        // Build expenditure table
+        db.execSQL(new StringBuilder()
+            .append(String.format("CREATE TABLE %s (", EXP_TABLE_NAME))
+            .append(String.format("%s %s", EXP_COL_1, EXP_COL_1_TYPE))
+            .append(String.format(", %s %s", EXP_COL_2, EXP_COL_2_TYPE))
+            .append(String.format(", %s %s", EXP_COL_3, EXP_COL_3_TYPE))
+            .append(String.format(", %s %s", EXP_COL_4, EXP_COL_4_TYPE))
+            .append(String.format(", %s %s", EXP_COL_5, EXP_COL_5_TYPE))
+            .append(String.format(", %s %s", EXP_COL_6, EXP_COL_6_TYPE))
+            .append(")")
+            .toString()
+        );
+
+        // Build category table
+        db.execSQL(new StringBuilder()
+            .append(String.format("CREATE TABLE %s (", CAT_TABLE_NAME))
+            .append(String.format("%s %s", CAT_COL_1, CAT_COL_1_TYPE))
+            .append(String.format(", %s %s", CAT_COL_2, CAT_COL_2_TYPE))
+            .append(String.format(", %s %s", CAT_COL_3, CAT_COL_3_TYPE))
+            .append(String.format(", %s %s", CAT_COL_4, CAT_COL_4_TYPE))
+            .append(")")
+            .toString()
+        );
+
+
+        // Build supervisor table
+        db.execSQL(new StringBuilder()
+            .append(String.format("CREATE TABLE %s (", SUP_TABLE_NAME))
+            .append(String.format("%s %s", SUP_COL_1, SUP_COL_1_TYPE))
+            .append(String.format(", %s %s", SUP_COL_2, SUP_COL_2_TYPE))
+            .append(")")
+            .toString()
+        );
     }
 
     /**
@@ -80,6 +142,9 @@ public class Database extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + EXP_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + CAT_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + SUP_TABLE_NAME);
         onCreate(db);
     }
 
@@ -119,7 +184,7 @@ public class Database extends SQLiteOpenHelper {
     /**
      * Get user account data corresponding to a specific username
      * @param username
-     * @return
+     * @return Cursor object, which can be used access data
      */
     public Cursor getUser(String username) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -135,11 +200,44 @@ public class Database extends SQLiteOpenHelper {
     //TODO
     public boolean deleteUser() { return true; }
 
-    //TODO
-    public boolean createExpenditure() { return true; }
+    /**
+     * Creates an expenditure
+     * @param userId User ID of user who the expenditure belongs
+     * @param categoryId Category ID to which the expenditure belongs
+     * @param amount Amount of expenditure in dollars
+     * @param date Date of when expenditure was made
+     * @param isRecurring Whether this expenditure is to occur again in the future
+     * @return true if successful, false if not
+     */
+    public boolean createExpenditure(int userId, int categoryId, float amount, String date, boolean isRecurring) { 
+        SQLiteDatabase db = this.getWritableDatabase();
 
-    //TODO
-    public boolean getExpenditure() { return true; }
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(EXP_COL_2, userId);
+        contentValues.put(EXP_COL_3, categoryId);
+        contentValues.put(EXP_COL_4, amount);
+        contentValues.put(EXP_COL_5, date);
+        contentValues.put(EXP_COL_6, isRecurring);
+
+        long result = db.insert(EXP_TABLE_NAME, null, contentValues);
+        if(result == -1)
+            return false;
+        return true; 
+    }
+
+    /**
+    * Get expenditures corresponding to a specific user
+    * @param username  Username for user's account
+    * @return Cursor object, which can be used to acess data
+    */
+    public Cursor getExpenditures(String username) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = new StringBuilder().append(String.format(
+                "SELECT * FROM %s AS exp JOIN %s AS u ON exp.UserId = u.UserId WHERE u.Username = \"%s\"",
+                EXP_TABLE_NAME, USER_TABLE_NAME, username)).toString();
+        Cursor res = db.rawQuery(query, null);
+        return res;
+    }
 
     //TODO
     public boolean updateExpenditure() { return true; }
@@ -147,11 +245,26 @@ public class Database extends SQLiteOpenHelper {
     //TODO
     public boolean deleteExpenditure() { return true; }
 
-    //TODO
-    public boolean createExpCategory() { return true; }
+    /**
+    * Create a category for a specific user
+    * @param userId User ID
+    * @param name Category name
+    * @param budget User's budget for the category
+    * @return true if successful, false if not
+    */
+    public boolean createExpCategory(int userId, String name, float budget) { 
+        SQLiteDatabase db = this.getWritableDatabase();
 
-    //TODO
-    public boolean getExpCategory() { return true; }
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CAT_COL_2, userId);
+        contentValues.put(CAT_COL_3, name);
+        contentValues.put(CAT_COL_4, budget);
+
+        long result = db.insert(CAT_TABLE_NAME, null, contentValues);
+        if(result == -1)
+            return false;
+        return true;          
+    }
 
     //TODO
     public boolean updateExpCategory() { return true; }
@@ -162,11 +275,11 @@ public class Database extends SQLiteOpenHelper {
     /**
      * TODO
      * Determine if the provided password for the provided username
-     * @param userName login name.
+     * @param username login name.
      * @param password login password.
      * @return true if login parameters are valid. false if login is not successful for any reason
      */
-    public boolean login(String userName, String password) {
+    public boolean login(String username, String password) {
         return true;
     }
 
