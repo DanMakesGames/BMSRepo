@@ -123,7 +123,7 @@ public class Database extends SQLiteOpenHelper {
         );
 
 
-        // Build supervior table
+        // Build supervisor table
         db.execSQL(new StringBuilder()
             .append(String.format("CREATE TABLE %s (", SUP_TABLE_NAME))
             .append(String.format("%s %s", SUP_COL_1, SUP_COL_1_TYPE))
@@ -230,10 +230,10 @@ public class Database extends SQLiteOpenHelper {
     * @param username  Username for user's account
     * @return Cursor object, which can be used to acess data
     */
-    public boolean getExpenditures(username) { 
+    public Cursor getExpenditures(String username) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = new StringBuilder().append(String.format(
-                "SELECT * FROM %s JOIN %s ON UserId WHERE username = \"%s\"", 
+                "SELECT * FROM %s AS exp JOIN %s AS u ON exp.UserId = u.UserId WHERE u.Username = \"%s\"",
                 EXP_TABLE_NAME, USER_TABLE_NAME, username)).toString();
         Cursor res = db.rawQuery(query, null);
         return res;
@@ -275,11 +275,11 @@ public class Database extends SQLiteOpenHelper {
     /**
      * TODO
      * Determine if the provided password for the provided username
-     * @param userName login name.
+     * @param username login name.
      * @param password login password.
      * @return true if login parameters are valid. false if login is not successful for any reason
      */
-    public boolean login(String userName, String password) {
+    public boolean login(String username, String password) {
         return true;
     }
 
