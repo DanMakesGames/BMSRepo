@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        testDatabase();
+        // Example code intended for developers, showing how to interact with the SQL database
+        showcaseDatabase();
 
         //Test Expenditure adding and filtering.
 
@@ -157,22 +158,34 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
           // Temporary
     }
 
-    private void testDatabase() {
+
+    /**
+     * Showcase how to interact with the SQL database
+     */
+    private void showcaseDatabase() {
         // Create SQL database
         bmsDb = new Database(this);
+        showcaseDatabaseUserTable(bmsDb);
+        showcaseDatabaseExpenditureTable(bmsDb);
+    }
 
+    /**
+     * Showcase how to interact with user data in the SQL database
+     * @param bmsDb
+     */
+    private void showcaseDatabaseUserTable(Database bmsDb) {
         // Create user
         boolean isCreated = bmsDb.createUser("FakeUser", "fakepass",
                 "fake@gmail.com", "Are you fake?", "Yes",
                 100, 50, 50);
-        if(isCreated == true)
-            Log.d("SQL Database Testing","Inserted");
+        if (isCreated == true)
+            Log.d("SQL Database Testing", "User inserted");
         else
-            Log.d("SQL Database Testing","Not inserted");
+            Log.d("SQL Database Testing", "User not inserted");
 
-        // Retrieve data
+        // Retrieve user data
         Cursor res = bmsDb.getUser("FakeUser");
-        if(res.getCount() == 0)
+        if (res.getCount() == 0)
             Log.d("SQL Database Testing", "No data returned");
         else
             while (res.moveToNext()) {
@@ -186,7 +199,34 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Log.d("SQL Database Testing", "savingsGoal: " + res.getString(7));
                 Log.d("SQL Database Testing", "bankBalance: " + res.getString(8));
             }
+    }
 
+    /**
+     * Showcase how to interact with expenditure data in the SQL database
+     * @param bmsDb
+     */
+    private void showcaseDatabaseExpenditureTable(Database bmsDb) {
+        // Create expenditure
+        boolean isCreated = bmsDb.createExpenditure(1, 1, 100,
+                "2018-11-26", false);
+        if(isCreated == true)
+            Log.d("SQL Database Testing","Expenditure inserted");
+        else
+            Log.d("SQL Database Testing","Expenditure not inserted");
 
+        // Retrieve expenditure data
+        Cursor res = bmsDb.getExpenditures("FakeUser");
+        if(res.getCount() == 0)
+            Log.d("SQL Database Testing", "No expenditure data returned");
+        else
+            while (res.moveToNext()) {
+                Log.d("SQL Database Testing", "ExpenditureId: " + res.getString(0));
+                Log.d("SQL Database Testing", "UserId: " + res.getString(1));
+                Log.d("SQL Database Testing", "CategoryId: " + res.getString(2));
+                Log.d("SQL Database Testing", "amount: " + res.getString(3));
+                Log.d("SQL Database Testing", "date: " + res.getString(4));
+                Log.d("SQL Database Testing", "isRecurring: " + res.getString(5));
+                Log.d("SQL Database Testing", "secretQuestionAnswer: " + res.getString(6));
+            }
     }
 }
