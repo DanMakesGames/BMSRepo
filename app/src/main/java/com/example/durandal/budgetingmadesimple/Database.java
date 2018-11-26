@@ -226,8 +226,18 @@ public class Database extends SQLiteOpenHelper {
         return true
     }
 
-    //TODO
-    public boolean deleteUser() { return true; }
+    /**
+    * Delete user from the database
+    * @param userId ID of the user to be deleted
+    * @return true if successful, false if not
+    */
+    public boolean deleteUser(int userId) { 
+        SQLiteDatabase db = this.getWritableDatabase();
+        rowsDeleted = db.delete(USER_TABLE_NAME, "UserId = ?", new String[] {userId});
+        if (rowsDeleted == 0)
+            return false
+        return true; 
+    }
 
     /**
      * Creates an expenditure
@@ -296,8 +306,18 @@ public class Database extends SQLiteOpenHelper {
         return true
     }
 
-    //TODO
-    public boolean deleteExpenditure() { return true; }
+    /**
+    * Delete expenditure from the database
+    * @param expenditureId ID of the expenditure to be deleted
+    * @return true if successful, false if not
+    */
+    public boolean deleteExpenditure(int expenditureId) { 
+        SQLiteDatabase db = this.getWritableDatabase();
+        rowsDeleted = db.delete(EXP_TABLE_NAME, "ExpenditureId = ?", new String[] {expenditureId});
+        if (rowsDeleted == 0)
+            return false
+        return true; 
+    }
 
     /**
     * Create a category for a specific user
@@ -343,8 +363,18 @@ public class Database extends SQLiteOpenHelper {
         return true
     }
 
-    //TODO
-    public boolean deleteExpCategory() { return true; }
+    /**
+    * Delete a user's category from the database
+    * @param categoryId ID of the category to be deleted
+    * @return true if successful, false if not
+    */
+    public boolean deleteExpCategory(int categoryId) { 
+        SQLiteDatabase db = this.getWritableDatabase();
+        rowsDeleted = db.delete(CAT_TABLE_NAME, "CategoryId = ?", new String[] {categoryId});
+        if (rowsDeleted == 0)
+            return false
+        return true;  
+    }
 
     /**
      * TODO
@@ -356,5 +386,4 @@ public class Database extends SQLiteOpenHelper {
     public boolean login(String username, String password) {
         return true;
     }
-
 }
