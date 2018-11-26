@@ -14,8 +14,9 @@ To merge your branch back into development:
 // you can delete the old branch
 git branch -d newBranchName
 
-### Firebase
-Check that you have all required dependencies and package verisions by watching first ~2 minutes of: 
-https://www.youtube.com/watch?v=cNPCgJW8c-E&feature=youtu.be
-
-
+### SQL Database
+#### General Information
+The application uses a local SQLite database to store data.
+If we were to ever release our application to end users, we would refactor our code to ensure that the database resided on a remote server.
+#### For Developers
+Contained in `MainActivity.java::showcaseDatabase()` you will find example code of how to interact with the SQL database.
