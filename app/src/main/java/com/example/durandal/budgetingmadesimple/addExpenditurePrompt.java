@@ -43,6 +43,10 @@ public class addExpenditurePrompt extends MainActivity {
         done.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (amount.getText().length() > 0 ) {
+                    if (categories.getSelectedItem().equals(ExpenditureSystem.SEL_CATEGORY)) {
+                        Toast.makeText(addExpenditurePrompt.this, "Please select a category", Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     float num = Float.parseFloat(amount.getText().toString());
                     Expenditure newExpen = new Expenditure(num,categories.getSelectedItem().toString());
                     BMSApplication.expSystem.addExpenditure(newExpen);

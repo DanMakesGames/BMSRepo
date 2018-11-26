@@ -109,8 +109,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
 
-
-
         // determine which drop down was being used.
         switch(parent.getId()){
             case R.id.category_dropdown:
