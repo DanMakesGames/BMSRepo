@@ -379,19 +379,55 @@ public class Database extends SQLiteOpenHelper {
         return true;  
     }
 
-    
-    //TODO
-    public boolean createSupervisor() {return true;}
+    /**
+    * Create a supervisor-supervisee relationship in the database
+    * @param supervisorId User ID of the supervisor
+    * @param superviseeId User ID of the supervisee
+    * @return true if successful, false if not
+    */
+    public boolean createSupervisor(int supervisorId, int superviseeId) {
+        SQLiteDatabase db = this.getWritableDatabase();
 
-    //TODO
-    public boolean getSupervisees() {return true;}
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SUP_COL_2, supervisorId);
+        contentValues.put(SUP_COL_3, superviseeId);
 
-    //TODO
-    public boolean getSupervisors() {return true;}
+        long result = db.insert(SUP_TABLE_NAME, null, contentValues);
+        if(result == -1)
+            return false;
+        return true; 
+    }
+
+    /**
+    * Get user IDs of all the accounts supervised by a supervisor account
+    * @param supervisorID User ID of the supervisor account
+    * @return true if successful, false if not
+    */
+    public boolean getSupervisees(int supervisorId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = new StringBuilder().append(String.format(
+                "SELECT SuperviseeId FROM %s WHERE SupervisorId = \"%s\"",
+                SUP_TABLE_NAME, supervisorId)).toString();
+        Cursor res = db.rawQuery(query, null);
+        return res;
+    }
+
+    /**
+    * Get user IDs of all the accounts supervising a supervisee account
+    * @param supervisorID User ID of the supervisee account
+    * @return true if successful, false if not
+    */
+    public boolean getSupervisors(int superviseeId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = new StringBuilder().append(String.format(
+                "SELECT SupervisorId FROM %s WHERE SuperviseeId = \"%s\"",
+                SUP_TABLE_NAME, superviseeId)).toString();
+        Cursor res = db.rawQuery(query, null);
+        return res;
+    }
 
     //TODO
     public boolean deleteSupervisor() {return true;}
-
 
 
     /**
