@@ -202,8 +202,8 @@ public class Database extends SQLiteOpenHelper {
 
     /**
      * Creates an expenditure
-     * @param userId User Id of user who the expenditure belongs
-     * @param categoryId Category Id to which the expenditure belongs
+     * @param userId User ID of user who the expenditure belongs
+     * @param categoryId Category ID to which the expenditure belongs
      * @param amount Amount of expenditure in dollars
      * @param date Date of when expenditure was made
      * @param isRecurring Whether this expenditure is to occur again in the future
@@ -227,7 +227,7 @@ public class Database extends SQLiteOpenHelper {
 
     /**
     * Get expenditures corresponding to a specific user
-    * @param username of user
+    * @param username  Username for user's account
     * @return Cursor object, which can be used to acess data
     */
     public boolean getExpenditures(username) { 
@@ -245,8 +245,26 @@ public class Database extends SQLiteOpenHelper {
     //TODO
     public boolean deleteExpenditure() { return true; }
 
-    //TODO
-    public boolean createExpCategory() { return true; }
+    /**
+    * Create a category for a specific user
+    * @param userId User ID
+    * @param name Category name
+    * @param budget User's budget for the category
+    * @return true if successful, false if not
+    */
+    public boolean createExpCategory(int userId, String name, float budget) { 
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CAT_COL_2, userId);
+        contentValues.put(CAT_COL_3, name);
+        contentValues.put(CAT_COL_4, budget);
+
+        long result = db.insert(CAT_TABLE_NAME, null, contentValues);
+        if(result == -1)
+            return false;
+        return true;          
+    }
 
     //TODO
     public boolean getExpCategory() { return true; }
