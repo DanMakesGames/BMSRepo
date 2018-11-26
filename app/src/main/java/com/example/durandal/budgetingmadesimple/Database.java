@@ -152,17 +152,16 @@ public class Database extends SQLiteOpenHelper {
      * Creates a new user account on the database
      * @param username Username to be used for new user account
      * @param password Password to be used for new user account
-     * @param email User's email
-     * @param secretQuestion User's secret question
-     * @param secretQuestionAnswer Answer to the user's secret question
-     * @param budget User's budget.
-     * @param savingsGoal User's savings goal
-     * @param bankBalance User's current bank balance
+     * @param email Email to be used for new user account
+     * @param secretQuestion Secret question to be used for new user account
+     * @param secretQuestionAnswer Secret question answer to be used for new user account
+     * @param budget Budget to used for new user account
+     * @param savingsGoal Savings goal to be used for new user account
+     * @param bankBalance Bank balance to be used for new user account
      * @return true if successful, false if not
      */
     public boolean createUser(String username, String password, String email, String secretQuestion,
-                              String secretQuestionAnswer, float budget, float savingsGoal,
-                              float bankBalance) {
+                              String secretQuestionAnswer, float budget, float savingsGoal, float bankBalance) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -194,19 +193,49 @@ public class Database extends SQLiteOpenHelper {
         return res;
     }
 
-    //TODO
-    public boolean updateUser() { return true; }
+    /**
+     * Update user account data in the database
+     * @param userId Unique user ID for the user account
+     * @param username Username to be used for the user account
+     * @param password Password to be used for the user account
+     * @param email Email to be used for the user account
+     * @param secretQuestion Secret question to be used for the user account
+     * @param secretQuestionAnswer Secret question answer to be used for the user account
+     * @param budget Budget to used for the user account
+     * @param savingsGoal Savings goal to be used for the user account
+     * @return true if successful, false if not    
+    */
+    public boolean updateUser(int userId, String username, String password, String email, String secretQuestion,
+                              String secretQuestionAnswer, float budget, float savingsGoal, float bankBalance) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(USER_COL_1, id);
+        contentValues.put(USER_COL_2, username);
+        contentValues.put(USER_COL_3, password);
+        contentValues.put(USER_COL_4, email);
+        contentValues.put(USER_COL_5, secretQuestion);
+        contentValues.put(USER_COL_6, secretQuestionAnswer);
+        contentValues.put(USER_COL_7, budget);
+        contentValues.put(USER_COL_8, savingsGoal);
+        contentValues.put(USER_COL_9, bankBalance);
+
+        rowsChanged = db.update(USER_TABLE_NAME, contentValues, "UserId = ?", new String[] {userId});
+        if (rowsChanged == 0)
+            return false;
+        return true
+    }
 
     //TODO
     public boolean deleteUser() { return true; }
 
     /**
      * Creates an expenditure
-     * @param userId User ID of user who the expenditure belongs
+     * @param userId User ID of user to whom the expenditure belongs
      * @param categoryId Category ID to which the expenditure belongs
-     * @param amount Amount of expenditure in dollars
+     * @param amount Amount of the expenditure in dollars
      * @param date Date of when expenditure was made
-     * @param isRecurring Whether this expenditure is to occur again in the future
+     * @param isRecurring Whether or not this expenditure is to occur again in the future
      * @return true if successful, false if not
      */
     public boolean createExpenditure(int userId, int categoryId, float amount, String date, boolean isRecurring) { 
@@ -239,15 +268,40 @@ public class Database extends SQLiteOpenHelper {
         return res;
     }
 
-    //TODO
-    public boolean updateExpenditure() { return true; }
+    /**
+     * Update an expenditure in the database
+     * @param expenditureId Unique ID of the expenditure
+     * @param userId User ID of user to whom the expenditure belongs
+     * @param categoryId Category ID to which the expenditure belongs
+     * @param amount Amount of the expenditure in dollars
+     * @param date Date of when expenditure was made
+     * @param isRecurring Whether or not this expenditure is to occur again in the future
+     * @return true if successful, false if not
+    */
+    public boolean updateExpenditure(int expenditureId, int userId, int categoryId, float amount, String date, 
+                                     boolean isRecurring) { 
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(EXP_COL_1, expenditureId)
+        contentValues.put(EXP_COL_2, userId);
+        contentValues.put(EXP_COL_3, categoryId);
+        contentValues.put(EXP_COL_4, amount);
+        contentValues.put(EXP_COL_5, date);
+        contentValues.put(EXP_COL_6, isRecurring);
+        
+        rowsChanged = db.update(EXP_TABLE_NAME, contentValues, "expenditureId = ?", new String[] {expenditureId});
+        if (rowsChanged == 0)
+            return false;
+        return true
+    }
 
     //TODO
     public boolean deleteExpenditure() { return true; }
 
     /**
     * Create a category for a specific user
-    * @param userId User ID
+    * @param userId User ID to whom category belongs
     * @param name Category name
     * @param budget User's budget for the category
     * @return true if successful, false if not
@@ -266,8 +320,28 @@ public class Database extends SQLiteOpenHelper {
         return true;          
     }
 
-    //TODO
-    public boolean updateExpCategory() { return true; }
+    /**
+    * Update a category for a specific user in the database   
+    * @param categoryId Unique ID of the category
+    * @param userId User ID to whom category belongs
+    * @param name Category name
+    * @param budget User's budget for the category
+    * @return true if successful, false if not
+    */
+    public boolean updateExpCategory(int categoryId, int userId, String name, float budget) { 
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CAT_COL_1, categoryId)
+        contentValues.put(CAT_COL_2, userId);
+        contentValues.put(CAT_COL_3, name);
+        contentValues.put(CAT_COL_4, budget);
+
+        rowsChanged = db.update(CAT_TABLE_NAME, contentValues, "categoryId = ?", new String[] {categoryId});
+        if (rowsChanged == 0)
+            return false;
+        return true
+    }
 
     //TODO
     public boolean deleteExpCategory() { return true; }
