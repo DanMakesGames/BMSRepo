@@ -170,7 +170,7 @@ public final class ExpenditureSystem {
 
         Expenditure newExpen = new Expenditure(inValue, inCategory, inReoccurring, inRate);
 
-        if (BMSApplication.database.createExpenditure()) {
+        if (BMSApplication.database.createExpenditure(0, 0, 0, null, false)) {
             expenditures.addFirst(newExpen);
             return true;
         }
@@ -189,7 +189,7 @@ public final class ExpenditureSystem {
     public boolean addExpDEBUG(float inValue, String inCategory, ZonedDateTime time) {
 
         Expenditure newExpen = new Expenditure(inValue, inCategory, time);
-        if (BMSApplication.database.createExpenditure()) {
+        if (BMSApplication.database.createExpenditure(0, 0, 0, null, false)) {
             expenditures.addFirst(newExpen);
             return true;
         }
