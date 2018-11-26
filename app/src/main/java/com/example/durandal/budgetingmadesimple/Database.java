@@ -267,9 +267,6 @@ public class Database extends SQLiteOpenHelper {
     }
 
     //TODO
-    public boolean getExpCategory() { return true; }
-
-    //TODO
     public boolean updateExpCategory() { return true; }
 
     //TODO
