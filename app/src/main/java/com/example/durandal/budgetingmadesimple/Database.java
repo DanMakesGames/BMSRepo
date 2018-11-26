@@ -63,10 +63,12 @@ public class Database extends SQLiteOpenHelper {
 
     // Define supervisor table
     public static final String SUP_TABLE_NAME = "Supervisor";
-    public static final String SUP_COL_1 = "SupervisorId";
-    public static final String SUP_COL_1_TYPE = "INTEGER";
-    public static final String SUP_COL_2 = "SupervisoreeId";
+    public static final String SUP_COL_1 = "RelationshipId"
+    public static final String CAT_COL_1_TYPE = "INTEGER PRIMARY KEY AUTOINCREMENT"; 
+    public static final String SUP_COL_2 = "SupervisorId";
     public static final String SUP_COL_2_TYPE = "INTEGER";
+    public static final String SUP_COL_3 = "SupervisoreeId";
+    public static final String SUP_COL_3_TYPE = "INTEGER";
 
     /**
      * Database constructor
@@ -128,6 +130,7 @@ public class Database extends SQLiteOpenHelper {
             .append(String.format("CREATE TABLE %s (", SUP_TABLE_NAME))
             .append(String.format("%s %s", SUP_COL_1, SUP_COL_1_TYPE))
             .append(String.format(", %s %s", SUP_COL_2, SUP_COL_2_TYPE))
+            .append(String.format(", %s %s", SUP_COL_3, SUP_COL_3_TYPE))
             .append(")")
             .toString()
         );
@@ -375,6 +378,21 @@ public class Database extends SQLiteOpenHelper {
             return false
         return true;  
     }
+
+    
+    //TODO
+    public boolean createSupervisor() {return true;}
+
+    //TODO
+    public boolean getSupervisees() {return true;}
+
+    //TODO
+    public boolean getSupervisors() {return true;}
+
+    //TODO
+    public boolean deleteSupervisor() {return true;}
+
+
 
     /**
      * TODO
