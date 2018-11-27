@@ -446,13 +446,20 @@ public class Database extends SQLiteOpenHelper {
     }
 
     /**
-     * TODO
-     * Determine if the provided password for the provided username
+     * Determine if the provided password for the provided username is valid
      * @param username login name.
      * @param password login password.
-     * @return true if login parameters are valid. false if login is not successful for any reason
+     * @return true if login parameters are valid, else false
      */
     public boolean login(String username, String password) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = new StringBuilder().append(String.format(
+                "SELECT * FROM %s WHERE Username = \"%s\" AND Password = \"%s\"",
+                USER_TABLE_NAME, username, password)).toString();
+        Cursor res = db.rawQuery(query, null);
+        if (res.getCount() == 0)
+            // No entries returned, which have both the provided password and username
+            return false;
         return true;
     }
 }
