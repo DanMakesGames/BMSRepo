@@ -204,7 +204,8 @@ public final class ExpenditureSystem {
      * @return true is successful, false if not.
      */
     public boolean deleteExpenditure(Expenditure inExpenditure) {
-        if (!BMSApplication.database.deleteExpenditure()) {
+        // TODO: Dummy value of 1 inserted to deleteExpenditure. Unique expenditure ID required
+        if (!BMSApplication.database.deleteExpenditure(1)) {
             return false;
         }
         for (int i = 0; i < expenditures.size(); i++) {

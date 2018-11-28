@@ -18,5 +18,9 @@ git branch -d newBranchName
 #### General Information
 The application uses a local SQLite database to store data.
 If we were to ever release our application to end users, we would refactor our code to ensure that the database resided on a remote server.
+#### Schema
+[Database schema artifact](https://docs.google.com/document/d/1TInMFT6fOzBeCUJQUn9g_RPayWeXGZGJcRjULuhF81c/edit?usp=sharing)
 #### For Developers
 Contained in `MainActivity.java::showcaseDatabase()` you will find example code of how to interact with the SQL database.
+Note that when Database Class methods return data, they do so via a Cursor object. 
+These Curosor objects should be unpacked when creating or updating higher level objects (e.g., account, expenditure, etc.).
