@@ -271,7 +271,7 @@ public class Database extends SQLiteOpenHelper {
     /**
     * Get expenditures corresponding to a specific user
     * @param username  Username for user's account
-    * @return Cursor object, which can be used to acess data
+    * @return Cursor object, which can be used to access data
     */
     public Cursor getExpenditures(String username) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -310,6 +310,7 @@ public class Database extends SQLiteOpenHelper {
             return false;
         return true;
     }
+
 
     /**
     * Delete expenditure from the database

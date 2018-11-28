@@ -60,4 +60,8 @@ public class Category {
         budget = b;
         bIsBudgeted = inBBudget;
     }
+
+    @Override public String toString() {
+        return name;
+    }
 }
