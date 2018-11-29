@@ -45,9 +45,9 @@ public class BMSApplication extends Application {
         BMSApplication.expSystem.addExpDEBUG(50, "food", ZonedDateTime.now().minusDays(5));
         BMSApplication.expSystem.addExpDEBUG(60, "food", ZonedDateTime.now().minusDays(6));
         BMSApplication.expSystem.addExpDEBUG(70, "food", ZonedDateTime.now().minusDays(7));
-        BMSApplication.expSystem.addExpDEBUG(80, "food", ZonedDateTime.now().minusDays(8));
-        BMSApplication.expSystem.addExpDEBUG(1000, "video games", ZonedDateTime.now().minusDays(100));
-        BMSApplication.expSystem.addExpDEBUG(80085, "food", ZonedDateTime.now().minusDays(100));
+        //BMSApplication.expSystem.addExpDEBUG(80, "food", ZonedDateTime.now().minusDays(8));
+        //BMSApplication.expSystem.addExpDEBUG(1000, "video games", ZonedDateTime.now().minusDays(100));
+        //BMSApplication.expSystem.addExpDEBUG(80085, "food", ZonedDateTime.now().minusDays(100));
 
         BMSApplication.expSystem.addCategory(false,0,"food");
         BMSApplication.expSystem.addCategory(false,0,"video games");
