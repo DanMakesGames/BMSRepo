@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item android:id="@+id/nav_item_one"
+
+            android:title="Expenditures" />
+        <item android:id="@+id/nav_item_two"
+
+            android:title="Categories" />
+        <item android:id="@+id/nav_item_three"
+
+            android:title="Statistics" />
+    </group>
+
+    <group android:id="@+id/group_menu">
+        <item android:id="@+id/nav_item_four"
+            android:icon="@drawable/settings"
+            android:title="Settings" />
+    </group>
+
+</menu>
