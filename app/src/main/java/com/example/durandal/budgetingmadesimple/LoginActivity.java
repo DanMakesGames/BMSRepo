@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 
 /**
@@ -21,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private EditText editPassword;
     private EditText editUsername;
+    private TextView textErrorMessage;
 
 
     @Override
@@ -31,6 +33,9 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = (Button) findViewById(R.id.login_button);
         editPassword = (EditText) findViewById(R.id.edit_password);
         editUsername = (EditText) findViewById(R.id.edit_username);
+        textErrorMessage = (TextView) findViewById(R.id.text_error_message);
+
+        textErrorMessage.setAlpha(0);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +85,8 @@ public class LoginActivity extends AppCompatActivity {
                     loginButton.setEnabled(true);
                     editUsername.setText("");
                     editPassword.setText("");
+
+                    textErrorMessage.setAlpha(1);
                 }
 
             }

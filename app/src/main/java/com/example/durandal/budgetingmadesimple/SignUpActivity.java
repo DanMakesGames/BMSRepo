@@ -78,18 +78,18 @@ public class SignUpActivity extends AppCompatActivity {
                 // error flag
                 boolean error = false;
 
-                if (username.length() < 0 || !Pattern.matches("[a-zA-Z]+", username)) {
+                if (username.length() == 0 || !Pattern.matches("[a-zA-Z]+", username)) {
                     editUsername.setError("Invalid username");
                     error = true;
                 }
 
-                if (password.length() < 0) {
+                if (password.length() == 0) {
                     editPassword.setError("Should input password");
                     error = true;
                 }
 
-                if (confirmPass.length() < 0) {
-                    editPassword.setError("Should input password");
+                if (confirmPass.length() == 0) {
+                    editConfirmPassword.setError("Should input password again");
                     error = true;
                 }
 
@@ -99,18 +99,18 @@ public class SignUpActivity extends AppCompatActivity {
                     error = true;
                 }
 
-                if (email.length() < 0) {
-                    editPassword.setError("Should input email");
+                if (email.length() == 0) {
+                    editEmail.setError("Should input email");
                     error = true;
                 }
 
-                if (editSecretQuestion.length() < 0) {
-                    editPassword.setError("Should input question");
+                if (secretQuestion.length() == 0) {
+                    editSecretQuestion.setError("Should input question");
                     error = true;
                 }
 
-                if (editSecretAnswer.length() < 0) {
-                    editPassword.setError("Should input answer");
+                if (secretAnswer.length() == 0) {
+                    editSecretAnswer.setError("Should input answer");
                     error = true;
                 }
 
