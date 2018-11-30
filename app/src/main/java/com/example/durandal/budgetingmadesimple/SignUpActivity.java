@@ -160,6 +160,11 @@ public class SignUpActivity extends AppCompatActivity {
                                 userCursor.getString(2));
                     }
                 }
+
+                // go to MainPage.
+                // Transition to mainPage.
+                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         }); // end signUpButton onClick
     }

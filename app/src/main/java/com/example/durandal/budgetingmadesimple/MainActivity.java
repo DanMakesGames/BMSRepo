@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
 
         // Example code intended for developers, showing how to interact with the SQL database
-        showcaseDatabase();
+        //showcaseDatabase();
 
 
         // Set up list of expenditures.
