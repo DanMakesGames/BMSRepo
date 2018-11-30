@@ -81,9 +81,9 @@ public class Expenditure {
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    Expenditure(float inValue, String inCategory, ZonedDateTime time) {
+    Expenditure(float inValue, String inCategory, Instant time) {
 
-        timeStamp = time.toInstant();
+        timeStamp = time;
         value = inValue;
         category = inCategory;
         bIsReoccurring = false;

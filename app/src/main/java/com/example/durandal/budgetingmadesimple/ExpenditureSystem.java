@@ -1,6 +1,7 @@
 package com.example.durandal.budgetingmadesimple;
 
 import android.annotation.TargetApi;
+import android.database.Cursor;
 import android.os.Build;
 import android.util.Log;
 
@@ -33,15 +34,60 @@ public final class ExpenditureSystem {
 
 
     /**
-     * This function should fill the expenditure data structure from the online database. Called
-     * durring startup.
-     * Not really sure how it should be implemented.
+     * This function should fill the expenditure data structure and categories data structure from
+     * the online database. Called during startup.
      *
      * Returns true if successful, false if not.
-     *
-     * unimplemented.
      */
-    public boolean populateFromDataBase() {
+    public boolean populateFromDatabase(String username) {
+
+        // Populate categories first.
+        // Get categories, populate categories list, populate local hasMap
+        Cursor catCursor = BMSApplication.database.getCategories(username);
+
+        // Hash map used for linking IDs to category names. Used in expenditure parsing process.
+        HashMap<Integer, String> IdToName = new HashMap<Integer, String>();
+
+        // loop parsing categories and adding them to Category hashmap.
+        while(catCursor.moveToNext()) {
+
+            // Extract category parameters from database entry.
+            int catId = Integer.parseInt(catCursor.getString(0));
+            float budget = Float.parseFloat(catCursor.getString(3));
+            String name = catCursor.getString(2);
+
+            // emplace new category into app Category storage
+            categories.put(name, new Category(budget != 0,budget,name));
+            IdToName.put(catId,name);
+        }
+
+        // Now lets populate the Expenditures.
+        Cursor expCursor = BMSApplication.database.getExpenditures(username);
+
+        // no expenditures in database to parse.
+        if(expCursor.getCount() == 0)
+            return false;
+
+        // loop through, turning exp database items into Expenditure objects, and adding them to
+        // the linked list.
+        while(expCursor.moveToNext()) {
+
+
+            // extract expenditure parameters
+            float value = Float.parseFloat(expCursor.getString(3));
+            Instant timestamp = Instant.ofEpochSecond(Long.parseLong(expCursor.getString(4)));
+            String category = IdToName.get(expCursor.getString(2));
+
+            // create new expenditure object.
+            Expenditure newExp = new Expenditure(
+                        value,      //value
+                        category,   //category
+                        timestamp); //timestamp
+
+            // add to expenditure list.
+            expenditures.addFirst(newExp);
+        }
+
         return true;
     }
 
@@ -186,7 +232,7 @@ public final class ExpenditureSystem {
 
      * @return
      */
-    public boolean addExpDEBUG(float inValue, String inCategory, ZonedDateTime time) {
+    public boolean addExpDEBUG(float inValue, String inCategory, Instant time) {
 
         Expenditure newExpen = new Expenditure(inValue, inCategory, time);
         if (BMSApplication.database.createExpenditure(0, 0, 0, null, false)) {
@@ -204,7 +250,8 @@ public final class ExpenditureSystem {
      * @return true is successful, false if not.
      */
     public boolean deleteExpenditure(Expenditure inExpenditure) {
-        if (!BMSApplication.database.deleteExpenditure()) {
+        // TODO: Dummy value of 1 inserted to deleteExpenditure. Unique expenditure ID required
+        if (!BMSApplication.database.deleteExpenditure(1)) {
             return false;
         }
         for (int i = 0; i < expenditures.size(); i++) {

@@ -12,61 +12,63 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class Database extends SQLiteOpenHelper {
 
     // Define database
-    public static final String DATABASE_NAME = "bms.db";
+    private static final String DATABASE_NAME = "bms.db";
 
     // Define user table
-    public static final String USER_TABLE_NAME = "User";
-    public static final String USER_COL_1 = "UserId";
-    public static final String USER_COL_1_TYPE = "INTEGER PRIMARY KEY AUTOINCREMENT";
-    public static final String USER_COL_2 = "Username";
-    public static final String USER_COL_2_TYPE = "TEXT";
-    public static final String USER_COL_3 = "Password";
-    public static final String USER_COL_3_TYPE = "TEXT";
-    public static final String USER_COL_4 = "Email";
-    public static final String USER_COL_4_TYPE = "TEXT";
-    public static final String USER_COL_5 = "SecretQuestion";
-    public static final String USER_COL_5_TYPE = "TEXT";
-    public static final String USER_COL_6 = "SecretQuestionAnswer";
-    public static final String USER_COL_6_TYPE = "TEXT";
-    public static final String USER_COL_7 = "Budget";
-    public static final String USER_COL_7_TYPE = "FLOAT";
-    public static final String USER_COL_8 = "SavingsGoal";
-    public static final String USER_COL_8_TYPE = "FLOAT";
-    public static final String USER_COL_9 = "BankBalance";
-    public static final String USER_COL_9_TYPE = "FLOAT";
+    private static final String USER_TABLE_NAME = "User";
+    private static final String USER_COL_1 = "UserId";
+    private static final String USER_COL_1_TYPE = "INTEGER PRIMARY KEY AUTOINCREMENT";
+    private static final String USER_COL_2 = "Username";
+    private static final String USER_COL_2_TYPE = "TEXT";
+    private static final String USER_COL_3 = "Password";
+    private static final String USER_COL_3_TYPE = "TEXT";
+    private static final String USER_COL_4 = "Email";
+    private static final String USER_COL_4_TYPE = "TEXT";
+    private static final String USER_COL_5 = "SecretQuestion";
+    private static final String USER_COL_5_TYPE = "TEXT";
+    private static final String USER_COL_6 = "SecretQuestionAnswer";
+    private static final String USER_COL_6_TYPE = "TEXT";
+    private static final String USER_COL_7 = "Budget";
+    private static final String USER_COL_7_TYPE = "FLOAT";
+    private static final String USER_COL_8 = "SavingsGoal";
+    private static final String USER_COL_8_TYPE = "FLOAT";
+    private static final String USER_COL_9 = "BankBalance";
+    private static final String USER_COL_9_TYPE = "FLOAT";
 
     // Define expenditure table
-    public static final String EXP_TABLE_NAME = "Expenditure";
-    public static final String EXP_COL_1 = "ExpenditureId";
-    public static final String EXP_COL_1_TYPE = "INTEGER PRIMARY KEY AUTOINCREMENT";
-    public static final String EXP_COL_2 = "UserId";
-    public static final String EXP_COL_2_TYPE = "INTEGER";
-    public static final String EXP_COL_3 = "CategoryId";
-    public static final String EXP_COL_3_TYPE = "INTEGER";
-    public static final String EXP_COL_4 = "Amount";
-    public static final String EXP_COL_4_TYPE = "FLOAT";
-    public static final String EXP_COL_5 = "Date";
-    public static final String EXP_COL_5_TYPE = "STRING";
-    public static final String EXP_COL_6 = "IsRecurring";
-    public static final String EXP_COL_6_TYPE = "BOOLEAN";
+    private static final String EXP_TABLE_NAME = "Expenditure";
+    private static final String EXP_COL_1 = "ExpenditureId";
+    private static final String EXP_COL_1_TYPE = "INTEGER PRIMARY KEY AUTOINCREMENT";
+    private static final String EXP_COL_2 = "UserId";
+    private static final String EXP_COL_2_TYPE = "INTEGER";
+    private static final String EXP_COL_3 = "CategoryId";
+    private static final String EXP_COL_3_TYPE = "INTEGER";
+    private static final String EXP_COL_4 = "Amount";
+    private static final String EXP_COL_4_TYPE = "FLOAT";
+    private static final String EXP_COL_5 = "Date";
+    private static final String EXP_COL_5_TYPE = "STRING";
+    private static final String EXP_COL_6 = "IsRecurring";
+    private static final String EXP_COL_6_TYPE = "BOOLEAN";
 
     // Define category table
-    public static final String CAT_TABLE_NAME = "Category";
-    public static final String CAT_COL_1 = "CategoryId";
-    public static final String CAT_COL_1_TYPE = "INTEGER PRIMARY KEY AUTOINCREMENT";
-    public static final String CAT_COL_2 = "UserId";
-    public static final String CAT_COL_2_TYPE = "INTEGER";
-    public static final String CAT_COL_3 = "Name";
-    public static final String CAT_COL_3_TYPE = "STRING";
-    public static final String CAT_COL_4 = "Budgt";
-    public static final String CAT_COL_4_TYPE = "FLOAT";
+    private static final String CAT_TABLE_NAME = "Category";
+    private static final String CAT_COL_1 = "CategoryId";
+    private static final String CAT_COL_1_TYPE = "INTEGER PRIMARY KEY AUTOINCREMENT";
+    private static final String CAT_COL_2 = "UserId";
+    private static final String CAT_COL_2_TYPE = "INTEGER";
+    private static final String CAT_COL_3 = "Name";
+    private static final String CAT_COL_3_TYPE = "STRING";
+    private static final String CAT_COL_4 = "Budgt";
+    private static final String CAT_COL_4_TYPE = "FLOAT";
 
     // Define supervisor table
-    public static final String SUP_TABLE_NAME = "Supervisor";
-    public static final String SUP_COL_1 = "SupervisorId";
-    public static final String SUP_COL_1_TYPE = "INTEGER";
-    public static final String SUP_COL_2 = "SupervisoreeId";
-    public static final String SUP_COL_2_TYPE = "INTEGER";
+    private static final String SUP_TABLE_NAME = "Supervisor";
+    private static final String SUP_COL_1 = "RelationshipId";
+    private static final String SUP_COL_1_TYPE = "INTEGER PRIMARY KEY AUTOINCREMENT";
+    private static final String SUP_COL_2 = "SupervisorId";
+    private static final String SUP_COL_2_TYPE = "INTEGER";
+    private static final String SUP_COL_3 = "SupervisoreeId";
+    private static final String SUP_COL_3_TYPE = "INTEGER";
 
     /**
      * Database constructor
@@ -128,6 +130,7 @@ public class Database extends SQLiteOpenHelper {
             .append(String.format("CREATE TABLE %s (", SUP_TABLE_NAME))
             .append(String.format("%s %s", SUP_COL_1, SUP_COL_1_TYPE))
             .append(String.format(", %s %s", SUP_COL_2, SUP_COL_2_TYPE))
+            .append(String.format(", %s %s", SUP_COL_3, SUP_COL_3_TYPE))
             .append(")")
             .toString()
         );
@@ -152,17 +155,16 @@ public class Database extends SQLiteOpenHelper {
      * Creates a new user account on the database
      * @param username Username to be used for new user account
      * @param password Password to be used for new user account
-     * @param email User's email
-     * @param secretQuestion User's secret question
-     * @param secretQuestionAnswer Answer to the user's secret question
-     * @param budget User's budget.
-     * @param savingsGoal User's savings goal
-     * @param bankBalance User's current bank balance
+     * @param email Email to be used for new user account
+     * @param secretQuestion Secret question to be used for new user account
+     * @param secretQuestionAnswer Secret question answer to be used for new user account
+     * @param budget Budget to used for new user account
+     * @param savingsGoal Savings goal to be used for new user account
+     * @param bankBalance Bank balance to be used for new user account
      * @return true if successful, false if not
      */
     public boolean createUser(String username, String password, String email, String secretQuestion,
-                              String secretQuestionAnswer, float budget, float savingsGoal,
-                              float bankBalance) {
+                              String secretQuestionAnswer, float budget, float savingsGoal, float bankBalance) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -190,26 +192,67 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = new StringBuilder().append(String.format(
                 "SELECT * FROM %s WHERE Username = \"%s\"", USER_TABLE_NAME, username)).toString();
-        Cursor res = db.rawQuery(query, null);
-        return res;
+        return db.rawQuery(query, null);
     }
 
-    //TODO
-    public boolean updateUser() { return true; }
+    /**
+     * Update user account data in the database
+     * @param userId Unique user ID for the user account
+     * @param username Username to be used for the user account
+     * @param password Password to be used for the user account
+     * @param email Email to be used for the user account
+     * @param secretQuestion Secret question to be used for the user account
+     * @param secretQuestionAnswer Secret question answer to be used for the user account
+     * @param budget Budget to used for the user account
+     * @param savingsGoal Savings goal to be used for the user account
+     * @return true if successful, false if not    
+    */
+    public boolean updateUser(int userId, String username, String password, String email, String secretQuestion,
+                              String secretQuestionAnswer, float budget, float savingsGoal, float bankBalance) {
+        SQLiteDatabase db = this.getWritableDatabase();
 
-    //TODO
-    public boolean deleteUser() { return true; }
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(USER_COL_1, userId);
+        contentValues.put(USER_COL_2, username);
+        contentValues.put(USER_COL_3, password);
+        contentValues.put(USER_COL_4, email);
+        contentValues.put(USER_COL_5, secretQuestion);
+        contentValues.put(USER_COL_6, secretQuestionAnswer);
+        contentValues.put(USER_COL_7, budget);
+        contentValues.put(USER_COL_8, savingsGoal);
+        contentValues.put(USER_COL_9, bankBalance);
+
+        int rowsChanged = db.update(USER_TABLE_NAME, contentValues, "UserId = ?",
+                new String[] {Integer.toString(userId)});
+        if (rowsChanged == 0)
+            return false;
+        return true;
+    }
+
+    /**
+    * Delete user from the database
+    * @param userId ID of the user to be deleted
+    * @return true if successful, false if not
+    */
+    public boolean deleteUser(int userId) { 
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsDeleted = db.delete(USER_TABLE_NAME, "UserId = ?",
+                new String[] {Integer.toString(userId)});
+        if (rowsDeleted == 0)
+            return false;
+        return true; 
+    }
 
     /**
      * Creates an expenditure
-     * @param userId User ID of user who the expenditure belongs
+     * @param userId User ID of user to whom the expenditure belongs
      * @param categoryId Category ID to which the expenditure belongs
-     * @param amount Amount of expenditure in dollars
-     * @param date Date of when expenditure was made
-     * @param isRecurring Whether this expenditure is to occur again in the future
+     * @param amount Amount of the expenditure in dollars
+     * @param date Date of when expenditure was made. Instant.getEpochSeconds()
+     * @param isRecurring Whether or not this expenditure is to occur again in the future
      * @return true if successful, false if not
      */
-    public boolean createExpenditure(int userId, int categoryId, float amount, String date, boolean isRecurring) { 
+    public boolean createExpenditure(int userId, int categoryId, float amount, String date, boolean isRecurring) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -239,18 +282,53 @@ public class Database extends SQLiteOpenHelper {
         return res;
     }
 
-    //TODO
-    public boolean updateExpenditure() { return true; }
+    /**
+     * Update an expenditure in the database
+     * @param expenditureId Unique ID of the expenditure
+     * @param userId User ID of user to whom the expenditure belongs
+     * @param categoryId Category ID to which the expenditure belongs
+     * @param amount Amount of the expenditure in dollars
+     * @param date Date of when expenditure was made
+     * @param isRecurring Whether or not this expenditure is to occur again in the future
+     * @return true if successful, false if not
+    */
+    public boolean updateExpenditure(int expenditureId, int userId, int categoryId, float amount, String date,
+                                     boolean isRecurring) { 
+        SQLiteDatabase db = this.getWritableDatabase();
 
-    //TODO
-    public boolean deleteExpenditure() {
-
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(EXP_COL_1, expenditureId);
+        contentValues.put(EXP_COL_2, userId);
+        contentValues.put(EXP_COL_3, categoryId);
+        contentValues.put(EXP_COL_4, amount);
+        contentValues.put(EXP_COL_5, date);
+        contentValues.put(EXP_COL_6, isRecurring);
+        
+        int rowsChanged = db.update(EXP_TABLE_NAME, contentValues, "expenditureId = ?",
+                new String[] {Integer.toString(expenditureId)});
+        if (rowsChanged == 0)
+            return false;
         return true;
+    }
+
+
+    /**
+    * Delete expenditure from the database
+    * @param expenditureId ID of the expenditure to be deleted
+    * @return true if successful, false if not
+    */
+    public boolean deleteExpenditure(int expenditureId) { 
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsDeleted = db.delete(EXP_TABLE_NAME, "ExpenditureId = ?",
+                new String[] {Integer.toString(expenditureId)});
+        if (rowsDeleted == 0)
+            return false;
+        return true; 
     }
 
     /**
     * Create a category for a specific user
-    * @param userId User ID
+    * @param userId User ID to whom category belongs
     * @param name Category name
     * @param budget User's budget for the category
     * @return true if successful, false if not
@@ -269,21 +347,134 @@ public class Database extends SQLiteOpenHelper {
         return true;          
     }
 
-    //TODO
-    public boolean updateExpCategory() { return true; }
-
-    //TODO
-    public boolean deleteExpCategory() { return true; }
+    /**
+    * Get categories corresponding to a specific user
+    * @param username  Username for user's account
+    * @return Cursor object, which can be used to access data
+    */
+    public Cursor getCategories(String username) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = new StringBuilder().append(String.format(
+                "SELECT * FROM %s AS cat JOIN %s AS u ON cat.UserId = u.UserId WHERE u.Username = \"%s\"",
+                CAT_TABLE_NAME, USER_TABLE_NAME, username)).toString();
+        Cursor res = db.rawQuery(query, null);
+        return res;        
+    }
 
     /**
-     * TODO
-     * Determine if the provided password for the provided username
-     * @param username login name.
-     * @param password login password.
-     * @return true if login parameters are valid. false if login is not successful for any reason
-     */
-    public boolean login(String username, String password) {
+    * Update a category for a specific user in the database   
+    * @param categoryId Unique ID of the category
+    * @param userId User ID to whom category belongs
+    * @param name Category name
+    * @param budget User's budget for the category
+    * @return true if successful, false if not
+    */
+    public boolean updateExpCategory(int categoryId, int userId, String name, float budget) { 
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CAT_COL_1, categoryId);
+        contentValues.put(CAT_COL_2, userId);
+        contentValues.put(CAT_COL_3, name);
+        contentValues.put(CAT_COL_4, budget);
+
+        int rowsChanged = db.update(CAT_TABLE_NAME, contentValues, "categoryId = ?",
+                new String[] {Integer.toString(categoryId)});
+        if (rowsChanged == 0)
+            return false;
         return true;
     }
 
+    /**
+    * Delete a user's category from the database
+    * @param categoryId ID of the category to be deleted
+    * @return true if successful, false if not
+    */
+    public boolean deleteExpCategory(int categoryId) { 
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsDeleted = db.delete(CAT_TABLE_NAME, "CategoryId = ?",
+                new String[] {Integer.toString(categoryId)});
+        if (rowsDeleted == 0)
+            return false;
+        return true;  
+    }
+
+    /**
+    * Create a supervisor-supervisee relationship in the database
+    * @param supervisorId User ID of the supervisor
+    * @param superviseeId User ID of the supervisee
+    * @return true if successful, false if not
+    */
+    public boolean createSupervisor(int supervisorId, int superviseeId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SUP_COL_2, supervisorId);
+        contentValues.put(SUP_COL_3, superviseeId);
+
+        long result = db.insert(SUP_TABLE_NAME, null, contentValues);
+        if(result == -1)
+            return false;
+        return true; 
+    }
+
+    /**
+    * Get user IDs of all the accounts supervised by a supervisor account
+    * @param supervisorId User ID of the supervisor account
+    * @return Cursor object, which can be used access data
+    */
+    public Cursor getSupervisees(int supervisorId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = new StringBuilder().append(String.format(
+                "SELECT SuperviseeId FROM %s WHERE SupervisorId = \"%s\"",
+                SUP_TABLE_NAME, supervisorId)).toString();
+        return db.rawQuery(query, null);
+    }
+
+    /**
+    * Get user IDs of all the accounts supervising a supervisee account
+    * @param superviseeId User ID of the supervisee account
+    * @return Cursor object, which can be used access data
+    */
+    public Cursor getSupervisors(int superviseeId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = new StringBuilder().append(String.format(
+                "SELECT SupervisorId FROM %s WHERE SuperviseeId = \"%s\"",
+                SUP_TABLE_NAME, superviseeId)).toString();
+        return db.rawQuery(query, null);
+    }
+
+    /**
+     * Delete a supervisor-supervisee relationship from the database
+     * @param supervisorId User ID of supervisor account
+     * @param superviseeId User ID of supervisee account
+     * @return true if successful, false if not
+     */
+    public boolean deleteSupervisor(int supervisorId, int superviseeId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsDeleted = db.delete(
+                SUP_TABLE_NAME, "SupervisorId = ? AND SuperviseeId = ?",
+                new String[] {Integer.toString(supervisorId), Integer.toString(superviseeId)});
+        if (rowsDeleted == 0)
+            return false;
+        return true;
+    }
+
+    /**
+     * Determine if the provided password for the provided username is valid
+     * @param username login name.
+     * @param password login password.
+     * @return true if login parameters are valid, else false
+     */
+    public boolean login(String username, String password) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = new StringBuilder().append(String.format(
+                "SELECT * FROM %s WHERE Username = \"%s\" AND Password = \"%s\"",
+                USER_TABLE_NAME, username, password)).toString();
+        Cursor res = db.rawQuery(query, null);
+        if (res.getCount() == 0)
+            // No entries returned, which have both the provided password and username
+            return false;
+        return true;
+    }
 }
