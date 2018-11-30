@@ -1,5 +1,6 @@
 package com.example.durandal.budgetingmadesimple;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -67,6 +68,8 @@ public class LoginActivity extends AppCompatActivity {
                     BMSApplication.expSystem.populateFromDatabase(username);
 
                     // Transition to mainPage.
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
 
                 }
                 // login failed, reset
