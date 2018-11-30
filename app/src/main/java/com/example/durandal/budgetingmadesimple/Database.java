@@ -248,11 +248,11 @@ public class Database extends SQLiteOpenHelper {
      * @param userId User ID of user to whom the expenditure belongs
      * @param categoryId Category ID to which the expenditure belongs
      * @param amount Amount of the expenditure in dollars
-     * @param date Date of when expenditure was made
+     * @param date Date of when expenditure was made. Instant.getEpochSeconds()
      * @param isRecurring Whether or not this expenditure is to occur again in the future
      * @return true if successful, false if not
      */
-    public boolean createExpenditure(int userId, int categoryId, float amount, String date, boolean isRecurring) { 
+    public boolean createExpenditure(int userId, int categoryId, float amount, String date, boolean isRecurring) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();

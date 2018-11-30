@@ -18,6 +18,8 @@ import java.lang.Object;
 import com.google.android.gms.common.util.ArrayUtils;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.time.Instant;
 import java.util.Arrays;
 import java.time.ZonedDateTime;
 
@@ -42,26 +44,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Example code intended for developers, showing how to interact with the SQL database
         showcaseDatabase();
-
-        //Test Expenditure adding and filtering.
-
-        BMSApplication.expSystem.addExpenditure(100,"food", false, ReoccurringRate.NONE);
-        /*
-        BMSApplication.expSystem.addExpenditure(600,"video games", false, ReoccurringRate.NONE);
-        BMSApplication.expSystem.addExpDEBUG(0, "food", ZonedDateTime.now());
-        BMSApplication.expSystem.addExpDEBUG(10, "food", ZonedDateTime.now().minusDays(1));
-        BMSApplication.expSystem.addExpDEBUG(20, "food", ZonedDateTime.now().minusDays(2));
-        BMSApplication.expSystem.addExpDEBUG(30, "food", ZonedDateTime.now().minusDays(3));
-        BMSApplication.expSystem.addExpDEBUG(40, "food", ZonedDateTime.now().minusDays(4));
-        BMSApplication.expSystem.addExpDEBUG(50, "food", ZonedDateTime.now().minusDays(5));
-        BMSApplication.expSystem.addExpDEBUG(60, "food", ZonedDateTime.now().minusDays(6));
-        BMSApplication.expSystem.addExpDEBUG(70, "food", ZonedDateTime.now().minusDays(7));
-        BMSApplication.expSystem.addExpDEBUG(80, "food", ZonedDateTime.now().minusDays(8));
-        BMSApplication.expSystem.addExpDEBUG(1000, "video games", ZonedDateTime.now().minusDays(100));
-        BMSApplication.expSystem.addExpDEBUG(80085, "food", ZonedDateTime.now().minusDays(100));
-        */
-        BMSApplication.expSystem.addCategory(false,0,"food");
-        BMSApplication.expSystem.addCategory(false,0,"video games");
 
 
         // Set up list of expenditures.
@@ -208,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void showcaseDatabaseExpenditureTable(Database bmsDb) {
         // Create expenditure
         boolean isCreated = bmsDb.createExpenditure(1, 1, 100,
-                "2018-11-26", false);
+                Long.toString(Instant.now().getEpochSecond()), false);
         if(isCreated == true)
             Log.d("SQL Database Testing","Expenditure inserted");
         else
