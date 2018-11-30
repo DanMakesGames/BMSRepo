@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:id="@+id/nameText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|center"
+                    android:text="Category Name:"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                    tools:layout_editor_absoluteX="7dp"
+                    tools:layout_editor_absoluteY="277dp" />
+
+                <EditText
+                    android:id="@+id/editCategoryName"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Enter Name"
+                    android:inputType="text"
+                    android:textAlignment="center"
+                    tools:layout_editor_absoluteX="153dp"
+                    tools:layout_editor_absoluteY="258dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:id="@+id/budgetText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|center"
+                    android:text="Budget:"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                    tools:layout_editor_absoluteX="7dp"
+                    tools:layout_editor_absoluteY="434dp" />
+
+                <EditText
+                    android:id="@+id/editBudgetAdd"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="(Optional)"
+                    android:inputType="number"
+                    android:textAlignment="center"
+                    tools:layout_editor_absoluteX="153dp"
+                    tools:layout_editor_absoluteY="458dp" />
+            </TableRow>
+
+        </TableLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:paddingRight="10dp" android:layout_height="0dp">
+
+            <CheckBox
+                android:id="@+id/budgetCheckboxAdd"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:checked="false"
+                android:layoutDirection="rtl"
+                android:text="Check to Apply Budget"
+                android:textAlignment="textStart"
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="327dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
