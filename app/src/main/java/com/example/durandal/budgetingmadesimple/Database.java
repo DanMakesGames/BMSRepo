@@ -348,6 +348,20 @@ public class Database extends SQLiteOpenHelper {
     }
 
     /**
+    * Get categories corresponding to a specific user
+    * @param username  Username for user's account
+    * @return Cursor object, which can be used to access data
+    */
+    public Cursor getCategories(String username) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = new StringBuilder().append(String.format(
+                "SELECT * FROM %s AS cat JOIN %s AS u ON cat.UserId = u.UserId WHERE u.Username = \"%s\"",
+                CAT_TABLE_NAME, USER_TABLE_NAME, username)).toString();
+        Cursor res = db.rawQuery(query, null);
+        return res;        
+    }
+
+    /**
     * Update a category for a specific user in the database   
     * @param categoryId Unique ID of the category
     * @param userId User ID to whom category belongs
