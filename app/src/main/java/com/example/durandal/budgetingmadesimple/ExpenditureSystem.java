@@ -1,6 +1,7 @@
 package com.example.durandal.budgetingmadesimple;
 
 import android.annotation.TargetApi;
+import android.database.Cursor;
 import android.os.Build;
 import android.util.Log;
 
@@ -41,7 +42,33 @@ public final class ExpenditureSystem {
      *
      * unimplemented.
      */
-    public boolean populateFromDataBase() {
+    public boolean populateFromDatabase(String username) {
+
+        Cursor expCursor = BMSApplication.database.getExpenditures(username);
+
+        if(expCursor.getCount() == 0)
+            return false;
+
+        // loop through, turning exp database items into Expenditure objects, and adding them to
+        // the linked list.
+        while(expCursor.moveToNext()) {
+
+            //TODO make sure category id - name is right
+            //make a new expenditure.
+            Instant timestamp = Instant.ofEpochSecond(Long.parseLong(expCursor.getString(4)));
+            Expenditure newExp = new Expenditure(
+                    Integer.parseInt(expCursor.getString(3)),
+                    expCursor.getString(2),
+                    timestamp);
+
+            expenditures.addFirst(newExp);
+
+
+            // check if this category is new or not, add to hashmap if new.
+        }
+
+
+
         return true;
     }
 
@@ -186,7 +213,7 @@ public final class ExpenditureSystem {
 
      * @return
      */
-    public boolean addExpDEBUG(float inValue, String inCategory, ZonedDateTime time) {
+    public boolean addExpDEBUG(float inValue, String inCategory, Instant time) {
 
         Expenditure newExpen = new Expenditure(inValue, inCategory, time);
         if (BMSApplication.database.createExpenditure(0, 0, 0, null, false)) {

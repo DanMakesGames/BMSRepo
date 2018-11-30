@@ -1,7 +1,9 @@
 package com.example.durandal.budgetingmadesimple;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,19 +37,46 @@ public class LoginActivity extends AppCompatActivity {
 
                 // disable input
                 loginButton.setEnabled(false);
-
-                editPassword.setText("");
                 editPassword.setEnabled(false);
-
-                editUsername.setText("");
                 editUsername.setEnabled(false);
+                String username = editUsername.getText().toString();
+                String password =  editPassword.getText().toString();
 
                 // login name and password are successful, move to loading expenditures activity.
-                if(BMSApplication.database.login( editUsername.getText().toString(), editPassword.getText().toString())) {
-                    // TODO switch to loading activity
+                if(BMSApplication.database.login( username, password)) {
+                    // populate account.
+
+                    // get account
+                    Cursor userCursor = BMSApplication.database.getUser(username);
+
+                    // create instantiate account.
+                    if (userCursor.getCount() == 0)
+                        Log.d("", "No data returned");
+                    else{
+                        while (userCursor.moveToNext()) {
+
+                            BMSApplication.account = new UserAccount(
+                                    Integer.parseInt(userCursor.getString(0)),
+                                    userCursor.getString(1),
+                                    userCursor.getString(3),
+                                    userCursor.getString(2));
+                        }
+                    }
+
+                    // populate expenditures and categories.
+                    BMSApplication.expSystem.populateFromDatabase(username);
+
+                    // Transition to mainPage.
+
                 }
+                // login failed, reset
                 else {
-                    // TODO re-enable button and text fields. Present message that login failed, and to try again.
+                    // re-enable button and text fields. Present message that login failed, and to try again.
+                    editUsername.setEnabled(true);
+                    editPassword.setEnabled(true);
+                    loginButton.setEnabled(true);
+                    editUsername.setText("");
+                    editPassword.setText("");
                 }
 
             }

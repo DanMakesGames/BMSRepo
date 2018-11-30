@@ -32,6 +32,7 @@ public class StartActivity extends AppCompatActivity {
                 Intent intent = new Intent(StartActivity.this, LoginActivity.class);
                 startActivity(intent);
 
+
             }
         });
 
