@@ -428,27 +428,27 @@ public class Database extends SQLiteOpenHelper {
     }
 
     /**
-    * Get user ID and relationship status for all accounts supervised by a supervisor account
+    * Get relationship info for all accounts supervised by a supervisor account
     * @param supervisorId User ID of the supervisor account
     * @return Cursor object, which can be used access data
     */
     public Cursor getSupervisees(int supervisorId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = new StringBuilder().append(String.format(
-                "SELECT SuperviseeId, status FROM %s WHERE SupervisorId = \"%s\"",
+                "SELECT * FROM %s WHERE SupervisorId = \"%s\"",
                 SUP_TABLE_NAME, supervisorId)).toString();
         return db.rawQuery(query, null);
     }
 
     /**
-    * Get user ID and relationship statu for all the accounts supervising a supervisee account
+    * Get relationship info for all the accounts supervising a supervisee account
     * @param superviseeId User ID of the supervisee account
     * @return Cursor object, which can be used access data
     */
     public Cursor getSupervisors(int superviseeId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = new StringBuilder().append(String.format(
-                "SELECT SupervisorId, status FROM %s WHERE SuperviseeId = \"%s\"",
+                "SELECT * FROM %s WHERE SuperviseeId = \"%s\"",
                 SUP_TABLE_NAME, superviseeId)).toString();
         return db.rawQuery(query, null);
     }
