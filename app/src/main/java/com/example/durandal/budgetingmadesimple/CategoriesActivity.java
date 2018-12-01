@@ -34,13 +34,7 @@ public class CategoriesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categories);
 
-        /* START TEST */
-        // adding random stuff to categories for testing the list
-        BMSApplication.expSystem.addCategory(false,0,"food");
-        BMSApplication.expSystem.addCategory(false,0,"video games");
-        BMSApplication.expSystem.addCategory(false,0,"test1");
-        BMSApplication.expSystem.addCategory(false,0,"test2");
-        /* END TEST */
+        
 
         // Populate names array
         categoryNames = BMSApplication.expSystem.getCategoryNames();
