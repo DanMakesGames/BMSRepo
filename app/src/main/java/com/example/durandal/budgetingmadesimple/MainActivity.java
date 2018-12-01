@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         }); */
 
-        BMSApplication.expSystem.addCategory(false,0,"food");
+        //BMSApplication.expSystem.addCategory(false,0,"food");
 
         // Set up time dropdown
         timeDropdown = (Spinner) findViewById(R.id.time_dropdown);
