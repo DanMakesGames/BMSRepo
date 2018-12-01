@@ -226,8 +226,10 @@ public final class ExpenditureSystem {
                 Long.toString(stamp.getEpochSecond()),
                 inReoccurring)) {
 
+
             int Id = 0;
             Expenditure newExpen = new Expenditure(inValue,inCategory, Id, stamp);
+
             expenditures.addFirst(newExpen);
             return true;
         }
@@ -246,6 +248,7 @@ public final class ExpenditureSystem {
      */
     public boolean addExpDEBUG(float inValue, String inCategory, Instant time) {
 
+
         if (BMSApplication.database.createExpenditure(BMSApplication.account.getUserID(),
                 categories.get(inCategory).getCategoryId(), inValue,
                 Long.toString(time.getEpochSecond()),
@@ -254,6 +257,7 @@ public final class ExpenditureSystem {
             int Id = 0;
 
             Expenditure newExpen = new Expenditure(inValue, inCategory, Id, time);
+
             expenditures.addFirst(newExpen);
             return true;
         }
