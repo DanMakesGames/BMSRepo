@@ -178,6 +178,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         String timeSelection = (String) timeDD.getSelectedItem();
         String catSelection = (String) catDD.getSelectedItem();
 
+        delFab.hide();
+        fab.show();
+
         // Filter by time.
         if(timeSelection.equals("all times")) {
             mainList = new LinkedList<MainListView>();
