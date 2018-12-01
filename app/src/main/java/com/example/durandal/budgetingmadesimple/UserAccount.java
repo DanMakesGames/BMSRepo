@@ -57,7 +57,7 @@ public class UserAccount extends Account {
         BMSApplication.account = null;
     }
 
-    private UserAccount(int userID, String userName, String userEmail, String password) {
+    public UserAccount(int userID, String userName, String userEmail, String password) {
         super(userID, userName, userEmail);
         this.password = password;
         supervisors = new ArrayList<>();
@@ -141,10 +141,10 @@ public class UserAccount extends Account {
 
     // means send link request
     // check input before calling
-    public boolean addSupervisee(String superviseeEmail) {
+    public boolean addSupervisee(String superviseeName) {
         int linkStatus = 0;
         int superviseeId = 0;
-        String superviseeName = "";
+        String superviseeEmail = "";
         //TODO get id etc. from email check if is linked, add status here "0"
         if (BMSApplication.database.createSupervisor(getUserID(), superviseeId)) {
             supervisees.add(new LinkedAccount(superviseeId, superviseeName, superviseeEmail, linkStatus));
