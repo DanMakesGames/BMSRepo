@@ -196,9 +196,16 @@ public class Database extends SQLiteOpenHelper {
         return db.rawQuery(query, null);
     }
 
-    //TODO
+    /**
+     * Get user account data corresponding to a specific UserId
+     * @param userId
+     * @return Cursor object, which can be used access data
+     */
     public Cursor getUser(int userId) {
-        return db.rawQuary("SELECT *", null)
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = new StringBuilder().append(String.format(
+                "SELECT * FROM %s WHERE UserId = \"%s\"", USER_TABLE_NAME, userId)).toString();
+        return db.rawQuery(query, null);
     }
 
     /**
@@ -405,6 +412,7 @@ public class Database extends SQLiteOpenHelper {
     * Create a supervisor-supervisee relationship in the database
     * @param supervisorId User ID of the supervisor
     * @param superviseeId User ID of the supervisee
+    * @param status Status code for the relationship
     * @return RealtionshipId if successful, -1 if not
     */
     public long createSupervisor(int supervisorId, int superviseeId, int status) {
@@ -420,7 +428,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     /**
-    * Get user IDs of all the accounts supervised by a supervisor account
+    * Get user ID and relationship status for all accounts supervised by a supervisor account
     * @param supervisorId User ID of the supervisor account
     * @return Cursor object, which can be used access data
     */
@@ -433,7 +441,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     /**
-    * Get user IDs of all the accounts supervising a supervisee account
+    * Get user ID and relationship statu for all the accounts supervising a supervisee account
     * @param superviseeId User ID of the supervisee account
     * @return Cursor object, which can be used access data
     */
@@ -446,9 +454,27 @@ public class Database extends SQLiteOpenHelper {
     }
 
     
-    //TODO
-    public bool updateSupervisor() {
-        return true; 
+    /**
+    * Create a supervisor-supervisee relationship in the database
+    * @param relationshipId Unique Relationship ID
+    * @param supervisorId User ID of the supervisor
+    * @param superviseeId User ID of the supervisee
+    * @param status Status code for the relationship
+    * @return true if successful, fals if not
+    */
+    public boolean updateSupervisor(int relationshipId, int supervisorId, int superviseeId, int status) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SUP_COL_1, supervisorId);
+        contentValues.put(SUP_COL_2, superviseeId);
+        contentValues.put(SUP_COL_3, status);
+
+        int rowsChanged = db.update(SUP_TABLE_NAME, contentValues, "RelationshipId = ?",
+                new String[] {Integer.toString(relationshipId)});
+        if (rowsChanged == 0)
+            return false;
+        return true;
     }
 
     /**
