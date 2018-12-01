@@ -128,8 +128,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 //startActivity(intent3);
                                 break;
                             case R.id.nav_item_four: // go to settings
-                                //Intent intent4 = new Intent(MainActivity.this, SettingsActivity.class);
-                                //startActivity(intent4);
+                                Intent intent4 = new Intent(MainActivity.this, AccountSettingsActivity.class);
+                                startActivity(intent4);
                                 break;
                         }
                         // close drawer when item is tapped

@@ -23,6 +23,7 @@ import android.view.View;
 import android.app.AlertDialog;
 import android.widget.EditText;
 import android.content.DialogInterface;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class CategoriesActivity extends AppCompatActivity {
@@ -69,7 +70,7 @@ public class CategoriesActivity extends AppCompatActivity {
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
         actionbar.setTitle("Categories");
 
-        //TextView drawer_text = (TextView) findViewById(R.id.drawer_header_text);
+        //TextView drawer_text = findViewById(R.id.drawer_header_text);
         //drawer_text.setText(BMSApplication.account.getUserName());
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
@@ -120,8 +121,8 @@ public class CategoriesActivity extends AppCompatActivity {
                                 //startActivity(intent3);
                                 break;
                             case R.id.nav_item_four: // go to settings
-                                //Intent intent4 = new Intent(CategoriesActivity.this, SettingsActivity.class);
-                                //startActivity(intent4);
+                                Intent intent4 = new Intent(CategoriesActivity.this, AccountSettingsActivity.class);
+                                startActivity(intent4);
                                 break;
                         }
                         // close drawer when item is tapped
