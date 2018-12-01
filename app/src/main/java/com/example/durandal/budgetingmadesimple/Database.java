@@ -69,6 +69,8 @@ public class Database extends SQLiteOpenHelper {
     private static final String SUP_COL_2_TYPE = "INTEGER";
     private static final String SUP_COL_3 = "SupervisoreeId";
     private static final String SUP_COL_3_TYPE = "INTEGER";
+    private static final String SUP_COL_4 = "Status";
+    private static final String SUP_COL_4_TYPE = "INTEGER";
 
     /**
      * Database constructor
@@ -131,6 +133,7 @@ public class Database extends SQLiteOpenHelper {
             .append(String.format("%s %s", SUP_COL_1, SUP_COL_1_TYPE))
             .append(String.format(", %s %s", SUP_COL_2, SUP_COL_2_TYPE))
             .append(String.format(", %s %s", SUP_COL_3, SUP_COL_3_TYPE))
+            .append(String.format(", %s %s", SUP_COL_4, SUP_COL_4_TYPE))
             .append(")")
             .toString()
         );
@@ -190,6 +193,18 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = new StringBuilder().append(String.format(
                 "SELECT * FROM %s WHERE Username = \"%s\"", USER_TABLE_NAME, username)).toString();
+        return db.rawQuery(query, null);
+    }
+
+    /**
+     * Get user account data corresponding to a specific UserId
+     * @param userId
+     * @return Cursor object, which can be used access data
+     */
+    public Cursor getUser(int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = new StringBuilder().append(String.format(
+                "SELECT * FROM %s WHERE UserId = \"%s\"", USER_TABLE_NAME, userId)).toString();
         return db.rawQuery(query, null);
     }
 
@@ -397,43 +412,69 @@ public class Database extends SQLiteOpenHelper {
     * Create a supervisor-supervisee relationship in the database
     * @param supervisorId User ID of the supervisor
     * @param superviseeId User ID of the supervisee
+    * @param status Status code for the relationship
     * @return RealtionshipId if successful, -1 if not
     */
-    public long createSupervisor(int supervisorId, int superviseeId) {
+    public long createSupervisor(int supervisorId, int superviseeId, int status) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(SUP_COL_2, supervisorId);
         contentValues.put(SUP_COL_3, superviseeId);
+        contentValues.put(SUP_COL_4, status);
 
         long result = db.insert(SUP_TABLE_NAME, null, contentValues);
         return result; 
     }
 
     /**
-    * Get user IDs of all the accounts supervised by a supervisor account
+    * Get user ID and relationship status for all accounts supervised by a supervisor account
     * @param supervisorId User ID of the supervisor account
     * @return Cursor object, which can be used access data
     */
     public Cursor getSupervisees(int supervisorId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = new StringBuilder().append(String.format(
-                "SELECT SuperviseeId FROM %s WHERE SupervisorId = \"%s\"",
+                "SELECT SuperviseeId, status FROM %s WHERE SupervisorId = \"%s\"",
                 SUP_TABLE_NAME, supervisorId)).toString();
         return db.rawQuery(query, null);
     }
 
     /**
-    * Get user IDs of all the accounts supervising a supervisee account
+    * Get user ID and relationship statu for all the accounts supervising a supervisee account
     * @param superviseeId User ID of the supervisee account
     * @return Cursor object, which can be used access data
     */
     public Cursor getSupervisors(int superviseeId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = new StringBuilder().append(String.format(
-                "SELECT SupervisorId FROM %s WHERE SuperviseeId = \"%s\"",
+                "SELECT SupervisorId, status FROM %s WHERE SuperviseeId = \"%s\"",
                 SUP_TABLE_NAME, superviseeId)).toString();
         return db.rawQuery(query, null);
+    }
+
+    
+    /**
+    * Create a supervisor-supervisee relationship in the database
+    * @param relationshipId Unique Relationship ID
+    * @param supervisorId User ID of the supervisor
+    * @param superviseeId User ID of the supervisee
+    * @param status Status code for the relationship
+    * @return true if successful, fals if not
+    */
+    public boolean updateSupervisor(int relationshipId, int supervisorId, int superviseeId, int status) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SUP_COL_1, supervisorId);
+        contentValues.put(SUP_COL_2, superviseeId);
+        contentValues.put(SUP_COL_3, status);
+
+        int rowsChanged = db.update(SUP_TABLE_NAME, contentValues, "RelationshipId = ?",
+                new String[] {Integer.toString(relationshipId)});
+        if (rowsChanged == 0)
+            return false;
+        return true;
     }
 
     /**
