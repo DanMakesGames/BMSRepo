@@ -69,12 +69,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         delFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                for (int i = 0; i < mainList.size(); i++) {
+                int[] positions = new int[mainList.size()];
+                for (int i = 0; i < MainActivity.mainList.size(); i++) {
                     if (mainList.get(i).isChecked()) {
-                        BMSApplication.expSystem.deleteExpenditure(mainList.get(i).getExpenditure());
+                        positions[i] = 1;
+                    }
+                    else {
+                        positions[i] = 0;
                     }
                 }
-                startActivity(new Intent(MainActivity.this, MainActivity.class));
+                Intent in = new Intent(MainActivity.this, delExpenditurePrompt.class);
+                in.putExtra("Positions",positions);
+                startActivity(in);
 
             }
         });
@@ -88,12 +94,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         adapter = new ExpenditureArrayAdapter(this, mainList);
         expList.setAdapter(adapter);
         //expList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        Log.d("Here","Here");
+        /*
         expList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long arg3)
             {
-                /*
+
                 MainListView expenView = adapter.getItem(position);
                 expenView.toggleChecked();
                 Log.d("Clicked: ", expenView.getName());
@@ -105,10 +111,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (MainListView.hasSelected(mainList)) {
                     fab.hide();
                 }
-                */
+
 
             }
-        });
+
+        }); */
 
 
 
