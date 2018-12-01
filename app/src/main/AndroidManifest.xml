@@ -21,12 +21,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".LoginActivity" />
         <activity android:name=".SignUpActivity" />
         <activity
             android:name=".CategoriesActivity"
             android:exported="true" />
         <activity android:name=".SettingsSupervisorActivity"></activity>
+
+
+        <activity android:name=".addExpenditurePrompt"
+            android:theme="@style/AppTheme.CustomTheme"
+            android:exported="true">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".delExpenditurePrompt"
+            android:theme="@style/AppTheme.CustomTheme"
+            android:exported="true">
+        </activity>
+
     </application>
 
 </manifest>
