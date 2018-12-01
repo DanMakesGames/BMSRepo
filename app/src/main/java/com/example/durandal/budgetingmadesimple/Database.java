@@ -69,6 +69,8 @@ public class Database extends SQLiteOpenHelper {
     private static final String SUP_COL_2_TYPE = "INTEGER";
     private static final String SUP_COL_3 = "SupervisoreeId";
     private static final String SUP_COL_3_TYPE = "INTEGER";
+    private static final String SUP_COL_4 = "Status";
+    private static final String SUP_COL_4_TYPE = "INTEGER";
 
     /**
      * Database constructor
@@ -131,6 +133,7 @@ public class Database extends SQLiteOpenHelper {
             .append(String.format("%s %s", SUP_COL_1, SUP_COL_1_TYPE))
             .append(String.format(", %s %s", SUP_COL_2, SUP_COL_2_TYPE))
             .append(String.format(", %s %s", SUP_COL_3, SUP_COL_3_TYPE))
+            .append(String.format(", %s %s", SUP_COL_4, SUP_COL_4_TYPE))
             .append(")")
             .toString()
         );
@@ -191,6 +194,11 @@ public class Database extends SQLiteOpenHelper {
         String query = new StringBuilder().append(String.format(
                 "SELECT * FROM %s WHERE Username = \"%s\"", USER_TABLE_NAME, username)).toString();
         return db.rawQuery(query, null);
+    }
+
+    //TODO
+    public Cursor getUser(int userId) {
+        return db.rawQuary("SELECT *", null)
     }
 
     /**
@@ -399,12 +407,13 @@ public class Database extends SQLiteOpenHelper {
     * @param superviseeId User ID of the supervisee
     * @return RealtionshipId if successful, -1 if not
     */
-    public long createSupervisor(int supervisorId, int superviseeId) {
+    public long createSupervisor(int supervisorId, int superviseeId, int status) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(SUP_COL_2, supervisorId);
         contentValues.put(SUP_COL_3, superviseeId);
+        contentValues.put(SUP_COL_4, status);
 
         long result = db.insert(SUP_TABLE_NAME, null, contentValues);
         return result; 
@@ -418,7 +427,7 @@ public class Database extends SQLiteOpenHelper {
     public Cursor getSupervisees(int supervisorId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = new StringBuilder().append(String.format(
-                "SELECT SuperviseeId FROM %s WHERE SupervisorId = \"%s\"",
+                "SELECT SuperviseeId, status FROM %s WHERE SupervisorId = \"%s\"",
                 SUP_TABLE_NAME, supervisorId)).toString();
         return db.rawQuery(query, null);
     }
@@ -431,9 +440,15 @@ public class Database extends SQLiteOpenHelper {
     public Cursor getSupervisors(int superviseeId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = new StringBuilder().append(String.format(
-                "SELECT SupervisorId FROM %s WHERE SuperviseeId = \"%s\"",
+                "SELECT SupervisorId, status FROM %s WHERE SuperviseeId = \"%s\"",
                 SUP_TABLE_NAME, superviseeId)).toString();
         return db.rawQuery(query, null);
+    }
+
+    
+    //TODO
+    public bool updateSupervisor() {
+        return true; 
     }
 
     /**
