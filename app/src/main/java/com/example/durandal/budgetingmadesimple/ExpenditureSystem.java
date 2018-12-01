@@ -1,12 +1,15 @@
 package com.example.durandal.budgetingmadesimple;
 
+
 import android.annotation.TargetApi;
 import android.database.Cursor;
 import android.os.Build;
 import android.util.Log;
 
 import java.time.ZonedDateTime;
+
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -22,6 +25,7 @@ public final class ExpenditureSystem {
     private LinkedList<Expenditure> expenditures;
     private HashMap<String,Category> categories;
     public final static String ALL_CATEGORY = "all categories";
+    public final static String SEL_CATEGORY = "Select a category";
 
 
     /**
@@ -234,6 +238,22 @@ public final class ExpenditureSystem {
         }
 
         return false;
+    }
+
+    /**
+     * Creates a new expenditure. Not only adds it to local dataStructure, but also sends request
+     * for it to be added to the DataBase.
+     * @param expen
+     * @return true is successful, false if not.
+     */
+    public boolean addExpenditure(Expenditure expen) {
+
+        if (BMSApplication.database.createExpenditure()) {
+            expenditures.addFirst(expen);
+            return true;
+        }
+        return false;
+
     }
 
     /**
