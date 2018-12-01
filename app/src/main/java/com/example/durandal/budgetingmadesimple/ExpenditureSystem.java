@@ -218,23 +218,22 @@ public final class ExpenditureSystem {
     public boolean addExpenditure(float inValue, String inCategory, boolean inReoccurring, ReoccurringRate inRate) {
 
         Instant stamp = Instant.now();
-
-        if (BMSApplication.database.createExpenditure(
+        long expId = BMSApplication.database.createExpenditure(
                 BMSApplication.account.getUserID(),
                 categories.get(inCategory).getCategoryId(),
                 inValue,
                 Long.toString(stamp.getEpochSecond()),
-                inReoccurring)) {
+                inReoccurring);
 
+        if (expId != -1) {
 
-            int Id = 0;
-            Expenditure newExpen = new Expenditure(inValue,inCategory, Id, stamp);
+            Expenditure newExpen = new Expenditure(inValue,inCategory, (int) expId, stamp);
 
             expenditures.addFirst(newExpen);
             return true;
         }
-        return false;
 
+        return false;
     }
 
     /**
@@ -249,14 +248,15 @@ public final class ExpenditureSystem {
     public boolean addExpDEBUG(float inValue, String inCategory, Instant time) {
 
 
-        if (BMSApplication.database.createExpenditure(BMSApplication.account.getUserID(),
+        int expId = (int) BMSApplication.database.createExpenditure(BMSApplication.account.getUserID(),
                 categories.get(inCategory).getCategoryId(), inValue,
                 Long.toString(time.getEpochSecond()),
-                false)) {
+                false);
 
-            int Id = 0;
+        // if creation was successful.
+        if (expId != -1) {
 
-            Expenditure newExpen = new Expenditure(inValue, inCategory, Id, time);
+            Expenditure newExpen = new Expenditure(inValue, inCategory, expId, time);
 
             expenditures.addFirst(newExpen);
             return true;
@@ -303,14 +303,20 @@ public final class ExpenditureSystem {
         if( categories.containsKey(name) )
             return false;
 
-        int catId = 0;
 
-        // insert onto database TODO save new category ID so that it can be associated with the new category/
-        BMSApplication.database.createExpCategory(BMSApplication.account.getUserID(),name,budget);
 
-        // insert
-        categories.put(name, new Category(bIsBudgeted, budget, name, catId));
-        return true;
+        // insert onto database
+        int catId  = (int) BMSApplication.database.createExpCategory(BMSApplication.account.getUserID(),name,budget);
+
+        // only add locally if cat add
+        if(catId != -1) {
+            // insert
+            categories.put(name, new Category(bIsBudgeted, budget, name, catId));
+            return true;
+        }
+
+        // data base request was not successful.
+        return false;
     }
 
     /**
