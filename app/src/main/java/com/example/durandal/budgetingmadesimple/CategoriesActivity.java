@@ -1,10 +1,18 @@
 package com.example.durandal.budgetingmadesimple;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -28,6 +36,7 @@ public class CategoriesActivity extends AppCompatActivity {
     private CheckBox budgetCheckbox;
     private CheckBox budgetCheckbox2; //lmao
     private FloatingActionButton addCategoryButton;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +53,79 @@ public class CategoriesActivity extends AppCompatActivity {
         ArrayAdapter adapter = new ArrayAdapter(this, R.layout.activity_categories_listview, R.id.textCategory, categoryNames);
         expList.setAdapter(adapter);
         expList.setTextFilterEnabled(true);
+
+
+        // code for navigation bar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        actionbar.setTitle("Categories");
+
+        //TextView drawer_text = (TextView) findViewById(R.id.drawer_header_text);
+        //drawer_text.setText(BMSApplication.account.getUserName());
+
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+
+        mDrawerLayout.addDrawerListener(
+                new DrawerLayout.DrawerListener() {
+                    @Override
+                    public void onDrawerSlide(View drawerView, float slideOffset) {
+                        // Respond when the drawer's position changes
+                        mDrawerLayout.bringToFront();
+                    }
+
+                    @Override
+                    public void onDrawerOpened(View drawerView) {
+                        // Respond when the drawer is opened
+                        mDrawerLayout.bringToFront();
+                    }
+
+                    @Override
+                    public void onDrawerClosed(View drawerView) {
+                        // Respond when the drawer is closed
+                        expList.bringToFront();
+
+                    }
+
+                    @Override
+                    public void onDrawerStateChanged(int newState) {
+                        // Respond when the drawer motion state changes
+                    }
+                }
+        );
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                        switch(menuItem.getItemId()) {
+                            case R.id.nav_item_one: // go to expenditures (home) page
+                                Intent intent1 = new Intent(CategoriesActivity.this, MainActivity.class);
+                                startActivity(intent1);
+                                break;
+                            case R.id.nav_item_two: // go to categories page
+                                Intent intent2 = new Intent(CategoriesActivity.this, CategoriesActivity.class);
+                                startActivity(intent2);
+                                break;
+                            case R.id.nav_item_three: // go to statistics page
+                                //Intent intent3 = new Intent(CategoriesActivity.this, StatisticsActivity.class);
+                                //startActivity(intent3);
+                                break;
+                            case R.id.nav_item_four: // go to settings
+                                //Intent intent4 = new Intent(CategoriesActivity.this, SettingsActivity.class);
+                                //startActivity(intent4);
+                                break;
+                        }
+                        // close drawer when item is tapped
+                        mDrawerLayout.closeDrawers();
+                        // Add code here to update the UI based on the item selected
+                        // For example, swap UI fragments here
+
+                        return true;
+                    }
+                }); // end of navigation bar code
 
         // Set onClickListener for the categories listed
         // TODO: Don't know how to get it to select the whole row.
@@ -108,7 +190,7 @@ public class CategoriesActivity extends AppCompatActivity {
                 builder.create().show();
             }
         });
-
+        expList.bringToFront();
         // Link the floating Button
         addCategoryButton = (FloatingActionButton) findViewById(R.id.floatButton);
         addCategoryButton.setOnClickListener(new View.OnClickListener() {
@@ -177,6 +259,16 @@ public class CategoriesActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
