@@ -69,6 +69,8 @@ public class Database extends SQLiteOpenHelper {
     private static final String SUP_COL_2_TYPE = "INTEGER";
     private static final String SUP_COL_3 = "SupervisoreeId";
     private static final String SUP_COL_3_TYPE = "INTEGER";
+    private static final String SUP_COL_4 = "Status";
+    private static final String SUP_COL_4_TYPE = "INTEGER";
 
     /**
      * Database constructor
@@ -131,6 +133,7 @@ public class Database extends SQLiteOpenHelper {
             .append(String.format("%s %s", SUP_COL_1, SUP_COL_1_TYPE))
             .append(String.format(", %s %s", SUP_COL_2, SUP_COL_2_TYPE))
             .append(String.format(", %s %s", SUP_COL_3, SUP_COL_3_TYPE))
+            .append(String.format(", %s %s", SUP_COL_4, SUP_COL_4_TYPE))
             .append(")")
             .toString()
         );
@@ -161,9 +164,9 @@ public class Database extends SQLiteOpenHelper {
      * @param budget Budget to used for new user account
      * @param savingsGoal Savings goal to be used for new user account
      * @param bankBalance Bank balance to be used for new user account
-     * @return true if successful, false if not
+     * @return UserId if successful, -1 if not
      */
-    public boolean createUser(String username, String password, String email, String secretQuestion,
+    public long createUser(String username, String password, String email, String secretQuestion,
                               String secretQuestionAnswer, float budget, float savingsGoal, float bankBalance) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -178,9 +181,7 @@ public class Database extends SQLiteOpenHelper {
         contentValues.put(USER_COL_9, bankBalance);
 
         long result = db.insert(USER_TABLE_NAME, null, contentValues);
-        if(result == -1)
-            return false;
-        return true;
+        return result;
     }
 
     /**
@@ -192,6 +193,18 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = new StringBuilder().append(String.format(
                 "SELECT * FROM %s WHERE Username = \"%s\"", USER_TABLE_NAME, username)).toString();
+        return db.rawQuery(query, null);
+    }
+
+    /**
+     * Get user account data corresponding to a specific UserId
+     * @param userId
+     * @return Cursor object, which can be used access data
+     */
+    public Cursor getUser(int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = new StringBuilder().append(String.format(
+                "SELECT * FROM %s WHERE UserId = \"%s\"", USER_TABLE_NAME, userId)).toString();
         return db.rawQuery(query, null);
     }
 
@@ -250,9 +263,9 @@ public class Database extends SQLiteOpenHelper {
      * @param amount Amount of the expenditure in dollars
      * @param date Date of when expenditure was made. Instant.getEpochSeconds()
      * @param isRecurring Whether or not this expenditure is to occur again in the future
-     * @return true if successful, false if not
+     * @return ExpenditureId if successful, -1 if not
      */
-    public boolean createExpenditure(int userId, int categoryId, float amount, String date, boolean isRecurring) {
+    public long createExpenditure(int userId, int categoryId, float amount, String date, boolean isRecurring) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -263,9 +276,7 @@ public class Database extends SQLiteOpenHelper {
         contentValues.put(EXP_COL_6, isRecurring);
 
         long result = db.insert(EXP_TABLE_NAME, null, contentValues);
-        if(result == -1)
-            return false;
-        return true; 
+        return result; 
     }
 
     /**
@@ -331,9 +342,9 @@ public class Database extends SQLiteOpenHelper {
     * @param userId User ID to whom category belongs
     * @param name Category name
     * @param budget User's budget for the category
-    * @return true if successful, false if not
+    * @return CategoryId if successful, -1 if not
     */
-    public boolean createExpCategory(int userId, String name, float budget) { 
+    public long createExpCategory(int userId, String name, float budget) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -342,9 +353,7 @@ public class Database extends SQLiteOpenHelper {
         contentValues.put(CAT_COL_4, budget);
 
         long result = db.insert(CAT_TABLE_NAME, null, contentValues);
-        if(result == -1)
-            return false;
-        return true;          
+        return result;          
     }
 
     /**
@@ -403,45 +412,69 @@ public class Database extends SQLiteOpenHelper {
     * Create a supervisor-supervisee relationship in the database
     * @param supervisorId User ID of the supervisor
     * @param superviseeId User ID of the supervisee
-    * @return true if successful, false if not
+    * @param status Status code for the relationship
+    * @return RealtionshipId if successful, -1 if not
     */
-    public boolean createSupervisor(int supervisorId, int superviseeId) {
+    public long createSupervisor(int supervisorId, int superviseeId, int status) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(SUP_COL_2, supervisorId);
         contentValues.put(SUP_COL_3, superviseeId);
+        contentValues.put(SUP_COL_4, status);
 
         long result = db.insert(SUP_TABLE_NAME, null, contentValues);
-        if(result == -1)
-            return false;
-        return true; 
+        return result; 
     }
 
     /**
-    * Get user IDs of all the accounts supervised by a supervisor account
+    * Get relationship info for all accounts supervised by a supervisor account
     * @param supervisorId User ID of the supervisor account
     * @return Cursor object, which can be used access data
     */
     public Cursor getSupervisees(int supervisorId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = new StringBuilder().append(String.format(
-                "SELECT SuperviseeId FROM %s WHERE SupervisorId = \"%s\"",
+                "SELECT * FROM %s WHERE SupervisorId = \"%s\"",
                 SUP_TABLE_NAME, supervisorId)).toString();
         return db.rawQuery(query, null);
     }
 
     /**
-    * Get user IDs of all the accounts supervising a supervisee account
+    * Get relationship info for all the accounts supervising a supervisee account
     * @param superviseeId User ID of the supervisee account
     * @return Cursor object, which can be used access data
     */
     public Cursor getSupervisors(int superviseeId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = new StringBuilder().append(String.format(
-                "SELECT SupervisorId FROM %s WHERE SuperviseeId = \"%s\"",
+                "SELECT * FROM %s WHERE SuperviseeId = \"%s\"",
                 SUP_TABLE_NAME, superviseeId)).toString();
         return db.rawQuery(query, null);
+    }
+
+    
+    /**
+    * Create a supervisor-supervisee relationship in the database
+    * @param relationshipId Unique Relationship ID
+    * @param supervisorId User ID of the supervisor
+    * @param superviseeId User ID of the supervisee
+    * @param status Status code for the relationship
+    * @return true if successful, fals if not
+    */
+    public boolean updateSupervisor(int relationshipId, int supervisorId, int superviseeId, int status) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SUP_COL_1, supervisorId);
+        contentValues.put(SUP_COL_2, superviseeId);
+        contentValues.put(SUP_COL_3, status);
+
+        int rowsChanged = db.update(SUP_TABLE_NAME, contentValues, "RelationshipId = ?",
+                new String[] {Integer.toString(relationshipId)});
+        if (rowsChanged == 0)
+            return false;
+        return true;
     }
 
     /**

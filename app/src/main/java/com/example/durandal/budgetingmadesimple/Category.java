@@ -1,12 +1,11 @@
 package com.example.durandal.budgetingmadesimple;
 
 public class Category {
+
     private float budget;
-
-
-
     private boolean bIsBudgeted;
     private String name;
+    private int categoryId;
 
 
     public boolean isbIsBudgeted() {
@@ -55,10 +54,15 @@ public class Category {
      * @param b - budget value
      * @param n - name of the category
      */
-    public Category(boolean inBBudget, float b, String n) {
+    public Category(boolean inBBudget, float b, String n, int id) {
         name = n;
         budget = b;
         bIsBudgeted = inBBudget;
+        categoryId = id;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
     }
 
     @Override public String toString() {
