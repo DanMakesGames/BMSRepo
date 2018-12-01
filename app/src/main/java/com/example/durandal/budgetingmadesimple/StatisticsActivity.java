@@ -167,7 +167,8 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
 
         // Calculate total spent for all categories if overall is selected
         if (catSelected == "Overall")
-            totalSpentValue = calcTotalSpentOverall(start, end);
+            expList = BMSApplication.expSystem.getExpendituresByDate(start, end);
+            totalSpentValue = calcTotalSpent(expList);
 
 
         // Calculate total spent for the selected category only
@@ -185,8 +186,6 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
             totalSpentView.setText("Total Spent: $" + totalSpent);
         }
 
-
-
     }
 
     private void onCategorySelected(String cat) {
@@ -202,18 +201,6 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
 
         while (it.hasNext())
             totalSpent += it.next().getValue();
-
-        return totalSpent;
-    }
-
-    private float calcTotalSpentOverall(ZonedDateTime start, ZonedDateTime end) {
-        float totalSpent = 0;
-
-        for (String category : BMSApplication.expSystem.getCategoryNames()) {
-            LinkedList<Expenditure> expList =
-                    BMSApplication.expSystem.getExpendituresTimeAndCat(start, end, category);
-            totalSpent += calcTotalSpent(expList);
-        }
 
         return totalSpent;
     }
