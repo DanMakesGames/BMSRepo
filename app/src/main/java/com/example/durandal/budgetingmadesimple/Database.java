@@ -161,9 +161,9 @@ public class Database extends SQLiteOpenHelper {
      * @param budget Budget to used for new user account
      * @param savingsGoal Savings goal to be used for new user account
      * @param bankBalance Bank balance to be used for new user account
-     * @return true if successful, false if not
+     * @return UserId if successful, -1 if not
      */
-    public boolean createUser(String username, String password, String email, String secretQuestion,
+    public long createUser(String username, String password, String email, String secretQuestion,
                               String secretQuestionAnswer, float budget, float savingsGoal, float bankBalance) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -178,9 +178,7 @@ public class Database extends SQLiteOpenHelper {
         contentValues.put(USER_COL_9, bankBalance);
 
         long result = db.insert(USER_TABLE_NAME, null, contentValues);
-        if(result == -1)
-            return false;
-        return true;
+        return result;
     }
 
     /**
@@ -250,9 +248,9 @@ public class Database extends SQLiteOpenHelper {
      * @param amount Amount of the expenditure in dollars
      * @param date Date of when expenditure was made. Instant.getEpochSeconds()
      * @param isRecurring Whether or not this expenditure is to occur again in the future
-     * @return true if successful, false if not
+     * @return ExpenditureId if successful, -1 if not
      */
-    public boolean createExpenditure(int userId, int categoryId, float amount, String date, boolean isRecurring) {
+    public long createExpenditure(int userId, int categoryId, float amount, String date, boolean isRecurring) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -263,9 +261,7 @@ public class Database extends SQLiteOpenHelper {
         contentValues.put(EXP_COL_6, isRecurring);
 
         long result = db.insert(EXP_TABLE_NAME, null, contentValues);
-        if(result == -1)
-            return false;
-        return true; 
+        return result; 
     }
 
     /**
@@ -331,9 +327,9 @@ public class Database extends SQLiteOpenHelper {
     * @param userId User ID to whom category belongs
     * @param name Category name
     * @param budget User's budget for the category
-    * @return true if successful, false if not
+    * @return CategoryId if successful, -1 if not
     */
-    public boolean createExpCategory(int userId, String name, float budget) { 
+    public long createExpCategory(int userId, String name, float budget) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -342,9 +338,7 @@ public class Database extends SQLiteOpenHelper {
         contentValues.put(CAT_COL_4, budget);
 
         long result = db.insert(CAT_TABLE_NAME, null, contentValues);
-        if(result == -1)
-            return false;
-        return true;          
+        return result;          
     }
 
     /**
@@ -403,9 +397,9 @@ public class Database extends SQLiteOpenHelper {
     * Create a supervisor-supervisee relationship in the database
     * @param supervisorId User ID of the supervisor
     * @param superviseeId User ID of the supervisee
-    * @return true if successful, false if not
+    * @return RealtionshipId if successful, -1 if not
     */
-    public boolean createSupervisor(int supervisorId, int superviseeId) {
+    public long createSupervisor(int supervisorId, int superviseeId) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -413,9 +407,7 @@ public class Database extends SQLiteOpenHelper {
         contentValues.put(SUP_COL_3, superviseeId);
 
         long result = db.insert(SUP_TABLE_NAME, null, contentValues);
-        if(result == -1)
-            return false;
-        return true; 
+        return result; 
     }
 
     /**
