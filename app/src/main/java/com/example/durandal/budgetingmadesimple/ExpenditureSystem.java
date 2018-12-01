@@ -240,22 +240,24 @@ public final class ExpenditureSystem {
         return false;
     }
 
+
     /**
      * Creates a new expenditure. Not only adds it to local dataStructure, but also sends request
      * for it to be added to the DataBase.
      * @param expen
      * @return true is successful, false if not.
      */
+    /*
     public boolean addExpenditure(Expenditure expen) {
 
-        if (BMSApplication.database.createExpenditure()) {
+        if (BMSApplication.database.createExpenditure() ) {
             expenditures.addFirst(expen);
             return true;
         }
         return false;
 
     }
-
+*/
     /**
      * Sepcial Add function that allows date to be set manually. Used for debug.
      * @param inValue

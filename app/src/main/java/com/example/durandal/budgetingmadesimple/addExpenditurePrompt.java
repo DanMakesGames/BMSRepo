@@ -48,8 +48,13 @@ public class addExpenditurePrompt extends MainActivity {
                         return;
                     }
                     float num = Float.parseFloat(amount.getText().toString());
-                    Expenditure newExpen = new Expenditure(num,categories.getSelectedItem().toString());
-                    BMSApplication.expSystem.addExpenditure(newExpen);
+
+                    // make sure that
+                    //Expenditure newExpen = new Expenditure(num,categories.getSelectedItem().toString());
+                    //BMSApplication.expSystem.addExpenditure(newExpen);
+                    BMSApplication.expSystem.addExpenditure(num,categories.getSelectedItem().toString(),false, ReoccurringRate.NONE);
+
+
                     startActivity(new Intent(addExpenditurePrompt.this, MainActivity.class));
                 }
                 else {
