@@ -141,6 +141,9 @@ public final class ExpenditureSystem {
         LinkedList<Expenditure> return_list = new LinkedList<Expenditure>();
         Iterator expenditures_it = dateExps.iterator();
 
+        if (categoryName == null) {
+            return return_list;
+        }
 
         if (categoryName.equals(ALL_CATEGORY))
             return dateExps;

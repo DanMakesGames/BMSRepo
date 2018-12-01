@@ -9,7 +9,10 @@ import android.widget.Spinner;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 public class StatisticsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -61,7 +64,7 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         times = new String[]{"Last 7 Days", "Last Month", "Last 3 Months"};
 
         // Populate categories based on user's categories
-        categories = BMSApplication.expSystem.getCategoryNames();
+        categories = populateCategories(BMSApplication.expSystem.getCategoryNames());
 
         // Populate the users array with the current user and it's supervisees
         //users = populateUsers(BMSApplication.account.getSupervisees());
@@ -76,13 +79,22 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         categoryDropdown.setAdapter(adapter2);
 
         // Populate the supervisee dropdown
-        ArrayAdapter<String> adapter3 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, categories);
+        ArrayAdapter<String> adapter3 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, users);
         superviseeDropdown.setAdapter(adapter3);
 
         // Set listeners
         timeDropdown.setOnItemSelectedListener(this);
         categoryDropdown.setOnItemSelectedListener(this);
         superviseeDropdown.setOnItemSelectedListener(this);
+
+        //By default, have last month as the time selected
+        timeDropdown.setSelection(1);
+
+        // By default, have the current user as the user selected
+        superviseeDropdown.setSelection(0);
+
+        // By default, have overall total spent selected
+        categoryDropdown.setSelection(0);
 
         // Set the text views with their default values
         totalBudgetView.setText(totalbudget);
@@ -93,11 +105,11 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch(parent.getId()) {
             case R.id.category_dropdown:
-                onCategorySelected(position);
+                onCategorySelected((String) categoryDropdown.getSelectedItem());
                 break;
 
             case R.id.time_dropdown:
-                onTimeSelected(position);
+                populateTotalSpent(position);
                 break;
         }
 
@@ -113,50 +125,97 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
 
         users[0] = "Current User";
 
-        for (int i = 1; i < superviseeNames.size(); i++) {
-            //users[i] = supervisees.get(i-1).getUsername
+        for (int i = 0; i < superviseeNames.size(); i++) {
+            //users[i + 1] = supervisees.get(i).getUsername
         }
 
         return users;
     }
 
-    public void onTimeSelected(int position) {
+    private String[] populateCategories (String[] categoryNames) {
+        String[] categories = new String[categoryNames.length + 1];
 
-        if (position == 0) {
-            // Set total spent based on last 7 days
-            /*
-            someList = getExpendituresTimeAndCat(currentTime - 7, currentTime, catSelected
-             */
+        categories[0] = "Overall";
+
+        for (int i = 0; i < categoryNames.length; i++)
+            categories[i + 1] = categoryNames[i];
+
+        return categories;
+    }
+
+    private void populateTotalSpent(int time) {
+
+        ZonedDateTime end = ZonedDateTime.now();
+        ZonedDateTime start;
+        LinkedList<Expenditure> expList;
+        float totalSpentValue;
+
+        if (time == 0) {
+            // Set start time to be 7 days ago
+            start = end.minusDays(7);
         }
 
-        else if (position == 1) {
-            // Set total spent based on last 7 days
-            /*
-            someList = getExpendituresTimeAndCat(currentTime - 30, currentTime, catSelected);
-             */
-
-            /*
-             if (totalBudget)
-                totalBudget - totalSpent;
-              */
+        else if (time == 1) {
+            // Set start time to be 1 month ago
+            start = end.minusMonths(1);
         }
 
         else {
-            // Set total spend based on last 3 months
-            /*
-            someList = getExpendituresTimeAndCat(currentTime - 90, currentTime, catSelected);
-             */
+            // Set start time to be 3 months ago
+            start = end.minusMonths(3);
         }
+
+        // Calculate total spent for all categories if overall is selected
+        if (catSelected == "Overall")
+            totalSpentValue = calcTotalSpentOverall(start, end);
+
+
+        // Calculate total spent for the selected category only
+        else {
+            expList = BMSApplication.expSystem.getExpendituresTimeAndCat(start, end, catSelected);
+            totalSpentValue = calcTotalSpent(expList);
+        }
+
+        if (totalSpentValue == 0) {
+            totalSpentView.setText(("Total Spent: $0.00"));
+        }
+
+        else {
+            totalSpent = Float.valueOf(totalSpentValue).toString();
+            totalSpentView.setText("Total Spent: $" + totalSpent);
+        }
+
+
+
     }
 
-    public void onCategorySelected(int position) {
+    private void onCategorySelected(String cat) {
         // Based on which category was selected, populate a list of expenditures
+        catSelected = cat;
 
-        // catSelected = item spinner has currently selected.
-
+        populateTotalSpent(timeDropdown.getSelectedItemPosition());
     }
 
+    private float calcTotalSpent(LinkedList<Expenditure> expList) {
+        ListIterator<Expenditure> it = expList.listIterator();
+        float totalSpent = 0;
 
+        while (it.hasNext())
+            totalSpent += it.next().getValue();
 
+        return totalSpent;
+    }
+
+    private float calcTotalSpentOverall(ZonedDateTime start, ZonedDateTime end) {
+        float totalSpent = 0;
+
+        for (String category : BMSApplication.expSystem.getCategoryNames()) {
+            LinkedList<Expenditure> expList =
+                    BMSApplication.expSystem.getExpendituresTimeAndCat(start, end, category);
+            totalSpent += calcTotalSpent(expList);
+        }
+
+        return totalSpent;
+    }
 
 }
