@@ -146,7 +146,7 @@ public class UserAccount extends Account {
         int superviseeId = 0;
         String superviseeEmail = "";
         //TODO get id etc. from email check if is linked, add status here "0"
-        if (BMSApplication.database.createSupervisor(getUserID(), superviseeId)) {
+        if (BMSApplication.database.createSupervisor(getUserID(), superviseeId, 0) != 1) {
             supervisees.add(new LinkedAccount(superviseeId, superviseeName, superviseeEmail, linkStatus));
             return true;
         } else
