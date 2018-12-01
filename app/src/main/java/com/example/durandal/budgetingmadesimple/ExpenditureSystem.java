@@ -187,8 +187,9 @@ public final class ExpenditureSystem {
      */
     public final LinkedList<Expenditure> getExpendituresTimeAndCat ( ZonedDateTime start, ZonedDateTime end, String categoryName) {
 
-
-
+        if (categoryName == null)
+            return null;
+        
         LinkedList<Expenditure> dateExps = getExpendituresByDate(start, end);
         LinkedList<Expenditure> return_list = new LinkedList<Expenditure>();
         Iterator expenditures_it = dateExps.iterator();
