@@ -157,10 +157,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private void showcaseDatabaseUserTable(Database bmsDb) {
         // Create user
-        boolean isCreated = bmsDb.createUser("FakeUser", "fakepass",
+        long isCreated = bmsDb.createUser("FakeUser", "fakepass",
                 "fake@gmail.com", "Are you fake?", "Yes",
                 100, 50, 50);
-        if (isCreated == true)
+        if (isCreated != -1)
             Log.d("SQL Database Testing", "User inserted");
         else
             Log.d("SQL Database Testing", "User not inserted");
@@ -189,9 +189,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private void showcaseDatabaseExpenditureTable(Database bmsDb) {
         // Create expenditure
-        boolean isCreated = bmsDb.createExpenditure(1, 1, 100,
+        long isCreated = bmsDb.createExpenditure(1, 1, 100,
                 Long.toString(Instant.now().getEpochSecond()), false);
-        if(isCreated == true)
+        if(isCreated != -1)
             Log.d("SQL Database Testing","Expenditure inserted");
         else
             Log.d("SQL Database Testing","Expenditure not inserted");
