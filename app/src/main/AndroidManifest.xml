@@ -11,16 +11,8 @@
         android:label="BMS"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-<<<<<<< HEAD
         android:theme="@style/AppTheme">
-=======
-        android:theme="@style/AppTheme"
-        android:name=".BMSApplication"
-        tools:ignore="GoogleAppIndexingWarning">
 
-
-
->>>>>>> statsPage
         <activity
             android:name=".MainActivity"
             android:exported="true" />
@@ -39,7 +31,22 @@
             android:exported="true" />
         <activity android:name=".SettingsSupervisorActivity"></activity>
 
+
         <activity android:name=".StatisticsActivity" android:exported="true"></activity>
+
+
+        <activity android:name=".addExpenditurePrompt"
+            android:theme="@style/AppTheme.CustomTheme"
+            android:exported="true">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".delExpenditurePrompt"
+            android:theme="@style/AppTheme.CustomTheme"
+            android:exported="true">
+        </activity>
+
 
     </application>
 
