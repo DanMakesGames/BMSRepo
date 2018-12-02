@@ -2,6 +2,8 @@ package com.example.durandal.budgetingmadesimple;
 
 import android.app.Application;
 
+import java.time.ZonedDateTime;
+
 /**
  * This is the class that handles Activity independant app state. Can store data with global access
  * level. Data lives as long as the app does.
@@ -31,6 +33,8 @@ public class BMSApplication extends Application {
         singleton = this;
 
         BMSApplication.database = new Database(getApplicationContext());
+
+        //expSystem.addCategory(false,0,"food");
 
     }
 }

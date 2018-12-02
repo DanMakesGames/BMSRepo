@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:name=".BMSApplication"
     package="com.example.durandal.budgetingmadesimple">
 
@@ -11,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".MainActivity"
             android:exported="true" />
@@ -21,19 +23,31 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AccountSettingsActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+      
         <activity android:name=".LoginActivity" />
         <activity android:name=".SignUpActivity" />
         <activity
             android:name=".CategoriesActivity"
             android:exported="true" />
         <activity android:name=".SettingsSupervisorActivity"></activity>
+
+
+        <activity android:name=".StatisticsActivity" android:exported="true"></activity>
+
+
+        <activity android:name=".addExpenditurePrompt"
+            android:theme="@style/AppTheme.CustomTheme"
+            android:exported="true">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".delExpenditurePrompt"
+            android:theme="@style/AppTheme.CustomTheme"
+            android:exported="true">
+        </activity>
+
+
     </application>
 
 </manifest>

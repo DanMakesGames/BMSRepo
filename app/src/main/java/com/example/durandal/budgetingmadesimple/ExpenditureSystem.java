@@ -1,12 +1,15 @@
 package com.example.durandal.budgetingmadesimple;
 
+
 import android.annotation.TargetApi;
 import android.database.Cursor;
 import android.os.Build;
 import android.util.Log;
 
 import java.time.ZonedDateTime;
+
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -22,6 +25,7 @@ public final class ExpenditureSystem {
     private LinkedList<Expenditure> expenditures;
     private HashMap<String,Category> categories;
     public final static String ALL_CATEGORY = "all categories";
+    public final static String SEL_CATEGORY = "Select a category";
 
 
     /**
@@ -57,7 +61,7 @@ public final class ExpenditureSystem {
             String name = catCursor.getString(2);
 
             // emplace new category into app Category storage
-            categories.put(name, new Category(budget != 0,budget,name));
+            categories.put(name, new Category(budget != 0,budget,name, catId));
             IdToName.put(catId,name);
         }
 
@@ -77,11 +81,13 @@ public final class ExpenditureSystem {
             float value = Float.parseFloat(expCursor.getString(3));
             Instant timestamp = Instant.ofEpochSecond(Long.parseLong(expCursor.getString(4)));
             String category = IdToName.get(expCursor.getString(2));
+            int Id = Integer.parseInt(expCursor.getString(0));
 
             // create new expenditure object.
             Expenditure newExp = new Expenditure(
                         value,      //value
                         category,   //category
+                        Id,
                         timestamp); //timestamp
 
             // add to expenditure list.
@@ -181,12 +187,16 @@ public final class ExpenditureSystem {
      */
     public final LinkedList<Expenditure> getExpendituresTimeAndCat ( ZonedDateTime start, ZonedDateTime end, String categoryName) {
 
-
-
+        if (categoryName == null)
+            return null;
+        
         LinkedList<Expenditure> dateExps = getExpendituresByDate(start, end);
         LinkedList<Expenditure> return_list = new LinkedList<Expenditure>();
         Iterator expenditures_it = dateExps.iterator();
 
+        if (categoryName == null) {
+            return return_list;
+        }
 
         if (categoryName.equals(ALL_CATEGORY))
             return dateExps;
@@ -211,19 +221,47 @@ public final class ExpenditureSystem {
      * @param inReoccurring
      * @param inRate
      * @return true is successful, false if not.
+     *
      */
     public boolean addExpenditure(float inValue, String inCategory, boolean inReoccurring, ReoccurringRate inRate) {
 
-        Expenditure newExpen = new Expenditure(inValue, inCategory, inReoccurring, inRate);
+        Instant stamp = Instant.now();
+        long expId = BMSApplication.database.createExpenditure(
+                BMSApplication.account.getUserID(),
+                categories.get(inCategory).getCategoryId(),
+                inValue,
+                Long.toString(stamp.getEpochSecond()),
+                inReoccurring);
 
-        if (BMSApplication.database.createExpenditure(0, 0, 0, null, false) != -1) {
+        if (expId != -1) {
+
+            Expenditure newExpen = new Expenditure(inValue,inCategory, (int) expId, stamp);
+
             expenditures.addFirst(newExpen);
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Creates a new expenditure. Not only adds it to local dataStructure, but also sends request
+     * for it to be added to the DataBase.
+     * @param expen
+     * @return true is successful, false if not.
+     */
+    /*
+    public boolean addExpenditure(Expenditure expen) {
+
+        if (BMSApplication.database.createExpenditure() ) {
+            expenditures.addFirst(expen);
             return true;
         }
         return false;
 
     }
-
+*/
     /**
      * Sepcial Add function that allows date to be set manually. Used for debug.
      * @param inValue
@@ -231,11 +269,21 @@ public final class ExpenditureSystem {
      * @param time
 
      * @return
+     *
      */
     public boolean addExpDEBUG(float inValue, String inCategory, Instant time) {
 
-        Expenditure newExpen = new Expenditure(inValue, inCategory, time);
-        if (BMSApplication.database.createExpenditure(0, 0, 0, null, false) != -1) {
+
+        int expId = (int) BMSApplication.database.createExpenditure(BMSApplication.account.getUserID(),
+                categories.get(inCategory).getCategoryId(), inValue,
+                Long.toString(time.getEpochSecond()),
+                false);
+
+        // if creation was successful.
+        if (expId != -1) {
+
+            Expenditure newExpen = new Expenditure(inValue, inCategory, expId, time);
+
             expenditures.addFirst(newExpen);
             return true;
         }
@@ -248,10 +296,13 @@ public final class ExpenditureSystem {
      *
      * @param inExpenditure
      * @return true is successful, false if not.
+     *
+     *
      */
     public boolean deleteExpenditure(Expenditure inExpenditure) {
-        // TODO: Dummy value of 1 inserted to deleteExpenditure. Unique expenditure ID required
-        if (!BMSApplication.database.deleteExpenditure(1)) {
+
+
+        if (!BMSApplication.database.deleteExpenditure(inExpenditure.getExpId())) {
             return false;
         }
         for (int i = 0; i < expenditures.size(); i++) {
@@ -270,6 +321,7 @@ public final class ExpenditureSystem {
      * @param budget
      * @param name
      * @return true if added. False if a category with that name already existed and thus the category was not added.
+     *
      */
     public boolean addCategory(boolean bIsBudgeted, float budget, String name) {
 
@@ -277,9 +329,20 @@ public final class ExpenditureSystem {
         if( categories.containsKey(name) )
             return false;
 
-        // insert
-        categories.put(name, new Category(bIsBudgeted, budget, name));
-        return true;
+
+
+        // insert onto database
+        int catId  = (int) BMSApplication.database.createExpCategory(BMSApplication.account.getUserID(),name,budget);
+
+        // only add locally if cat add
+        if(catId != -1) {
+            // insert
+            categories.put(name, new Category(bIsBudgeted, budget, name, catId));
+            return true;
+        }
+
+        // data base request was not successful.
+        return false;
     }
 
     /**

@@ -47,7 +47,7 @@
                     android:layout_height="50dp"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="number"
+                    android:inputType="number|numberDecimal"
                     android:textAlignment="center"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.573"
