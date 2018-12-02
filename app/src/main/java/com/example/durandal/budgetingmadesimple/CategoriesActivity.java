@@ -129,11 +129,13 @@ public class CategoriesActivity extends AppCompatActivity {
                 }); // end of navigation bar code
 
         // Set onClickListener for the categories listed
-        // TODO: Don't know how to get it to select the whole row.
         expList.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
+            public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
+                // Highlight the row
+                view.setSelected(true);
+
                 // Get string of category selected
                 final String selected = expList.getItemAtPosition(position).toString();
                 final Category catSelected = BMSApplication.expSystem.getCategory(selected);
@@ -180,18 +182,22 @@ public class CategoriesActivity extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(), selected+" Budget Unset",
                                             Toast.LENGTH_SHORT).show();
                                 }
+                                // unhighlight the row
+                                view.setSelected(false);
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                // TODO: view.setA
+                                // unhighlight row
+                                view.setSelected(false);
                             }
                         })
                         .setOnCancelListener(new DialogInterface.OnCancelListener() {
                             @Override
                             public void onCancel(DialogInterface dialog) {
-                                // TODO
+                                // unhighlight row
+                                view.setSelected(false);
                             }
                         })
                         .setView(alertView);
