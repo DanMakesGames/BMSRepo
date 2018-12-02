@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:name=".BMSApplication"
     package="com.example.durandal.budgetingmadesimple">
 
@@ -10,7 +11,16 @@
         android:label="BMS"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+<<<<<<< HEAD
         android:theme="@style/AppTheme">
+=======
+        android:theme="@style/AppTheme"
+        android:name=".BMSApplication"
+        tools:ignore="GoogleAppIndexingWarning">
+
+
+
+>>>>>>> statsPage
         <activity
             android:name=".MainActivity"
             android:exported="true" />
@@ -21,12 +31,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".LoginActivity" />
         <activity android:name=".SignUpActivity" />
         <activity
             android:name=".CategoriesActivity"
             android:exported="true" />
         <activity android:name=".SettingsSupervisorActivity"></activity>
+
+        <activity android:name=".StatisticsActivity" android:exported="true"></activity>
+
     </application>
 
 </manifest>
