@@ -65,8 +65,11 @@ public final class ExpenditureSystem {
             IdToName.put(catId,name);
         }
 
+        Log.d("populate", IdToName.toString());
+
         // Now lets populate the Expenditures.
         Cursor expCursor = BMSApplication.database.getExpenditures(username);
+
 
         // no expenditures in database to parse.
         if(expCursor.getCount() == 0)
@@ -76,13 +79,13 @@ public final class ExpenditureSystem {
         // the linked list.
         while(expCursor.moveToNext()) {
 
-
             // extract expenditure parameters
             float value = Float.parseFloat(expCursor.getString(3));
             Instant timestamp = Instant.ofEpochSecond(Long.parseLong(expCursor.getString(4)));
-            String category = IdToName.get(expCursor.getString(2));
+            String category = IdToName.get( Integer.parseInt(expCursor.getString(2)) );
             int Id = Integer.parseInt(expCursor.getString(0));
 
+            Log.d("populate", value +", catId: "+expCursor.getString(2));
             // create new expenditure object.
             Expenditure newExp = new Expenditure(
                         value,      //value
@@ -225,7 +228,10 @@ public final class ExpenditureSystem {
      */
     public boolean addExpenditure(float inValue, String inCategory, boolean inReoccurring, ReoccurringRate inRate) {
 
+        Log.e("addExpenditure", "adding");
+
         Instant stamp = Instant.now();
+
         long expId = BMSApplication.database.createExpenditure(
                 BMSApplication.account.getUserID(),
                 categories.get(inCategory).getCategoryId(),

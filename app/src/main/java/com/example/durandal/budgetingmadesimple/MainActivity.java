@@ -48,7 +48,7 @@ import java.util.List;
  *  Spinner is the android name for a dropdown menu.
  */
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    Database bmsDb;
+    //Database bmsDb;
     private final String[] categoryDropdownDefault = {ExpenditureSystem.ALL_CATEGORY};
 
     protected static List<MainListView> mainList;
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
         // Example code intended for developers, showing how to interact with the SQL database
-        showcaseDatabase();
+        //showcaseDatabase();
 
 
 
@@ -342,17 +342,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /**
      * Showcase how to interact with the SQL database
      */
+    /*
     private void showcaseDatabase() {
         // Create SQL database
         bmsDb = new Database(this);
         showcaseDatabaseUserTable(bmsDb);
         showcaseDatabaseExpenditureTable(bmsDb);
     }
-
+    */
     /**
      * Showcase how to interact with user data in the SQL database
      * @param bmsDb
      */
+    /*
     private void showcaseDatabaseUserTable(Database bmsDb) {
         // Create user
         long isCreated = bmsDb.createUser("FakeUser", "fakepass",
@@ -380,11 +382,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Log.d("SQL Database Testing", "bankBalance: " + res.getString(8));
             }
     }
-
+    */
     /**
      * Showcase how to interact with expenditure data in the SQL database
      * @param bmsDb
      */
+    /*
     private void showcaseDatabaseExpenditureTable(Database bmsDb) {
         // Create expenditure
         long isCreated = bmsDb.createExpenditure(1, 1, 100,
@@ -409,4 +412,5 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Log.d("SQL Database Testing", "secretQuestionAnswer: " + res.getString(6));
             }
     }
+   */
 }
