@@ -111,8 +111,8 @@ public class CategoriesActivity extends AppCompatActivity {
                                 startActivity(intent2);
                                 break;
                             case R.id.nav_item_three: // go to statistics page
-                                //Intent intent3 = new Intent(CategoriesActivity.this, StatisticsActivity.class);
-                                //startActivity(intent3);
+                                Intent intent3 = new Intent(CategoriesActivity.this, StatisticsActivity.class);
+                                startActivity(intent3);
                                 break;
                             case R.id.nav_item_four: // go to settings
                                 Intent intent4 = new Intent(CategoriesActivity.this, AccountSettingsActivity.class);
