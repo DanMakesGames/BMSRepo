@@ -67,8 +67,8 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         categories = populateCategories(BMSApplication.expSystem.getCategoryNames());
 
         // Populate the users array with the current user and it's supervisees
-        //users = populateUsers(BMSApplication.account.getSupervisees());
-        users = new String[]{"Current User"};
+        users = populateUsers(BMSApplication.account.getSupervisees());
+        //users = new String[]{"Current User"};
 
         // Populate the time dropdown
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, times);
@@ -166,9 +166,10 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         }
 
         // Calculate total spent for all categories if overall is selected
-        if (catSelected == "Overall")
+        if (catSelected == "Overall") {
             expList = BMSApplication.expSystem.getExpendituresByDate(start, end);
             totalSpentValue = calcTotalSpent(expList);
+        }
 
 
         // Calculate total spent for the selected category only
