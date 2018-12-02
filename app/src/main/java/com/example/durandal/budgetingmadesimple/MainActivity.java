@@ -14,14 +14,7 @@ import android.widget.Spinner;
 
 import com.google.android.gms.common.util.ArrayUtils;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.time.Instant;
-import java.util.Arrays;
-
-
-
 import java.time.ZonedDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,6 +29,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     Database bmsDb;
     private final String[] categoryDropdownDefault = {ExpenditureSystem.ALL_CATEGORY};
+    private final String[] userDropdownDefault = {ExpenditureSystem.USERS};
 
     protected static List<MainListView> mainList;
     private ExpenditureArrayAdapter adapter;
@@ -43,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private boolean checked;
     private Spinner timeDropdown;
     private Spinner catDropdown;
+    private Spinner userDropdown;
+    private String prevUser;
     protected static FloatingActionButton fab;
     protected static FloatingActionButton delFab;
 
@@ -52,8 +48,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
 
 
+        System.out.println(BMSApplication.account.getUserName());
+
         // Set up list of expenditures.
         expList = (ListView) findViewById(R.id.expList);
+
+        // Give prevUser default value
+        prevUser = ExpenditureSystem.USERS;
+
+        // Set up adapter
+        Object[] expenArray = BMSApplication.expSystem.getExpendituresAll().toArray();
+        mainList = new LinkedList<>();
+        for (int i = 0; i < expenArray.length; i++) {
+            mainList.add(new MainListView((Expenditure)expenArray[i]));
+        }
+
+        adapter = new ExpenditureArrayAdapter(this, mainList);
+        expList.setAdapter(adapter);
+
 
 
         Log.e("Debug: ","LENGTH:" + BMSApplication.expSystem.getExpendituresAll().toArray().length);
@@ -61,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 BMSApplication.expSystem.getExpendituresAll().toArray() );*/
 
 
-
+        // Set up addButton and delButton
         fab = (FloatingActionButton)findViewById(R.id.addExpenditureButton);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -91,37 +103,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        Object[] expenArray = BMSApplication.expSystem.getExpendituresAll().toArray();
-        mainList = new LinkedList<>();
-        for (int i = 0; i < expenArray.length; i++) {
-            mainList.add(new MainListView((Expenditure)expenArray[i]));
-        }
-
-        adapter = new ExpenditureArrayAdapter(this, mainList);
-        expList.setAdapter(adapter);
-        //expList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        /*
-        expList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long arg3)
-            {
-
-                MainListView expenView = adapter.getItem(position);
-                expenView.toggleChecked();
-                Log.d("Clicked: ", expenView.getName());
-                MainListViewHolder viewHolder = (MainListViewHolder)view.getTag();
-                if (viewHolder == null) {
-                    return;
-                }
-                viewHolder.getCheckBox().setChecked(expenView.isChecked());
-                if (MainListView.hasSelected(mainList)) {
-                    fab.hide();
-                }
-
-
-            }
-
-        }); */
 
         //BMSApplication.expSystem.addCategory(false,0,"food");
 
@@ -137,16 +118,47 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Set up category drop down
         catDropdown = (Spinner) findViewById(R.id.category_dropdown);
+        String[] testCat = new String[2];
+        testCat[0] = ExpenditureSystem.ALL_CATEGORY;
+        testCat[1] = "food";
 
+        ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.our_spinner_item, testCat);
+        /*
         ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.our_spinner_item,
                 ArrayUtils.concat(categoryDropdownDefault,
                         BMSApplication.expSystem.getCategoryNames()));
-
+        */
         catAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         catDropdown.setAdapter(catAdapter);
         catDropdown.setSelection(0);
         catDropdown.setOnItemSelectedListener(this);
 
+        // Set up user drop down
+        userDropdown = (Spinner) findViewById(R.id.user_dropdown);
+        /*
+        String[] users;
+        if (BMSApplication.account != null) {
+            ArrayList<LinkedAccount> linked = BMSApplication.account.getSupervisees();
+            for (int i =0; i < linked.size(); i++) {
+                linked.get(i).isLinked();
+            }
+            users = new String[linked.size()];
+            for (int i = 0; i < users.length; i++) {
+                users[i] = linked.get(i).getUserName();
+            }
+        }
+        else {
+            users = new String[0];
+        }
+        */
+        String[] users = new String[1];
+        users[0] = "Dummy";
+        ArrayAdapter userAdapter = new ArrayAdapter(this, R.layout.our_spinner_item,
+                ArrayUtils.concat(userDropdownDefault, users));
+        userAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        userDropdown.setAdapter(userAdapter);
+        userDropdown.setSelection(0);
+        userDropdown.setOnItemSelectedListener(this);
 
 
         //loop adding
@@ -160,11 +172,46 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // determine which drop down was being used.
         switch(parent.getId()){
+            case R.id.user_dropdown:
+                String userSelection = (String)userDropdown.getSelectedItem();
+                if (userSelection.equals(prevUser)) {
+                    break;
+                }
+                if (userSelection.equals(userDropdownDefault)) {
+                    break;
+                }
+                else {
+                    // populate userExpenditures in expSystem
+                    BMSApplication.expSystem.populateUserFromDatabase(userSelection);
+
+                    // Adjust prevUser
+                    prevUser = userSelection;
+
+                    // Set up categories of user
+                    ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.our_spinner_item,
+                            ArrayUtils.concat(categoryDropdownDefault,
+                                    BMSApplication.expSystem.getUserCategoryNames()));
+
+                    //catAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                    catDropdown.setAdapter(catAdapter);
+                    //catDropdown.setSelection(0);
+                    //catDropdown.setOnItemSelectedListener(this);
+
+                    // Set up expenditures of user
+                    Object[] expenArray = BMSApplication.expSystem.getUserExpendituresAll().toArray();
+                    mainList = new LinkedList<>();
+                    for (int i = 0; i < expenArray.length; i++) {
+                        mainList.add(new MainListView((Expenditure)expenArray[i]));
+                    }
+                    adapter = new ExpenditureArrayAdapter(this, mainList);
+                    expList.setAdapter(adapter);
+                    return;
+                }
             case R.id.category_dropdown:
-                filterExpenditures(expList, timeDropdown, catDropdown);
+                filterExpenditures(expList, timeDropdown, catDropdown, userDropdown);
                 break;
             case R.id.time_dropdown:
-                filterExpenditures(expList, timeDropdown, catDropdown);
+                filterExpenditures(expList, timeDropdown, catDropdown, userDropdown);
                 break;
         }
 
@@ -174,7 +221,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Another interface callback
     }
 
-    public void filterExpenditures(ListView target, Spinner timeDD, Spinner catDD) {
+    public void adjustDD(Spinner timeDD, Spinner catDD) {
+
+    }
+
+    public void filterExpenditures(ListView target, Spinner timeDD, Spinner catDD, Spinner userDD) {
         final String allTime = "all times";
         // get time
         ZonedDateTime now = ZonedDateTime.now();
@@ -183,40 +234,41 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         String timeSelection = (String) timeDD.getSelectedItem();
         String catSelection = (String) catDD.getSelectedItem();
+        String userSelection = (String) userDD.getSelectedItem();
 
-        // Filter by time.
-        if(timeSelection.equals("all times")) {
-            mainList = new LinkedList<MainListView>();
-            LinkedList<Expenditure> array = BMSApplication.expSystem.getExpendituresByCategory(catSelection);
-            for (int i = 0; i < array.size(); i++) {
-                mainList.add(new MainListView(array.get(i)));
-            }
-            adapter = new ExpenditureArrayAdapter(this, mainList);
-        }
-        else if(timeSelection.equals("last 7 days")) {
-            mainList = new LinkedList<MainListView>();
-            LinkedList<Expenditure> array = BMSApplication.expSystem.getExpendituresTimeAndCat(
-                    now.minusDays( 7 ), now, catSelection);
-            for (int i = 0; i < array.size(); i++) {
-                mainList.add(new MainListView(array.get(i)));
-            }
-            adapter = new ExpenditureArrayAdapter(this, mainList);
+
+        if (userSelection.equals(userDropdownDefault)) {
+            // Filter by time.
+            if (timeSelection.equals("all times")) {
+                mainList = new LinkedList<MainListView>();
+                LinkedList<Expenditure> array = BMSApplication.expSystem.getExpendituresByCategory(catSelection);
+                for (int i = 0; i < array.size(); i++) {
+                    mainList.add(new MainListView(array.get(i)));
+                }
+                adapter = new ExpenditureArrayAdapter(this, mainList);
+            } else if (timeSelection.equals("last 7 days")) {
+                mainList = new LinkedList<MainListView>();
+                LinkedList<Expenditure> array = BMSApplication.expSystem.getExpendituresTimeAndCat(
+                        now.minusDays(7), now, catSelection);
+                for (int i = 0; i < array.size(); i++) {
+                    mainList.add(new MainListView(array.get(i)));
+                }
+                adapter = new ExpenditureArrayAdapter(this, mainList);
             /*
             adapter =  new ArrayAdapter(this, R.layout.simple_row, R.id.label,
                     BMSApplication.expSystem.getExpendituresTimeAndCat(
                             now.minusDays( 7 ), now, catSelection));
             */
-        }
-        else if(timeSelection.equals("this month")) {
-            mainList = new LinkedList<MainListView>();
-            LinkedList<Expenditure> array =  BMSApplication.expSystem.getExpendituresTimeAndCat(
-                    now.minusDays(now.getDayOfMonth()),
-                    now,
-                    catSelection);
-            for (int i = 0; i < array.size(); i++) {
-                mainList.add(new MainListView(array.get(i)));
-            }
-            adapter = new ExpenditureArrayAdapter(this, mainList);
+            } else if (timeSelection.equals("this month")) {
+                mainList = new LinkedList<MainListView>();
+                LinkedList<Expenditure> array = BMSApplication.expSystem.getExpendituresTimeAndCat(
+                        now.minusDays(now.getDayOfMonth()),
+                        now,
+                        catSelection);
+                for (int i = 0; i < array.size(); i++) {
+                    mainList.add(new MainListView(array.get(i)));
+                }
+                adapter = new ExpenditureArrayAdapter(this, mainList);
             /*
             adapter =  new ArrayAdapter(this, R.layout.simple_row, R.id.label,
                     BMSApplication.expSystem.getExpendituresTimeAndCat(
@@ -224,6 +276,36 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             now,
                             catSelection));
                             */
+            }
+        }
+        else {
+            // Filter by time.
+            if (timeSelection.equals("all times")) {
+                mainList = new LinkedList<MainListView>();
+                LinkedList<Expenditure> array = BMSApplication.expSystem.getUserExpendituresByCategory(catSelection);
+                for (int i = 0; i < array.size(); i++) {
+                    mainList.add(new MainListView(array.get(i)));
+                }
+                adapter = new ExpenditureArrayAdapter(this, mainList);
+            } else if (timeSelection.equals("last 7 days")) {
+                mainList = new LinkedList<MainListView>();
+                LinkedList<Expenditure> array = BMSApplication.expSystem.getUserExpendituresTimeAndCat(
+                        now.minusDays(7), now, catSelection);
+                for (int i = 0; i < array.size(); i++) {
+                    mainList.add(new MainListView(array.get(i)));
+                }
+                adapter = new ExpenditureArrayAdapter(this, mainList);
+            } else if (timeSelection.equals("this month")) {
+                mainList = new LinkedList<MainListView>();
+                LinkedList<Expenditure> array = BMSApplication.expSystem.getUserExpendituresTimeAndCat(
+                        now.minusDays(now.getDayOfMonth()),
+                        now,
+                        catSelection);
+                for (int i = 0; i < array.size(); i++) {
+                    mainList.add(new MainListView(array.get(i)));
+                }
+                adapter = new ExpenditureArrayAdapter(this, mainList);
+            }
         }
 
         // Reset expenditures.
