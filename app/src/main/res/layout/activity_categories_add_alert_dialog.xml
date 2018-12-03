@@ -80,7 +80,7 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:hint="(Optional)"
-                    android:inputType="number"
+                    android:inputType="number|numberDecimal"
                     android:textAlignment="center"
                     tools:layout_editor_absoluteX="153dp"
                     tools:layout_editor_absoluteY="458dp" />

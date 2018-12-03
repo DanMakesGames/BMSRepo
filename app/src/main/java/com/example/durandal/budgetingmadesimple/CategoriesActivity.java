@@ -111,8 +111,8 @@ public class CategoriesActivity extends AppCompatActivity {
                                 startActivity(intent2);
                                 break;
                             case R.id.nav_item_three: // go to statistics page
-                                //Intent intent3 = new Intent(CategoriesActivity.this, StatisticsActivity.class);
-                                //startActivity(intent3);
+                                Intent intent3 = new Intent(CategoriesActivity.this, StatisticsActivity.class);
+                                startActivity(intent3);
                                 break;
                             case R.id.nav_item_four: // go to settings
                                 Intent intent4 = new Intent(CategoriesActivity.this, AccountSettingsActivity.class);
@@ -129,13 +129,16 @@ public class CategoriesActivity extends AppCompatActivity {
                 }); // end of navigation bar code
 
         // Set onClickListener for the categories listed
-        // TODO: Don't know how to get it to select the whole row.
         expList.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
+            public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
+                // Highlight the row
+                view.setSelected(true);
+
                 // Get string of category selected
                 final String selected = expList.getItemAtPosition(position).toString();
+                final Category catSelected = BMSApplication.expSystem.getCategory(selected);
 
                 // Instead of going to another page, I just added an alert dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(CategoriesActivity.this);
@@ -145,14 +148,13 @@ public class CategoriesActivity extends AppCompatActivity {
                 budgetCheckbox2 = (CheckBox) alertView.findViewById(R.id.budgetCheckbox2);
 
                 // Set the hint value and checkbox values
-                // TODO: Need method to return true or false if a category has a budget or not
-                // If (Category has a budget) {
-                //      editBudget2.setHint([That category budget]);
-                //      budgetCheckbox2.setChecked(false);
-                // } Else {
-                editBudget2.setHint("Enter a Budget");
-                budgetCheckbox2.setChecked(false);
-                // }
+                if (catSelected.isbIsBudgeted()) {
+                    editBudget2.setText(Float.toString(catSelected.getBudget()));
+                    budgetCheckbox2.setChecked(true);
+                } else {
+                    editBudget2.setHint("Enter a Budget");
+                    budgetCheckbox2.setChecked(false);
+                }
 
                 builder.setTitle("Category: "+selected)
                         .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
@@ -160,31 +162,42 @@ public class CategoriesActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 final boolean isBudgetChecked = (boolean) budgetCheckbox2.isChecked();
                                 String budgetStr = editBudget2.getText().toString();
-                                double budgetAmnt = budgetStr.isEmpty() ? 0.0 : Double.parseDouble(budgetStr);
+                                float budgetAmnt = budgetStr.isEmpty() ? (float) 0.0 : Float.parseFloat(budgetStr);
 
                                 // Check the apply budget box
-                                if (isBudgetChecked){
+                                if (isBudgetChecked) {
                                     if (budgetAmnt == 0) { // budget not set
                                         Toast.makeText(getApplicationContext(), selected+" Budget Not Set",
                                                 Toast.LENGTH_SHORT).show();
                                     }
                                     else { // set the budget
-                                        // TODO however you set the budget do it here
+                                        catSelected.updateBudget(budgetAmnt);
+                                        catSelected.setbIsBudgeted(true);
                                         Toast.makeText(getApplicationContext(), selected+" Budget Set",
                                                 Toast.LENGTH_SHORT).show();
                                     }
                                 }
                                 else { // apply budget box not checked
-                                    // TODO however you unset the budget do it here
+                                    catSelected.setbIsBudgeted(false);
                                     Toast.makeText(getApplicationContext(), selected+" Budget Unset",
                                             Toast.LENGTH_SHORT).show();
                                 }
+                                // unhighlight the row
+                                view.setSelected(false);
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                // TODO for cancel don't do anything?
+                                // unhighlight row
+                                view.setSelected(false);
+                            }
+                        })
+                        .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                // unhighlight row
+                                view.setSelected(false);
                             }
                         })
                         .setView(alertView);
@@ -201,10 +214,6 @@ public class CategoriesActivity extends AppCompatActivity {
                 final AlertDialog.Builder builder=new AlertDialog.Builder(CategoriesActivity.this);
                 final View alertView2 = getLayoutInflater().inflate(R.layout.activity_categories_add_alert_dialog, null);
 
-                /* TODO set the 'hint' value in the editText on the alert dialog to the current budget...if none then default to
-                 *  'Enter Budget'
-                 *  Same thing goes for the checkbox, need to set the value based on if it's checked or not. Then set the value
-                 *  like that. */
                 editBudgetAdd = (EditText) alertView2.findViewById(R.id.editBudgetAdd);
                 budgetCheckbox = (CheckBox) alertView2.findViewById(R.id.budgetCheckboxAdd);
                 addCategoryName = (EditText) alertView2.findViewById(R.id.editCategoryName);
@@ -216,7 +225,7 @@ public class CategoriesActivity extends AppCompatActivity {
                                 // Get the category name and budget amount
                                 String catName = addCategoryName.getText().toString();
                                 String budgetStr = editBudgetAdd.getText().toString();
-                                double budgetAmnt = budgetStr.isEmpty() ? 0.0 : Double.parseDouble(budgetStr);
+                                float budgetAmnt = budgetStr.isEmpty() ? (float) 0.0 : Float.parseFloat(budgetStr);
                                 // Get checkbox boolean
                                 boolean isBudgetChecked = (boolean) budgetCheckbox.isChecked();
 
@@ -232,8 +241,6 @@ public class CategoriesActivity extends AppCompatActivity {
                                         Toast.makeText(getApplicationContext(), "Category Added: Budget Not Set",
                                                 Toast.LENGTH_SHORT).show();
                                         BMSApplication.expSystem.addCategory(false, 0, catName);
-                                        //ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), R.layout.activity_categories_listview, R.id.textCategory, categoryNames);
-                                        //expList.setAdapter(adapter);
                                         finish();
                                         startActivity(getIntent());
                                     }
@@ -245,14 +252,12 @@ public class CategoriesActivity extends AppCompatActivity {
                                         startActivity(getIntent());
                                     }
                                 }
-                                //adapter.notifyDataSetChanged();
-                                //expList.invalidateViews();
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                // TODO for cancel don't do anything?
+                                // Nothing
                             }
                         })
                         .setView(alertView2);

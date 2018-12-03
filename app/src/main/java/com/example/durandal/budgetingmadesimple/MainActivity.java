@@ -1,44 +1,31 @@
 package com.example.durandal.budgetingmadesimple;
 
 import android.content.Intent;
-import android.database.Cursor;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
-import android.support.v4.content.res.TypedArrayUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-
 import android.view.MenuItem;
-import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
-
-import java.lang.Object;
-//import org.apache.commons.lang3.ArrayUtils;
 
 import com.google.android.gms.common.util.ArrayUtils;
-
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.time.Instant;
-import java.util.Arrays;
-
-
 
 import java.time.ZonedDateTime;
 import java.util.LinkedList;
 import java.util.List;
+
+//import org.apache.commons.lang3.ArrayUtils;
 
 //import org.apache.commons.lang3.ArrayUtils;
 
@@ -48,7 +35,7 @@ import java.util.List;
  *  Spinner is the android name for a dropdown menu.
  */
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    Database bmsDb;
+    //Database bmsDb;
     private final String[] categoryDropdownDefault = {ExpenditureSystem.ALL_CATEGORY};
 
     protected static List<MainListView> mainList;
@@ -124,8 +111,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 startActivity(intent2);
                                 break;
                             case R.id.nav_item_three: // go to statistics page
-                                //Intent intent3 = new Intent(MainActivity.this, StatisticsActivity.class);
-                                //startActivity(intent3);
+                                Intent intent3 = new Intent(MainActivity.this, StatisticsActivity.class);
+                                startActivity(intent3);
                                 break;
                             case R.id.nav_item_four: // go to settings
                                 Intent intent4 = new Intent(MainActivity.this, AccountSettingsActivity.class);
@@ -143,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
         // Example code intended for developers, showing how to interact with the SQL database
-        showcaseDatabase();
+        //showcaseDatabase();
 
 
 
@@ -342,17 +329,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /**
      * Showcase how to interact with the SQL database
      */
+    /*
     private void showcaseDatabase() {
         // Create SQL database
         bmsDb = new Database(this);
         showcaseDatabaseUserTable(bmsDb);
         showcaseDatabaseExpenditureTable(bmsDb);
     }
-
+    */
     /**
      * Showcase how to interact with user data in the SQL database
      * @param bmsDb
      */
+    /*
     private void showcaseDatabaseUserTable(Database bmsDb) {
         // Create user
         long isCreated = bmsDb.createUser("FakeUser", "fakepass",
@@ -380,11 +369,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Log.d("SQL Database Testing", "bankBalance: " + res.getString(8));
             }
     }
-
+    */
     /**
      * Showcase how to interact with expenditure data in the SQL database
      * @param bmsDb
      */
+    /*
     private void showcaseDatabaseExpenditureTable(Database bmsDb) {
         // Create expenditure
         long isCreated = bmsDb.createExpenditure(1, 1, 100,
@@ -409,4 +399,5 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Log.d("SQL Database Testing", "secretQuestionAnswer: " + res.getString(6));
             }
     }
+   */
 }

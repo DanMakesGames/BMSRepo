@@ -67,7 +67,7 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         categories = populateCategories(BMSApplication.expSystem.getCategoryNames());
 
         // Populate the users array with the current user and it's supervisees
-        users = populateUsers(BMSApplication.account.getSupervisees());
+        //users = populateUsers(BMSApplication.account.getSupervisees());
         //users = new String[]{"Current User"};
 
         // Populate the time dropdown
