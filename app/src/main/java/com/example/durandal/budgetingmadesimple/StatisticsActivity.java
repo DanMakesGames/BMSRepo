@@ -1,10 +1,19 @@
 package com.example.durandal.budgetingmadesimple;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
@@ -40,11 +49,91 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
     private String totalSpent; // Get total spent based on category selected and
     private String remaining = "Remaining: N/A"; // Only modified when we check expenditures of the last month
     private String catSelected; // Current category selected
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        actionbar.setTitle("Statistics");
+        final LinearLayout LL1 = findViewById(R.id.linearLayout);
+        final LinearLayout LL2 = findViewById(R.id.linearLayout3);
+        final LinearLayout LL3 = findViewById(R.id.linearLayout6);
+
+        //TextView drawer_text = (TextView) findViewById(R.id.drawer_header_text);
+        //drawer_text.setText(BMSApplication.account.getUserName());
+
+        // Code for navigation drawer
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+
+        mDrawerLayout.addDrawerListener(
+                new DrawerLayout.DrawerListener() {
+                    @Override
+                    public void onDrawerSlide(View drawerView, float slideOffset) {
+                        // Respond when the drawer's position changes
+                        mDrawerLayout.bringToFront();
+                    }
+
+                    @Override
+                    public void onDrawerOpened(View drawerView) {
+                        // Respond when the drawer is opened
+                        mDrawerLayout.bringToFront();
+                    }
+
+                    @Override
+                    public void onDrawerClosed(View drawerView) {
+                        // Respond when the drawer is closed
+                        LL1.bringToFront();
+                        LL2.bringToFront();
+                        LL3.bringToFront();
+
+                    }
+
+                    @Override
+                    public void onDrawerStateChanged(int newState) {
+                        // Respond when the drawer motion state changes
+                    }
+                }
+        );
+
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                        switch(menuItem.getItemId()) {
+                            case R.id.nav_item_one: // go to expenditures (home) page
+                                Intent intent1 = new Intent(StatisticsActivity.this, MainActivity.class);
+                                startActivity(intent1);
+                                break;
+                            case R.id.nav_item_two: // go to categories page
+                                Intent intent2 = new Intent(StatisticsActivity.this, CategoriesActivity.class);
+                                startActivity(intent2);
+                                break;
+                            case R.id.nav_item_three: // go to statistics page
+                                Intent intent3 = new Intent(StatisticsActivity.this, StatisticsActivity.class);
+                                startActivity(intent3);
+                                break;
+                            case R.id.nav_item_four: // go to settings
+                                Intent intent4 = new Intent(StatisticsActivity.this, AccountSettingsActivity.class);
+                                startActivity(intent4);
+                                break;
+                        }
+                        // close drawer when item is tapped
+                        mDrawerLayout.closeDrawers();
+                        // Add code here to update the UI based on the item selected
+                        // For example, swap UI fragments here
+
+                        return true;
+                    }
+                }); // end of navigation bar code
+
 
         // Buttons
         personalButton = findViewById(R.id.peronal_button);
@@ -106,6 +195,20 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         //totalBudgetView.setText(totalbudget);
         //remainingView.setText(remaining);
 
+        LL1.bringToFront();
+        LL2.bringToFront();
+        LL3.bringToFront();
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
