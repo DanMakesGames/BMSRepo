@@ -120,7 +120,7 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
 
     }
 
-    private String[] populateUsers (ArrayList<Account> superviseeNames) {
+    private String[] populateUsers (ArrayList<LinkedAccount> superviseeNames) {
         String[] users = new String[superviseeNames.size() + 1];
 
         users[0] = "Current User";
