@@ -53,6 +53,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         List<String> dataList = new ArrayList<String>();
         dataList.add("supervisor");
         dataList.add("supervisee");
+        dataList.add("change password");
         dataList.add("log out");
 
 
@@ -70,14 +71,18 @@ public class AccountSettingsActivity extends AppCompatActivity {
                     startActivity(intent);*/
                 }
                 if(clickItemObj.toString().equals("supervisee")){
-                    /*Toast.makeText(AccountSettingsActivity.this, "fck " + clickItemObj.toString(), Toast.LENGTH_SHORT).show();*/
                     Intent intent = new Intent(AccountSettingsActivity.this,SettingsSuperviseeActivity.class);
+                    startActivity(intent);
+                }
+
+                if(clickItemObj.toString().equals("change password")){
+                    Intent intent = new Intent(AccountSettingsActivity.this,ChangePasswordActivity.class);
                     startActivity(intent);
                 }
 
                 if(clickItemObj.toString().equals("logout"))
                 {
-                    UserAccount.logout(AccountSettingsActivity.this);
+                    //UserAccount.logout(AccountSettingsActivity.this);
                     Intent intent = new Intent(AccountSettingsActivity.this, StartActivity.class);
                     startActivity(intent);
 
