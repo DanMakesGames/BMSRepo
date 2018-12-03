@@ -67,7 +67,7 @@ public class Database extends SQLiteOpenHelper {
     private static final String SUP_COL_1_TYPE = "INTEGER PRIMARY KEY AUTOINCREMENT";
     private static final String SUP_COL_2 = "SupervisorId";
     private static final String SUP_COL_2_TYPE = "INTEGER";
-    private static final String SUP_COL_3 = "SupervisoreeId";
+    private static final String SUP_COL_3 = "SuperviseeId";
     private static final String SUP_COL_3_TYPE = "INTEGER";
     private static final String SUP_COL_4 = "Status";
     private static final String SUP_COL_4_TYPE = "INTEGER";
@@ -466,9 +466,9 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(SUP_COL_1, supervisorId);
-        contentValues.put(SUP_COL_2, superviseeId);
-        contentValues.put(SUP_COL_3, status);
+        contentValues.put(SUP_COL_2, supervisorId);
+        contentValues.put(SUP_COL_3, superviseeId);
+        contentValues.put(SUP_COL_4, status);
 
         int rowsChanged = db.update(SUP_TABLE_NAME, contentValues, "RelationshipId = ?",
                 new String[] {Integer.toString(relationshipId)});

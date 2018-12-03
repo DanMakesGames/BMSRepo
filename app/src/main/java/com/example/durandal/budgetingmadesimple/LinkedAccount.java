@@ -14,7 +14,7 @@ public class LinkedAccount extends Account {
     public LinkedAccount(int userID, String userName, String userEmail, int status, int relationId) {
         super(userID, userName, userEmail);
         this.status = status;
-        this.status = relationId;
+        this.relationId = relationId;
     }
 
     public boolean isLinked() {
