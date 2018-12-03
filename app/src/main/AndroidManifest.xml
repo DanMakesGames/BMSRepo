@@ -47,10 +47,7 @@
             android:name=".AccountSettingsActivity"
             android:label="Account Settings" />
         <activity android:name=".SettingsSuperviseeActivity" />
-        <activity
-            android:name=".test"
-            android:label="@string/title_activity_test"
-            android:theme="@style/AppTheme"></activity>
+
     </application>
 
 </manifest>
