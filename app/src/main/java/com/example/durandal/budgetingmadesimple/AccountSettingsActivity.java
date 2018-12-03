@@ -1,7 +1,11 @@
 package com.example.durandal.budgetingmadesimple;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,7 +23,28 @@ public class AccountSettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account_settings);
 
         this.arrayAdapterListView();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    // dont know what is doing
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
+    }
+
 
     // This method use an ArrayAdapter to add data in ListView.
     private void arrayAdapterListView()
@@ -44,13 +69,18 @@ public class AccountSettingsActivity extends AppCompatActivity {
                     /*Intent intent = new Intent(AccountSettingsActivity.this, StartActivity.class);
                     startActivity(intent);*/
                 }
-                if(clickItemObj.toString() == "supervisee")
+                if(clickItemObj.toString().equals("supervisee")){
                     /*Toast.makeText(AccountSettingsActivity.this, "fck " + clickItemObj.toString(), Toast.LENGTH_SHORT).show();*/
-                if(clickItemObj.toString() == "logout")
+                    Intent intent = new Intent(AccountSettingsActivity.this,SettingsSuperviseeActivity.class);
+                    startActivity(intent);
+                }
+
+                if(clickItemObj.toString().equals("logout"))
                 {
+                    UserAccount.logout(AccountSettingsActivity.this);
                     Intent intent = new Intent(AccountSettingsActivity.this, StartActivity.class);
                     startActivity(intent);
-                    UserAccount.logout(AccountSettingsActivity.this);
+
                 }
             }
         });

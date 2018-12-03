@@ -20,6 +20,7 @@ import android.widget.TextView;
 public class LoginActivity extends AppCompatActivity {
 
     private Button loginButton;
+    private Button backButton;
     private EditText editPassword;
     private EditText editUsername;
     private TextView textErrorMessage;
@@ -31,11 +32,21 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         loginButton = (Button) findViewById(R.id.login_button);
+        backButton = (Button) findViewById(R.id.back);
         editPassword = (EditText) findViewById(R.id.edit_password);
         editUsername = (EditText) findViewById(R.id.edit_username);
         textErrorMessage = (TextView) findViewById(R.id.text_error_message);
 
         textErrorMessage.setAlpha(0);
+
+        backButton.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, StartActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
