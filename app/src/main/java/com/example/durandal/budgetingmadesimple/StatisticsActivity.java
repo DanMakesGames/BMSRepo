@@ -17,9 +17,9 @@ import java.util.ListIterator;
 public class StatisticsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     // The app's text vies display total budget, total spent, and the remaining amount available
-    private TextView totalBudgetView;
+    //private TextView totalBudgetView;
     private TextView totalSpentView;
-    private TextView remainingView;
+    //private TextView remainingView;
 
     // The app's dropdowns are populated based on user's categories, it's supervisees, and the
     // times available
@@ -34,7 +34,7 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
     private String[] categories; // Stores the categories of the user
     private String[] times; // Stores the times that we check expenditures for
     private String[] users; // Stores the current user and the supervisees
-    private Account[] supervisees;
+    //private Account[] supervisees;
 
     private String totalbudget = "Total Budget: N/A"; // Only modified when we check expenditures of the last month
     private String totalSpent; // Get total spent based on category selected and
@@ -51,9 +51,9 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         groupButton = findViewById(R.id.group_button);
 
         // Text Boxes
-        totalBudgetView = findViewById(R.id.total_bugdet);
+        //totalBudgetView = findViewById(R.id.total_bugdet);
         totalSpentView = findViewById(R.id.total_spent);
-        remainingView = findViewById(R.id.remaining);
+        //remainingView = findViewById(R.id.remaining);
 
         // Dropdowns
         timeDropdown = findViewById(R.id.time_dropdown);
@@ -67,6 +67,12 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         categories = populateCategories(BMSApplication.expSystem.getCategoryNames());
 
         // Populate the users array with the current user and it's supervisees
+        //if (BMSApplication.account.getSupervisees() == null)
+            users = new String[]{"Current user"};
+
+        //else
+          //  users = populateUsers(BMSApplication.account.getSupervisees());
+
         //users = populateUsers(BMSApplication.account.getSupervisees());
         //users = new String[]{"Current User"};
 
@@ -83,9 +89,12 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         superviseeDropdown.setAdapter(adapter3);
 
         // Set listeners
-        timeDropdown.setOnItemSelectedListener(this);
         categoryDropdown.setOnItemSelectedListener(this);
-        superviseeDropdown.setOnItemSelectedListener(this);
+        timeDropdown.setOnItemSelectedListener(this);
+        //superviseeDropdown.setOnItemSelectedListener(this);
+
+        // By default, have overall total spent selected
+        categoryDropdown.setSelection(0);
 
         //By default, have last month as the time selected
         timeDropdown.setSelection(1);
@@ -93,23 +102,20 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         // By default, have the current user as the user selected
         superviseeDropdown.setSelection(0);
 
-        // By default, have overall total spent selected
-        categoryDropdown.setSelection(0);
-
         // Set the text views with their default values
-        totalBudgetView.setText(totalbudget);
-        remainingView.setText(remaining);
+        //totalBudgetView.setText(totalbudget);
+        //remainingView.setText(remaining);
 
     }
 
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch(parent.getId()) {
-            case R.id.category_dropdown:
-                onCategorySelected((String) categoryDropdown.getSelectedItem());
+            case R.id.sort_dropdown:
+                populateTotalSpent(categoryDropdown, timeDropdown);
                 break;
 
             case R.id.time_dropdown:
-                populateTotalSpent(position);
+                populateTotalSpent(categoryDropdown, timeDropdown);
                 break;
         }
 
@@ -126,7 +132,7 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         users[0] = "Current User";
 
         for (int i = 0; i < superviseeNames.size(); i++) {
-            //users[i + 1] = supervisees.get(i).getUsername
+            //users[i + 1] = superviseeNames.get(i).getUserName();
         }
 
         return users;
@@ -143,19 +149,22 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         return categories;
     }
 
-    private void populateTotalSpent(int time) {
+    private void populateTotalSpent(Spinner catDD, Spinner timeDD) {
+
+        String catSelected = (String) catDD.getSelectedItem();
+        String time = (String) timeDD.getSelectedItem();
 
         ZonedDateTime end = ZonedDateTime.now();
         ZonedDateTime start;
         LinkedList<Expenditure> expList;
         float totalSpentValue;
 
-        if (time == 0) {
+        if (time.equals("Last 7 Days")) {
             // Set start time to be 7 days ago
             start = end.minusDays(7);
         }
 
-        else if (time == 1) {
+        else if (time.equals("Last Month")) {
             // Set start time to be 1 month ago
             start = end.minusMonths(1);
         }
@@ -166,7 +175,7 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         }
 
         // Calculate total spent for all categories if overall is selected
-        if (catSelected == "Overall") {
+        if (catSelected.equals("Overall")) {
             expList = BMSApplication.expSystem.getExpendituresByDate(start, end);
             totalSpentValue = calcTotalSpent(expList);
         }
@@ -189,16 +198,14 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
 
     }
 
-    private void onCategorySelected(String cat) {
-        // Based on which category was selected, populate a list of expenditures
-        catSelected = cat;
-
-        populateTotalSpent(timeDropdown.getSelectedItemPosition());
-    }
-
     private float calcTotalSpent(LinkedList<Expenditure> expList) {
-        ListIterator<Expenditure> it = expList.listIterator();
+
         float totalSpent = 0;
+
+        if (expList == null)
+            return totalSpent;
+
+        ListIterator<Expenditure> it = expList.listIterator();
 
         while (it.hasNext())
             totalSpent += it.next().getValue();

@@ -67,25 +67,12 @@
         app:layout_constraintVertical_bias="0.239">
 
         <TextView
-            android:id="@+id/total_bugdet"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Total Budget:"
-            android:textSize="30sp" />
-
-        <TextView
             android:id="@+id/total_spent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Total Spent:"
             android:textSize="30sp" />
 
-        <TextView
-            android:id="@+id/remaining"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Remaining:"
-            android:textSize="30sp" />
     </LinearLayout>
 
     <LinearLayout
