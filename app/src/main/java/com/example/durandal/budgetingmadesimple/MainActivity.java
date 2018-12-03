@@ -16,6 +16,7 @@ import com.google.android.gms.common.util.ArrayUtils;
 
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -118,16 +119,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Set up category drop down
         catDropdown = (Spinner) findViewById(R.id.category_dropdown);
+        /*
         String[] testCat = new String[2];
         testCat[0] = ExpenditureSystem.ALL_CATEGORY;
         testCat[1] = "food";
 
         ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.our_spinner_item, testCat);
-        /*
+        */
+
         ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.our_spinner_item,
                 ArrayUtils.concat(categoryDropdownDefault,
                         BMSApplication.expSystem.getCategoryNames()));
-        */
         catAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         catDropdown.setAdapter(catAdapter);
         catDropdown.setSelection(0);
@@ -135,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Set up user drop down
         userDropdown = (Spinner) findViewById(R.id.user_dropdown);
-        /*
         String[] users;
         if (BMSApplication.account != null) {
             ArrayList<LinkedAccount> linked = BMSApplication.account.getSupervisees();
@@ -150,9 +151,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         else {
             users = new String[0];
         }
-        */
+        /*
         String[] users = new String[1];
         users[0] = "Dummy";
+        */
         ArrayAdapter userAdapter = new ArrayAdapter(this, R.layout.our_spinner_item,
                 ArrayUtils.concat(userDropdownDefault, users));
         userAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);

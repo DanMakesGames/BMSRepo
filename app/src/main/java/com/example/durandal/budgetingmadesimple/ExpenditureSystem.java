@@ -65,7 +65,7 @@ public final class ExpenditureSystem {
             IdToName.put(catId,name);
         }
 
-        categories.put("food",new Category(0 != 0, 0,"food",0));
+        //categories.put("food",new Category(0 != 0, 0,"food",0));
 
         // Now lets populate the Expenditures.
         Cursor expCursor = BMSApplication.database.getExpenditures(username);
