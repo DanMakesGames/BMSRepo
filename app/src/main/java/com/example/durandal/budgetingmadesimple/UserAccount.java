@@ -95,7 +95,7 @@ public class UserAccount extends Account {
 
     // call to access Supervisors
     public ArrayList<LinkedAccount> getSupervisors() {
-        if (supervisors == null) {
+        supervisors = new ArrayList<>();
             Cursor supervisorCursor = BMSApplication.database.getSupervisors(getUserID());
             Cursor userCursor;
             int supervisorId;
@@ -111,17 +111,18 @@ public class UserAccount extends Account {
                 linkStatus = supervisorCursor.getInt(3);
                 //find in user table by id
                 userCursor = BMSApplication.database.getUser(supervisorId);
+                userCursor.moveToNext();
                 supervisorName = userCursor.getString(1);
                 supervisorEmail = userCursor.getString(3);
                 supervisors.add(new LinkedAccount(supervisorId, supervisorName, supervisorEmail, linkStatus, relationId));
             }
-        }
         return supervisors;
     }
 
     // call to access Supervisees
     public ArrayList<LinkedAccount> getSupervisees() {
-        if (supervisees == null) {
+        supervisees = new ArrayList<>();
+
             Cursor supervisorCursor = BMSApplication.database.getSupervisees(getUserID());
             Cursor userCursor;
             int superviseeId;
@@ -136,18 +137,19 @@ public class UserAccount extends Account {
                 linkStatus = supervisorCursor.getInt(3);
                 //find in user table by id
                 userCursor = BMSApplication.database.getUser(superviseeId);
+                userCursor.moveToNext();
                 superviseeName = userCursor.getString(1);
                 superviseeEmail = userCursor.getString(3);
                 supervisees.add(new LinkedAccount(superviseeId, superviseeName, superviseeEmail, linkStatus, relationId));
             }
-        }
+
         return supervisees;
     }
 
     // means send link request
     // check input before calling
     // if return false prompt user no account or already linked
-    public boolean addSupervisee(String superviseeName) {
+    public int addSupervisee(String superviseeName) {
         int linkStatus = 0;
         int superviseeId = 0;
         int relationId = 0;
@@ -158,15 +160,16 @@ public class UserAccount extends Account {
         // get user by name
         Cursor userCursor = BMSApplication.database.getUser(superviseeName);
         if(userCursor.getCount() == 0){
-            return false; //no account
+            return 1; //no account
         }
+        userCursor.moveToNext();
         superviseeId = userCursor.getInt(0);
         superviseeEmail = userCursor.getString(3);
 
         //find in all supervisee
         Cursor superviseeCursor = BMSApplication.database.getSupervisees(getUserID());
         while (superviseeCursor.moveToNext()) {
-            superviseeIdInTable = superviseeCursor.getInt(0);
+            superviseeIdInTable = superviseeCursor.getInt(2);
             if(superviseeId == superviseeIdInTable){
                 //found supervisee, check their status
                 linkStatus = superviseeCursor.getInt(3);
@@ -174,15 +177,15 @@ public class UserAccount extends Account {
                 //create new supervisee object
                 supervisee = new LinkedAccount(superviseeId,superviseeName,superviseeEmail,linkStatus, relationId);
                 //check if they are linked
-                if(supervisee.isLinked()){
-                    return false;
+                if(supervisee.isLinked()||linkStatus==LinkedAccount.REQUEST_SENT){
+                    return 2;
                 }else{
                     //have record but not linked, then send request
                     BMSApplication.database.updateSupervisor(relationId,getUserID(),superviseeId,LinkedAccount.REQUEST_SENT);
                     //refresh local list
                     supervisees = null;
                     getSupervisees();
-                    return true;
+                    return 0;
                 }
             }
         }
@@ -190,10 +193,10 @@ public class UserAccount extends Account {
         // if supervisee is not found
         relationId = (int)BMSApplication.database.createSupervisor(getUserID(),superviseeId,LinkedAccount.REQUEST_SENT);
         if (relationId<0){
-            return false;
+            return 3;
         }
         supervisees.add(new LinkedAccount(superviseeId,superviseeName,superviseeEmail,LinkedAccount.REQUEST_SENT, relationId));
-        return true;
+        return -1;
 
     }
 

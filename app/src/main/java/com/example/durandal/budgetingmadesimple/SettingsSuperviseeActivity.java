@@ -67,7 +67,8 @@ public class SettingsSuperviseeActivity extends AppCompatActivity {
             listItemMap.put("email", supervisee.getUserEmail());
             listItemMap.put("userid", supervisee.getUserID());
             String status = "";
-            switch (supervisee.getStatus()) {
+            int statusCode = supervisee.getStatus();
+            switch (statusCode) {
                 case LinkedAccount.REQUEST_SENT:
                     status = "Request Sent";
                     break;
@@ -87,7 +88,7 @@ public class SettingsSuperviseeActivity extends AppCompatActivity {
                     status = "Linked";
             }
             listItemMap.put("status", status);
-            listItemMap.put("statusCode", status);
+            listItemMap.put("statusCode", statusCode);
             itemDataList.add(listItemMap);
         }
         //add supervisee button
@@ -114,7 +115,7 @@ public class SettingsSuperviseeActivity extends AppCompatActivity {
                 HashMap clickItemMap = (HashMap) clickItemObj;
                 final String userName = (String) clickItemMap.get("name");
                 String userEmail = (String) clickItemMap.get("email");
-                final int linkStatus = (int) clickItemMap.get("statusCode");
+                final int linkStatus =  (int)clickItemMap.get("statusCode");
                 final int userId = (int) clickItemMap.get("userid");
                 View alertView = getLayoutInflater().inflate(R.layout.add_supervisee_view, null);
                 final EditText inputName = (EditText) alertView.findViewById(R.id.username);
@@ -130,11 +131,13 @@ public class SettingsSuperviseeActivity extends AppCompatActivity {
                                     String nameToAdd = inputName.getText().toString();
                                     if (nameToAdd.equals(user.getUserName())) {
                                         Toast.makeText(SettingsSuperviseeActivity.this, "You cannot add yourself.", Toast.LENGTH_SHORT).show();
-                                    }
-                                    if (user.addSupervisee(nameToAdd)) {
-                                        Toast.makeText(SettingsSuperviseeActivity.this, "Request send to " + nameToAdd, Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(SettingsSuperviseeActivity.this, "Please make sure the name you input is valid and not linked.", Toast.LENGTH_SHORT).show();
+                                    }else {
+                                        int ret = user.addSupervisee(nameToAdd);
+                                        if (ret < 1) {
+                                            Toast.makeText(SettingsSuperviseeActivity.this, ret+" Request send to " + nameToAdd, Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(SettingsSuperviseeActivity.this, ret + " Please make sure the name you input is valid and not linked.", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 }
                             })
@@ -186,7 +189,7 @@ public class SettingsSuperviseeActivity extends AppCompatActivity {
                                         //do nothing
                                     } else if (linkStatus == LinkedAccount.DECLINED || linkStatus == LinkedAccount.UNLINK_GRANTED) {
                                         //send again
-                                        if (user.addSupervisee(userName))
+                                        if (user.addSupervisee(userName)<1)
                                             Toast.makeText(SettingsSuperviseeActivity.this, "Request send to " + userName, Toast.LENGTH_SHORT).show();
                                         else
                                             Toast.makeText(SettingsSuperviseeActivity.this, "Request did not send", Toast.LENGTH_SHORT).show();

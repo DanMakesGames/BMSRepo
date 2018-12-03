@@ -68,6 +68,8 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 {
                     /*Intent intent = new Intent(AccountSettingsActivity.this, StartActivity.class);
                     startActivity(intent);*/
+                    Intent intent = new Intent(AccountSettingsActivity.this,SettingsSupervisorActivity.class);
+                    startActivity(intent);
                 }
                 if(clickItemObj.toString().equals("supervisee")){
                     /*Toast.makeText(AccountSettingsActivity.this, "fck " + clickItemObj.toString(), Toast.LENGTH_SHORT).show();*/
