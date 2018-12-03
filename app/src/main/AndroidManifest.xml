@@ -1,53 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:name=".BMSApplication"
     package="com.example.durandal.budgetingmadesimple">
 
     <application
-        android:name=".BMSApplication"
         android:allowBackup="true"
-        android:icon="@drawable/bms_logo"
-        android:label="BMS"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".MainActivity"
-            android:exported="true" />
-        <activity android:name=".StartActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".SignUpActivity" />
-        <activity
-            android:name=".CategoriesActivity"
-            android:exported="true" />
-        <activity android:name=".SettingsSupervisorActivity" />
-        <activity
-            android:name=".StatisticsActivity"
-            android:exported="true" />
-        <activity
-            android:name=".addExpenditurePrompt"
-            android:exported="true"
-            android:theme="@style/AppTheme.CustomTheme">
-            <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".delExpenditurePrompt"
-            android:exported="true"
-            android:theme="@style/AppTheme.CustomTheme" />
-        <activity
-            android:name=".AccountSettingsActivity"
-            android:label="Account Settings" />
-        <activity android:name=".SettingsSuperviseeActivity" />
-
     </application>
 
 </manifest>
