@@ -146,6 +146,18 @@ public class UserAccount extends Account {
         return supervisees;
     }
 
+    // call to access Linked Supervisees
+    public ArrayList<LinkedAccount> getLinkedSupervisees() {
+        supervisees = getSupervisees();
+        ArrayList<LinkedAccount> linkedSupervisees = new ArrayList<LinkedAccount>();
+        for (int i = 0; i < supervisees.size(); i++) {
+            if (supervisees.get(i).isLinked()) {
+                linkedSupervisees.add(supervisees.get(i));
+            }
+        }
+        return linkedSupervisees;
+    }
+
     // means send link request
     // check input before calling
     // if return false prompt user no account or already linked
