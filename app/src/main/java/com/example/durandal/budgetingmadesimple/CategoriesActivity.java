@@ -64,9 +64,6 @@ public class CategoriesActivity extends AppCompatActivity {
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
         actionbar.setTitle("Categories");
 
-        //TextView drawer_text = findViewById(R.id.drawer_header_text);
-        //drawer_text.setText(BMSApplication.account.getUserName());
-
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
         mDrawerLayout.addDrawerListener(
