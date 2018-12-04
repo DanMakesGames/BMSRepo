@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         // Respond when the drawer is closed
                         catDropdown.bringToFront();
                         timeDropdown.bringToFront();
+                        userDropdown.bringToFront();
 
                     }
 
@@ -155,6 +156,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Object[] expenArray = BMSApplication.expSystem.getExpendituresAll().toArray();
         mainList = new LinkedList<>();
         for (int i = 0; i < expenArray.length; i++) {
+            System.out.println(expenArray[i].toString());
             mainList.add(new MainListView((Expenditure)expenArray[i]));
         }
 
@@ -258,6 +260,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         userDropdown.setAdapter(userAdapter);
         userDropdown.setSelection(0);
         userDropdown.setOnItemSelectedListener(this);
+        userDropdown.bringToFront();
 
 
 
@@ -280,15 +283,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
 
-
+        System.out.println("Start onItemSelected");
         // determine which drop down was being used.
         switch(parent.getId()){
             case R.id.user_dropdown:
+                System.out.println("in user_dropdown");
                 String userSelection = (String)userDropdown.getSelectedItem();
                 if (userSelection.equals(prevUser)) {
+                    System.out.println("userSelection equals prev break");
                     break;
                 }
                 if (userSelection.equals(userDropdownDefault)) {
+                    System.out.println("userSelection is default break");
                     break;
                 }
                 else {
@@ -319,9 +325,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     return;
                 }
             case R.id.category_dropdown:
+                System.out.println("in cat_dropdown");
                 filterExpenditures(expList, timeDropdown, catDropdown, userDropdown);
                 break;
             case R.id.time_dropdown:
+                System.out.println("in time_dropdown");
                 filterExpenditures(expList, timeDropdown, catDropdown, userDropdown);
                 break;
         }
@@ -348,8 +356,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         String catSelection = (String) catDD.getSelectedItem();
         String userSelection = (String) userDD.getSelectedItem();
 
-
-        if (userSelection.equals(userDropdownDefault)) {
+        if (userSelection.equals(ExpenditureSystem.USERS)) {
             // Filter by time.
             if (timeSelection.equals("all times")) {
                 mainList = new LinkedList<MainListView>();
