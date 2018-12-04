@@ -52,48 +52,13 @@ public class SettingsSupervisorActivity extends AppCompatActivity {
     private void userListView() {
         setTitle("Supervisors");
 
-        ArrayList<Map<String, Object>> itemDataList = new ArrayList<Map<String, Object>>();
+        final ArrayList<Map<String, Object>> itemDataList = new ArrayList<Map<String, Object>>();
         final UserAccount user = UserAccount.getUserAccount(SettingsSupervisorActivity.this);
-        ArrayList<LinkedAccount> supervisors = user.getSupervisors();
-        final int userNum = supervisors.size();
+        final ArrayList<LinkedAccount> supervisors = user.getSupervisors();
 
-        for (LinkedAccount supervisor : supervisors) {
-            //create item map for layout
-            Map<String, Object> listItemMap = new HashMap<String, Object>();
-            if (supervisor.isLinked())
-                listItemMap.put("image", R.drawable.account_settings_user_linked);
-            else
-                listItemMap.put("image", R.drawable.account_settings_user_not_linked);
-            listItemMap.put("name", supervisor.getUserName());
-            listItemMap.put("email", supervisor.getUserEmail());
-            listItemMap.put("userid", supervisor.getUserID());
-            String status = "";
-            int statusCode = supervisor.getStatus();
-            switch (statusCode) {
-                case LinkedAccount.REQUEST_SENT:
-                    status = "Request Received";
-                    break;
-                case LinkedAccount.ACCEPTED:
-                    status = "Linked";
-                    break;
-                case LinkedAccount.DECLINED:
-                    status = "Declined";
-                    break;
-                case LinkedAccount.UNLINK_SENT:
-                    status = "Unlink Request Sent";
-                    break;
-                case LinkedAccount.UNLINK_GRANTED:
-                    status = "Unlinked";
-                    break;
-                case LinkedAccount.UNLINK_DENIED:
-                    status = "Unlink Refused";
-            }
-            listItemMap.put("status", status);
-            listItemMap.put("statusCode", statusCode);
-            itemDataList.add(listItemMap);
-        }
+        updateItemDataList(itemDataList, supervisors);
 
-        SimpleAdapter simpleAdapter = new SimpleAdapter(this, itemDataList, R.layout.supervisor_list_item,
+        final SimpleAdapter simpleAdapter = new SimpleAdapter(this, itemDataList, R.layout.supervisor_list_item,
                 new String[]{"image", "name", "email", "status"}, new int[]{R.id.userImage, R.id.userName, R.id.userEmail, R.id.linkStatus});
 
         ListView listView = (ListView) findViewById(R.id.settingsList);
@@ -167,6 +132,8 @@ public class SettingsSupervisorActivity extends AppCompatActivity {
                                             Toast.makeText(SettingsSupervisorActivity.this, "Failed. Something went wrong.", Toast.LENGTH_SHORT).show();
                                         }
                                 }
+                                updateItemDataList(itemDataList,supervisors);
+                                simpleAdapter.notifyDataSetChanged();
                             }
                         })
                         .setNegativeButton(negativeButton, new DialogInterface.OnClickListener() {
@@ -179,6 +146,8 @@ public class SettingsSupervisorActivity extends AppCompatActivity {
                                     else
                                         Toast.makeText(SettingsSupervisorActivity.this, "Send failed", Toast.LENGTH_SHORT).show();
                                 }
+                                updateItemDataList(itemDataList,supervisors);
+                                simpleAdapter.notifyDataSetChanged();
                             }
                         });
                 builder.create().show();
@@ -187,5 +156,44 @@ public class SettingsSupervisorActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void updateItemDataList(ArrayList<Map<String, Object>> itemDataList, ArrayList<LinkedAccount> supervisors) {
+        itemDataList.clear();
+        for (LinkedAccount supervisor : supervisors) {
+            //create item map for layout
+            Map<String, Object> listItemMap = new HashMap<String, Object>();
+            if (supervisor.isLinked())
+                listItemMap.put("image", R.drawable.account_settings_user_linked);
+            else
+                listItemMap.put("image", R.drawable.account_settings_user_not_linked);
+            listItemMap.put("name", supervisor.getUserName());
+            listItemMap.put("email", supervisor.getUserEmail());
+            listItemMap.put("userid", supervisor.getUserID());
+            String status = "";
+            int statusCode = supervisor.getStatus();
+            switch (statusCode) {
+                case LinkedAccount.REQUEST_SENT:
+                    status = "Request Received";
+                    break;
+                case LinkedAccount.ACCEPTED:
+                    status = "Linked";
+                    break;
+                case LinkedAccount.DECLINED:
+                    status = "Declined";
+                    break;
+                case LinkedAccount.UNLINK_SENT:
+                    status = "Unlink Request Sent";
+                    break;
+                case LinkedAccount.UNLINK_GRANTED:
+                    status = "Unlinked";
+                    break;
+                case LinkedAccount.UNLINK_DENIED:
+                    status = "Unlink Refused";
+            }
+            listItemMap.put("status", status);
+            listItemMap.put("statusCode", statusCode);
+            itemDataList.add(listItemMap);
+        }
     }
 }
