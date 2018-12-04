@@ -148,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Object[] expenArray = BMSApplication.expSystem.getExpendituresAll().toArray();
         mainList = new LinkedList<>();
         for (int i = 0; i < expenArray.length; i++) {
+            System.out.println("added to mainList");
             mainList.add(new MainListView((Expenditure)expenArray[i]));
         }
 
