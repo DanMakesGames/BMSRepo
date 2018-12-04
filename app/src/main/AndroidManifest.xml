@@ -47,6 +47,8 @@
             android:name=".AccountSettingsActivity"
             android:label="Account Settings" />
         <activity android:name=".SettingsSuperviseeActivity" />
+        <activity android:name=".ChangePasswordActivity" />
+
 
     </application>
 

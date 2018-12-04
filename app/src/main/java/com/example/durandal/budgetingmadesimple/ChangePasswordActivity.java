@@ -66,16 +66,18 @@ public class ChangePasswordActivity extends AppCompatActivity{
                     else{
                         while (userCursor.moveToNext()) {
 
-                            BMSApplication.account = new UserAccount(
-                                    Integer.parseInt(userCursor.getString(0)),
+                            BMSApplication.database.updateUser(userCursor.getInt(0),
                                     userCursor.getString(1),
+                                    newpassword,
                                     userCursor.getString(3),
-                                    userCursor.getString(2));
+                                    userCursor.getString(4),
+                                    userCursor.getString(5),
+                                    userCursor.getFloat(6),
+                                    userCursor.getFloat(7),
+                                    userCursor.getFloat(8));
                         }
                     }
 
-                    // populate expenditures and categories.
-                    BMSApplication.expSystem.populateFromDatabase(username);
 
                     // Transition to mainPage.
                     Intent intent = new Intent(ChangePasswordActivity.this, AccountSettingsActivity.class);
