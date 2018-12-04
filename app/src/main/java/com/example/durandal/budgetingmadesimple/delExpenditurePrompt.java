@@ -40,7 +40,9 @@ public class delExpenditurePrompt extends MainActivity {
             public void onClick(View v) {
                 for (int i = 0; i < MainActivity.mainList.size(); i++) {
                     if (positions[i] == 1) {
-                        BMSApplication.expSystem.deleteExpenditure(MainActivity.mainList.get(i).getExpenditure());
+                        //System.out.println("del " + MainActivity.mainList.get(i).getExpenditure());
+                        Boolean a = BMSApplication.expSystem.deleteExpenditure(MainActivity.mainList.get(i).getExpenditure());
+                        //System.out.println(a);
                     }
                 }
                 startActivity(new Intent(delExpenditurePrompt.this, MainActivity.class));

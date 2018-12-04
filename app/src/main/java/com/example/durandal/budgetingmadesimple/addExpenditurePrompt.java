@@ -52,8 +52,8 @@ public class addExpenditurePrompt extends MainActivity {
                     // make sure that
                     //Expenditure newExpen = new Expenditure(num,categories.getSelectedItem().toString());
                     //BMSApplication.expSystem.addExpenditure(newExpen);
-                    BMSApplication.expSystem.addExpenditure(num,categories.getSelectedItem().toString(),false, ReoccurringRate.NONE);
-
+                    Boolean a = BMSApplication.expSystem.addExpenditure(num,categories.getSelectedItem().toString(),false, ReoccurringRate.NONE);
+                    //System.out.println("addExpen after done: " + a);
 
                     startActivity(new Intent(addExpenditurePrompt.this, MainActivity.class));
                 }

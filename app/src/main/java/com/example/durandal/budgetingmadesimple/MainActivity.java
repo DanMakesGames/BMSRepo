@@ -184,6 +184,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 for (int i = 0; i < MainActivity.mainList.size(); i++) {
                     if (mainList.get(i).isChecked()) {
                         positions[i] = 1;
+                        //System.out.println("mainList is checked: ");
+                        //System.out.println(mainList.get(i).getName());
                     }
                     else {
                         positions[i] = 0;

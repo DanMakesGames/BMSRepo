@@ -42,6 +42,7 @@ public class ExpenditureArrayAdapter extends ArrayAdapter<MainListView> {
                     CheckBox cb = (CheckBox) v;
                     MainListView expenditureView = (MainListView) cb.getTag();
                     expenditureView.setChecked(cb.isChecked());
+                    System.out.println(expenditureView.getName());
                     if (hasSelected(MainActivity.mainList)) {
                         MainActivity.fab.hide();
                         MainActivity.delFab.show();

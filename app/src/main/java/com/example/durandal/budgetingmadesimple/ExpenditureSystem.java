@@ -462,16 +462,16 @@ public final class ExpenditureSystem {
      */
     public boolean deleteExpenditure(Expenditure inExpenditure) {
 
-
-        if (!BMSApplication.database.deleteExpenditure(inExpenditure.getExpId())) {
-            return false;
-        }
         for (int i = 0; i < expenditures.size(); i++) {
             if (expenditures.get(i).equals(inExpenditure)) {
                 expenditures.remove(i);
-                return true;
             }
         }
+        if (!BMSApplication.database.deleteExpenditure(inExpenditure.getExpId())) {
+            //System.out.println("database failed to del");
+            return false;
+        }
+        //System.out.println("Couldn't find expenditure in expednitures");
         return false;
     }
 
