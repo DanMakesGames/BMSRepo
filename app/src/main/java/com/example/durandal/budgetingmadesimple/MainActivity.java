@@ -1,11 +1,18 @@
 package com.example.durandal.budgetingmadesimple;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,11 +21,14 @@ import android.widget.Spinner;
 
 import com.google.android.gms.common.util.ArrayUtils;
 
-import java.time.Instant;
+
+
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+//import org.apache.commons.lang3.ArrayUtils;
 
 //import org.apache.commons.lang3.ArrayUtils;
 
@@ -28,7 +38,7 @@ import java.util.List;
  *  Spinner is the android name for a dropdown menu.
  */
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    Database bmsDb;
+    //Database bmsDb;
     private final String[] categoryDropdownDefault = {ExpenditureSystem.ALL_CATEGORY};
     private final String[] userDropdownDefault = {ExpenditureSystem.USERS};
 
@@ -40,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Spinner catDropdown;
     private Spinner userDropdown;
     private String prevUser;
+    private DrawerLayout mDrawerLayout;
+
     protected static FloatingActionButton fab;
     protected static FloatingActionButton delFab;
 
@@ -49,7 +61,89 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
 
 
+
         System.out.println(BMSApplication.account.getUserName());
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        actionbar.setTitle("Expenditures");
+
+        //TextView drawer_text = (TextView) findViewById(R.id.drawer_header_text);
+        //drawer_text.setText(BMSApplication.account.getUserName());
+
+        // Code for navigation drawer
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+
+        mDrawerLayout.addDrawerListener(
+                new DrawerLayout.DrawerListener() {
+                    @Override
+                    public void onDrawerSlide(View drawerView, float slideOffset) {
+                        // Respond when the drawer's position changes
+                        mDrawerLayout.bringToFront();
+                    }
+
+                    @Override
+                    public void onDrawerOpened(View drawerView) {
+                        // Respond when the drawer is opened
+                        mDrawerLayout.bringToFront();
+                    }
+
+                    @Override
+                    public void onDrawerClosed(View drawerView) {
+                        // Respond when the drawer is closed
+                        catDropdown.bringToFront();
+                        timeDropdown.bringToFront();
+
+                    }
+
+                    @Override
+                    public void onDrawerStateChanged(int newState) {
+                        // Respond when the drawer motion state changes
+                    }
+                }
+        );
+
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(
+                new OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                        switch(menuItem.getItemId()) {
+                            case R.id.nav_item_one: // go to expenditures (home) page
+                                Intent intent1 = new Intent(MainActivity.this, MainActivity.class);
+                                startActivity(intent1);
+                                break;
+                            case R.id.nav_item_two: // go to categories page
+                                Intent intent2 = new Intent(MainActivity.this, CategoriesActivity.class);
+                                startActivity(intent2);
+                                break;
+                            case R.id.nav_item_three: // go to statistics page
+                                Intent intent3 = new Intent(MainActivity.this, StatisticsActivity.class);
+                                startActivity(intent3);
+                                break;
+                            case R.id.nav_item_four: // go to settings
+                                Intent intent4 = new Intent(MainActivity.this, AccountSettingsActivity.class);
+                                startActivity(intent4);
+                                break;
+                        }
+                        // close drawer when item is tapped
+                        mDrawerLayout.closeDrawers();
+                        // Add code here to update the UI based on the item selected
+                        // For example, swap UI fragments here
+
+                        return true;
+                    }
+                }); // end of navigation bar code
+
+
+        // Example code intended for developers, showing how to interact with the SQL database
+        //showcaseDatabase();
+
+
+
 
         // Set up list of expenditures.
         expList = (ListView) findViewById(R.id.expList);
@@ -116,6 +210,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         timeDropdown.setAdapter(timeDropAdapter);
         timeDropdown.setSelection(0);
         timeDropdown.setOnItemSelectedListener(this);
+        timeDropdown.bringToFront();
 
         // Set up category drop down
         catDropdown = (Spinner) findViewById(R.id.category_dropdown);
@@ -134,6 +229,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         catDropdown.setAdapter(catAdapter);
         catDropdown.setSelection(0);
         catDropdown.setOnItemSelectedListener(this);
+        catDropdown.bringToFront();
+
 
         // Set up user drop down
         userDropdown = (Spinner) findViewById(R.id.user_dropdown);
@@ -163,14 +260,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         userDropdown.setOnItemSelectedListener(this);
 
 
+
+
         //loop adding
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
     // Used by drop downs
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
+
 
         // determine which drop down was being used.
         switch(parent.getId()){
@@ -218,6 +327,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
     }
+
 
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
@@ -320,17 +430,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /**
      * Showcase how to interact with the SQL database
      */
+    /*
     private void showcaseDatabase() {
         // Create SQL database
         bmsDb = new Database(this);
         showcaseDatabaseUserTable(bmsDb);
         showcaseDatabaseExpenditureTable(bmsDb);
     }
-
+    */
     /**
      * Showcase how to interact with user data in the SQL database
      * @param bmsDb
      */
+    /*
     private void showcaseDatabaseUserTable(Database bmsDb) {
         // Create user
         long isCreated = bmsDb.createUser("FakeUser", "fakepass",
@@ -358,11 +470,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Log.d("SQL Database Testing", "bankBalance: " + res.getString(8));
             }
     }
-
+    */
     /**
      * Showcase how to interact with expenditure data in the SQL database
      * @param bmsDb
      */
+    /*
     private void showcaseDatabaseExpenditureTable(Database bmsDb) {
         // Create expenditure
         long isCreated = bmsDb.createExpenditure(1, 1, 100,
@@ -387,4 +500,5 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Log.d("SQL Database Testing", "secretQuestionAnswer: " + res.getString(6));
             }
     }
+   */
 }

@@ -10,51 +10,51 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-
-/**
- * Login page. Enter password, Enter username. Press "Login". Test. Valid, go to loading activity.
- * False, report to use false, stay on page.
- *
- * After pressing login, all buttons and fields should become inoperable, until false login.
- */
-public class LoginActivity extends AppCompatActivity {
-
-    private Button loginButton;
+public class ChangePasswordActivity extends AppCompatActivity{
+    private Button changePasswordButton;
     private Button backButton;
-    private EditText editPassword;
+    private EditText editOldPassword;
+    private EditText editNewPassword;
     private EditText editUsername;
     private TextView textErrorMessage;
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_change_password);
 
-        loginButton = (Button) findViewById(R.id.login_button);
+        changePasswordButton = (Button) findViewById(R.id.login_button);
         backButton = (Button) findViewById(R.id.back);
-        editPassword = (EditText) findViewById(R.id.edit_password);
+        editOldPassword = (EditText) findViewById(R.id.edit_oldpassword);
         editUsername = (EditText) findViewById(R.id.edit_username);
+        editNewPassword = (EditText) findViewById(R.id.edit_newpassword);
         textErrorMessage = (TextView) findViewById(R.id.text_error_message);
 
         textErrorMessage.setAlpha(0);
 
+        backButton.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ChangePasswordActivity.this, AccountSettingsActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        changePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 // disable input
-                loginButton.setEnabled(false);
-                editPassword.setEnabled(false);
+                changePasswordButton.setEnabled(false);
+                editOldPassword.setEnabled(false);
                 editUsername.setEnabled(false);
                 String username = editUsername.getText().toString();
-                String password =  editPassword.getText().toString();
-
+                String oldpassword =  editOldPassword.getText().toString();
+                String newpassword =  editNewPassword.getText().toString();
                 // login name and password are successful, move to loading expenditures activity.
-                if(BMSApplication.database.login( username, password)) {
+                if(BMSApplication.database.login( username, oldpassword)) {
                     // populate account.
 
                     // get account
@@ -66,42 +66,37 @@ public class LoginActivity extends AppCompatActivity {
                     else{
                         while (userCursor.moveToNext()) {
 
-                            BMSApplication.account = new UserAccount(
-                                    Integer.parseInt(userCursor.getString(0)),
+                            BMSApplication.database.updateUser(userCursor.getInt(0),
                                     userCursor.getString(1),
+                                    newpassword,
                                     userCursor.getString(3),
-                                    userCursor.getString(2));
+                                    userCursor.getString(4),
+                                    userCursor.getString(5),
+                                    userCursor.getFloat(6),
+                                    userCursor.getFloat(7),
+                                    userCursor.getFloat(8));
                         }
                     }
 
-                    // populate expenditures and categories.
-                    BMSApplication.expSystem.populateFromDatabase(username);
 
                     // Transition to mainPage.
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    Intent intent = new Intent(ChangePasswordActivity.this, AccountSettingsActivity.class);
                     startActivity(intent);
 
                 }
-                // login failed, reset
+                // change password failed, reset
                 else {
                     // re-enable button and text fields. Present message that login failed, and to try again.
                     editUsername.setEnabled(true);
-                    editPassword.setEnabled(true);
-                    loginButton.setEnabled(true);
+                    editOldPassword.setEnabled(true);
+                    editNewPassword.setEnabled(true);
+                    changePasswordButton.setEnabled(true);
                     editUsername.setText("");
-                    editPassword.setText("");
+                    editOldPassword.setText("");
 
                     textErrorMessage.setAlpha(1);
                 }
 
-            }
-        });
-
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, StartActivity.class);
-                startActivity(intent);
             }
         });
 

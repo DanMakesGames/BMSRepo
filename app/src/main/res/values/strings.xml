@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">BudgetingMadeSimple</string>
     <string name="back">back</string>
+    <string name="startup"><![CDATA[<username>]]></string>
 
     <string-array name="time_array">
         <item>all times</item>

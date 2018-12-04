@@ -95,47 +95,54 @@ public class UserAccount extends Account {
 
     // call to access Supervisors
     public ArrayList<LinkedAccount> getSupervisors() {
-        if (supervisors == null) {
+        supervisors = new ArrayList<>();
             Cursor supervisorCursor = BMSApplication.database.getSupervisors(getUserID());
             Cursor userCursor;
             int supervisorId;
             int linkStatus;
+            int relationId;
             String supervisorName;
             String supervisorEmail;
+
             while (supervisorCursor.moveToNext()) {
+                //get supervisor table
+                relationId = supervisorCursor.getInt(0);
                 supervisorId = supervisorCursor.getInt(1);
-                //TODO get link status, and get user information with ID. following needs to be changed
-                linkStatus = supervisorCursor.getInt(0);
+                linkStatus = supervisorCursor.getInt(3);
                 //find in user table by id
-                userCursor = BMSApplication.database.getUser("" + supervisorId);
+                userCursor = BMSApplication.database.getUser(supervisorId);
+                userCursor.moveToNext();
                 supervisorName = userCursor.getString(1);
                 supervisorEmail = userCursor.getString(3);
-                supervisors.add(new LinkedAccount(supervisorId, supervisorName, supervisorEmail, linkStatus));
+                supervisors.add(new LinkedAccount(supervisorId, supervisorName, supervisorEmail, linkStatus, relationId));
             }
-        }
         return supervisors;
     }
 
     // call to access Supervisees
     public ArrayList<LinkedAccount> getSupervisees() {
-        if (supervisees == null) {
+        supervisees = new ArrayList<>();
+
             Cursor supervisorCursor = BMSApplication.database.getSupervisees(getUserID());
             Cursor userCursor;
             int superviseeId;
             int linkStatus;
+            int relationId;
             String superviseeName;
             String superviseeEmail;
             while (supervisorCursor.moveToNext()) {
-                superviseeId = supervisorCursor.getInt(1);
-                //TODO get link status, and get user information with ID. following needs to be changed
-                linkStatus = supervisorCursor.getInt(0);
+                //get supervisor table
+                relationId = supervisorCursor.getInt(0);
+                superviseeId = supervisorCursor.getInt(2);
+                linkStatus = supervisorCursor.getInt(3);
                 //find in user table by id
-                userCursor = BMSApplication.database.getUser("" + superviseeId);
+                userCursor = BMSApplication.database.getUser(superviseeId);
+                userCursor.moveToNext();
                 superviseeName = userCursor.getString(1);
                 superviseeEmail = userCursor.getString(3);
-                supervisees.add(new LinkedAccount(superviseeId, superviseeName, superviseeEmail, linkStatus));
+                supervisees.add(new LinkedAccount(superviseeId, superviseeName, superviseeEmail, linkStatus, relationId));
             }
-        }
+
         return supervisees;
     }
 
@@ -153,43 +160,113 @@ public class UserAccount extends Account {
 
     // means send link request
     // check input before calling
-    public boolean addSupervisee(String superviseeName) {
+    // if return false prompt user no account or already linked
+    public int addSupervisee(String superviseeName) {
         int linkStatus = 0;
         int superviseeId = 0;
+        int relationId = 0;
+        int superviseeIdInTable;
+        LinkedAccount supervisee;
         String superviseeEmail = "";
-        //TODO get id etc. from email check if is linked, add status here "0"
-        if (BMSApplication.database.createSupervisor(getUserID(), superviseeId, 0) != 1) {
-            supervisees.add(new LinkedAccount(superviseeId, superviseeName, superviseeEmail, linkStatus));
-            return true;
-        } else
-            return false;
+
+        // get user by name
+        Cursor userCursor = BMSApplication.database.getUser(superviseeName);
+        if(userCursor.getCount() == 0){
+            return 1; //no account
+        }
+        userCursor.moveToNext();
+        superviseeId = userCursor.getInt(0);
+        superviseeEmail = userCursor.getString(3);
+
+        //find in all supervisee
+        Cursor superviseeCursor = BMSApplication.database.getSupervisees(getUserID());
+        while (superviseeCursor.moveToNext()) {
+            superviseeIdInTable = superviseeCursor.getInt(2);
+            if(superviseeId == superviseeIdInTable){
+                //found supervisee, check their status
+                linkStatus = superviseeCursor.getInt(3);
+                relationId = superviseeCursor.getInt(0);
+                //create new supervisee object
+                supervisee = new LinkedAccount(superviseeId,superviseeName,superviseeEmail,linkStatus, relationId);
+                //check if they are linked
+                if(supervisee.isLinked()||linkStatus==LinkedAccount.REQUEST_SENT){
+                    return 2;
+                }else{
+                    //have record but not linked, then send request
+                    BMSApplication.database.updateSupervisor(relationId,getUserID(),superviseeId,LinkedAccount.REQUEST_SENT);
+                    //refresh local list
+                    supervisees = null;
+                    getSupervisees();
+                    return 0;
+                }
+            }
+        }
+
+        // if supervisee is not found
+        relationId = (int)BMSApplication.database.createSupervisor(getUserID(),superviseeId,LinkedAccount.REQUEST_SENT);
+        if (relationId<0){
+            return 3;
+        }
+        supervisees.add(new LinkedAccount(superviseeId,superviseeName,superviseeEmail,LinkedAccount.REQUEST_SENT, relationId));
+        return -1;
+
     }
 
-    //simply remove or accept unlink request
+    //simply remove or accept unlink request, call by supervisor
     public boolean removeSupervisee(int superviseeId) {
         //update status both online and in memory
-        return true;
+        return updateSuperviseeStatus(superviseeId,LinkedAccount.UNLINK_GRANTED);
     }
-
+    // call by supervisor
     public boolean denyUnlinkRequest(int superviseeId) {
         //update status both online and in memory
-        return true;
+        return updateSuperviseeStatus(superviseeId,LinkedAccount.UNLINK_DENIED);
     }
 
-    //accept link request
+    //accept link request, call by supervisee
     public boolean addSupervisor(int supervisorId) {
         //update status both online and in memory
-        return true;
+        return updateSupervisorStatus(supervisorId,LinkedAccount.ACCEPTED);
     }
 
-    //send unlink request
+    //send unlink request, call by supervisee
     public boolean removeSupervisor(int supervisorId) {
         //update status both online and in memory
+        return updateSupervisorStatus(supervisorId,LinkedAccount.UNLINK_SENT);
+    }
+
+    //decline link request, call by supervisee
+    public boolean declineLinkRequest(int supervisorId) {
+        return updateSupervisorStatus(supervisorId,LinkedAccount.DECLINED);
+    }
+
+    private boolean updateSuperviseeStatus(int superviseeId,int status ){
+        int index = 0;
+        int relationId = 0;
+        for (LinkedAccount supervisee:supervisees) {
+            if(supervisee.getUserID() == superviseeId){
+                relationId = supervisee.getRelationId();
+                index = supervisees.indexOf(supervisee);
+                break;
+            }
+        }
+        BMSApplication.database.updateSupervisor(relationId,getUserID(),superviseeId,status);
+        supervisees.get(index).setStatus(status);
         return true;
     }
 
-    //decline link request
-    public boolean declineLinkRequest(int supervisorId) {
+    private boolean updateSupervisorStatus(int supervisorId,int status ){
+        int index = 0;
+        int relationId = 0;
+        for (LinkedAccount supervisor:supervisors) {
+            if(supervisor.getUserID() == supervisorId){
+                relationId = supervisor.getRelationId();
+                index = supervisors.indexOf(supervisor);
+                break;
+            }
+        }
+        BMSApplication.database.updateSupervisor(relationId,supervisorId,getUserID(),status);
+        supervisors.get(index).setStatus(status);
         return true;
     }
 
