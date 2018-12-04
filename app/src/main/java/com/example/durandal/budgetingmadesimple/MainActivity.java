@@ -220,13 +220,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.our_spinner_item, testCat);
         */
 
-        ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.our_spinner_item,
+        ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.support_simple_spinner_dropdown_item,
                 ArrayUtils.concat(categoryDropdownDefault,
                         BMSApplication.expSystem.getCategoryNames()));
         catAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         catDropdown.setAdapter(catAdapter);
-        //catDropdown.setSelection(0, true);
         catDropdown.setOnItemSelectedListener(this);
+        catDropdown.setSelection(0);
         catDropdown.bringToFront();
 
 
@@ -257,8 +257,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         userDropdown.setSelection(0);
         userDropdown.setOnItemSelectedListener(this);
         userDropdown.bringToFront();
-
-        catDropdown.setSelection(0);
 
 
 
