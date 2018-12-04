@@ -157,10 +157,10 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
 
         // Populate the users array with the current user and it's supervisees
         //if (BMSApplication.account.getSupervisees() == null)
-            users = new String[]{"Current user"};
+            //users = new String[]{"Current user"};
 
         //else
-          //  users = populateUsers(BMSApplication.account.getSupervisees());
+            users = populateUsers(BMSApplication.account.getSupervisees());
 
         //users = populateUsers(BMSApplication.account.getSupervisees());
         //users = new String[]{"Current User"};
@@ -229,13 +229,17 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
 
     }
 
-    private String[] populateUsers (ArrayList<LinkedAccount> superviseeNames) {
-        String[] users = new String[superviseeNames.size() + 1];
+    private String[] populateUsers (ArrayList<LinkedAccount> linked) {
 
+        for (int i = 0; i < linked.size(); i++) {
+            linked.get(i).isLinked();
+        }
+
+        String[] users = new String[linked.size() + 1];
         users[0] = "Current User";
 
-        for (int i = 0; i < superviseeNames.size(); i++) {
-            //users[i + 1] = superviseeNames.get(i).getUserName();
+        for (int i = 0; i < linked.size(); i++) {
+            users[i + 1] = linked.get(i).getUserName();
         }
 
         return users;
