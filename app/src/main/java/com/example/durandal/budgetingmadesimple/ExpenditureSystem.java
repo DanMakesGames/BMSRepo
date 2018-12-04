@@ -24,7 +24,7 @@ public final class ExpenditureSystem {
 
     private LinkedList<Expenditure> expenditures;
     private HashMap<String,Category> categories;
-    public final static String ALL_CATEGORY = "all categories";
+    public final static String ALL_CATEGORY = "All Categories";
     public final static String SEL_CATEGORY = "Select a category";
 
 

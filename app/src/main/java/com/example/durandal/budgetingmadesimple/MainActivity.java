@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         // Respond when the drawer is closed
                         catDropdown.bringToFront();
                         timeDropdown.bringToFront();
-
+                        expList.bringToFront();
                     }
 
                     @Override
@@ -181,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         adapter = new ExpenditureArrayAdapter(this, mainList);
         expList.setAdapter(adapter);
+        expList.bringToFront();
         //expList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         /*
         expList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
