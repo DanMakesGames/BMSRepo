@@ -38,6 +38,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     //Database bmsDb;
     private final String[] categoryDropdownDefault = {ExpenditureSystem.ALL_CATEGORY};
+    private final String[] userDropdownDefault = {ExpenditureSystem.USERS};
 
     protected static List<MainListView> mainList;
     private ExpenditureArrayAdapter adapter;
@@ -140,6 +141,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Set up list of expenditures.
         expList = (ListView) findViewById(R.id.expList);
 
+        // Give prevUser default value
+        prevUser = ExpenditureSystem.USERS;
+
+        // Set up adapter
+        Object[] expenArray = BMSApplication.expSystem.getExpendituresAll().toArray();
+        mainList = new LinkedList<>();
+        for (int i = 0; i < expenArray.length; i++) {
+            mainList.add(new MainListView((Expenditure)expenArray[i]));
+        }
+
+        adapter = new ExpenditureArrayAdapter(this, mainList);
+        expList.setAdapter(adapter);
+
 
         Log.e("Debug: ","LENGTH:" + BMSApplication.expSystem.getExpendituresAll().toArray().length);
         /*final ArrayAdapter adapter = new ArrayAdapter(this, R.layout.simple_row,
@@ -176,39 +190,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        Object[] expenArray = BMSApplication.expSystem.getExpendituresAll().toArray();
-        mainList = new LinkedList<>();
-        for (int i = 0; i < expenArray.length; i++) {
-            mainList.add(new MainListView((Expenditure)expenArray[i]));
-        }
-
-        adapter = new ExpenditureArrayAdapter(this, mainList);
-        expList.setAdapter(adapter);
-        //expList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        /*
-        expList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long arg3)
-            {
-
-                MainListView expenView = adapter.getItem(position);
-                expenView.toggleChecked();
-                Log.d("Clicked: ", expenView.getName());
-                MainListViewHolder viewHolder = (MainListViewHolder)view.getTag();
-                if (viewHolder == null) {
-                    return;
-                }
-                viewHolder.getCheckBox().setChecked(expenView.isChecked());
-                if (MainListView.hasSelected(mainList)) {
-                    fab.hide();
-                }
-
-
-            }
-
-        }); */
-
-        //BMSApplication.expSystem.addCategory(false,0,"food");
 
         // Set up time dropdown
         timeDropdown = (Spinner) findViewById(R.id.time_dropdown);
@@ -253,9 +234,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             users = new String[0];
         }
         /*
-        String[] users = new String[1];
-        users[0] = "Dummy";
-        */
+        String[] users = new String[2];
+        users[1] = "Dummy";
+        users[0] = userDropdownDefault.toString();
+        ArrayAdapter userAdapter = new ArrayAdapter(this, R.layout.our_spinner_item,
+                users); */
+
         ArrayAdapter userAdapter = new ArrayAdapter(this, R.layout.our_spinner_item,
                 ArrayUtils.concat(userDropdownDefault, users));
         userAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -265,6 +249,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
         //loop adding
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
