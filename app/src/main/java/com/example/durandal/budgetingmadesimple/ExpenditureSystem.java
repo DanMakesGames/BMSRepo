@@ -1,12 +1,7 @@
 package com.example.durandal.budgetingmadesimple;
 
 
-import android.annotation.TargetApi;
 import android.database.Cursor;
-import android.os.Build;
-import android.util.Log;
-
-import java.time.ZonedDateTime;
 
 import java.time.Instant;
 import java.time.ZonedDateTime;
@@ -15,7 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * Class handels the storage, sorting, access, and modification of Expenditures.
+ * Class handles the storage, sorting, access, and modification of Expenditures.
  * Must be initialized at app startup either from cache or from the online data base.
  *
  * It's only member object is the data structure holding all the expenditures.
@@ -23,9 +18,12 @@ import java.util.LinkedList;
 public final class ExpenditureSystem {
 
     private LinkedList<Expenditure> expenditures;
+    private LinkedList<Expenditure> userExpenditures;
     private HashMap<String,Category> categories;
+    private HashMap<String,Category> userCategories;
     public final static String ALL_CATEGORY = "all categories";
     public final static String SEL_CATEGORY = "Select a category";
+    public final static String USERS = "Supervisee(s)";
 
 
     /**
@@ -34,6 +32,8 @@ public final class ExpenditureSystem {
     ExpenditureSystem() {
         expenditures = new LinkedList<Expenditure>();
         categories = new HashMap<String, Category>();
+        userExpenditures = new LinkedList<Expenditure>();
+        userCategories = new HashMap<String,Category>();
     }
 
 
@@ -65,11 +65,10 @@ public final class ExpenditureSystem {
             IdToName.put(catId,name);
         }
 
-        Log.d("populate", IdToName.toString());
+        //categories.put("food",new Category(0 != 0, 0,"food",0));
 
         // Now lets populate the Expenditures.
         Cursor expCursor = BMSApplication.database.getExpenditures(username);
-
 
         // no expenditures in database to parse.
         if(expCursor.getCount() == 0)
@@ -79,22 +78,76 @@ public final class ExpenditureSystem {
         // the linked list.
         while(expCursor.moveToNext()) {
 
+
             // extract expenditure parameters
             float value = Float.parseFloat(expCursor.getString(3));
             Instant timestamp = Instant.ofEpochSecond(Long.parseLong(expCursor.getString(4)));
-            String category = IdToName.get( Integer.parseInt(expCursor.getString(2)) );
+            String category = IdToName.get(expCursor.getString(2));
             int Id = Integer.parseInt(expCursor.getString(0));
 
-            Log.d("populate", value +", catId: "+expCursor.getString(2));
             // create new expenditure object.
             Expenditure newExp = new Expenditure(
-                        value,      //value
-                        category,   //category
-                        Id,
-                        timestamp); //timestamp
+                    value,      //value
+                    category,   //category
+                    Id,
+                    timestamp); //timestamp
 
             // add to expenditure list.
             expenditures.addFirst(newExp);
+        }
+
+        return true;
+    }
+
+    public boolean populateUserFromDatabase(String username) {
+
+        // Populate categories first.
+        // Get categories, populate categories list, populate local hasMap
+        Cursor catCursor = BMSApplication.database.getCategories(username);
+
+        // Hash map used for linking IDs to category names. Used in expenditure parsing process.
+        HashMap<Integer, String> IdToName = new HashMap<Integer, String>();
+
+        // loop parsing categories and adding them to Category hashmap.
+        while(catCursor.moveToNext()) {
+
+            // Extract category parameters from database entry.
+            int catId = Integer.parseInt(catCursor.getString(0));
+            float budget = Float.parseFloat(catCursor.getString(3));
+            String name = catCursor.getString(2);
+
+            // emplace new category into app Category storage
+            userCategories.put(name, new Category(budget != 0,budget,name, catId));
+            IdToName.put(catId,name);
+        }
+
+        // Now lets populate the Expenditures.
+        Cursor expCursor = BMSApplication.database.getExpenditures(username);
+
+        // no expenditures in database to parse.
+        if(expCursor.getCount() == 0)
+            return false;
+
+        // loop through, turning exp database items into Expenditure objects, and adding them to
+        // the linked list.
+        while(expCursor.moveToNext()) {
+
+
+            // extract expenditure parameters
+            float value = Float.parseFloat(expCursor.getString(3));
+            Instant timestamp = Instant.ofEpochSecond(Long.parseLong(expCursor.getString(4)));
+            String category = IdToName.get(expCursor.getString(2));
+            int Id = Integer.parseInt(expCursor.getString(0));
+
+            // create new expenditure object.
+            Expenditure newExp = new Expenditure(
+                    value,      //value
+                    category,   //category
+                    Id,
+                    timestamp); //timestamp
+
+            // add to expenditure list.
+            userExpenditures.addFirst(newExp);
         }
 
         return true;
@@ -124,11 +177,28 @@ public final class ExpenditureSystem {
     }
 
     /**
+     * Returns all of the names of the categories of user in an array format.
+     * @return
+     */
+    public String[] getUserCategoryNames() {
+        String[] stringArray = {};
+        return userCategories.keySet().toArray( stringArray);
+    }
+
+    /**
      * Unfiltered immutable get of expenditures.
      * @return
      */
     public final LinkedList<Expenditure> getExpendituresAll() {
         return expenditures;
+    }
+
+    /**
+     * Unfiltered immutable get of userExpenditures.
+     * @return
+     */
+    public final LinkedList<Expenditure> getUserExpendituresAll() {
+        return userExpenditures;
     }
 
     /**
@@ -142,6 +212,30 @@ public final class ExpenditureSystem {
 
         LinkedList<Expenditure> return_list = new LinkedList<>();
         Iterator expenditures_it = expenditures.iterator();
+        Instant start_instant = start.toInstant();
+        Instant end_instant = end.toInstant();
+        while(expenditures_it.hasNext()) {
+            Expenditure exp = (Expenditure)expenditures_it.next();
+            Instant time = exp.getTimeStamp();
+
+            // removing time.isBefore is the only way i COUld get this shit to work
+            if(time.isAfter(start_instant) /*&& time.isBefore(end_instant) */)
+                return_list.add(exp);
+        }
+        return return_list;
+    }
+
+    /**
+     * One getter of userExpenditures.
+     * @param start all times after this time (older)
+     * @param end all times before this time (more recent)
+     * @return expenditures in order newest to oldest from start to end.
+     */
+
+    public final LinkedList<Expenditure> getUserExpendituresByDate(ZonedDateTime start, ZonedDateTime end) {
+
+        LinkedList<Expenditure> return_list = new LinkedList<>();
+        Iterator expenditures_it = userExpenditures.iterator();
         Instant start_instant = start.toInstant();
         Instant end_instant = end.toInstant();
         while(expenditures_it.hasNext()) {
@@ -182,6 +276,31 @@ public final class ExpenditureSystem {
     }
 
     /**
+     * Gets list of userExpenditures in order newest to oldest that are of the same category. If you
+     * enter ALL_CATEGORY, does not sort and returns all.
+     * @param categoryName
+     * @return
+     */
+    public final LinkedList<Expenditure> getUserExpendituresByCategory (String categoryName) {
+
+        // return all expenditures.
+        if(categoryName.equals(ALL_CATEGORY)) {
+            return userExpenditures;
+        }
+
+        LinkedList<Expenditure> return_list = new LinkedList<Expenditure>();
+        Iterator expenditures_it = userExpenditures.iterator();
+        while(expenditures_it.hasNext()) {
+            Expenditure  exp = (Expenditure)expenditures_it.next();
+            if(exp.getCategory().equals(categoryName)) {
+                return_list.add(exp);
+            }
+        }
+        return return_list;
+
+    }
+
+    /**
      * Return Expenditures sorted by date and time.
      * @param categoryName
      * @param start
@@ -192,14 +311,11 @@ public final class ExpenditureSystem {
 
         if (categoryName == null)
             return null;
-        
+
         LinkedList<Expenditure> dateExps = getExpendituresByDate(start, end);
         LinkedList<Expenditure> return_list = new LinkedList<Expenditure>();
         Iterator expenditures_it = dateExps.iterator();
 
-        if (categoryName == null) {
-            return return_list;
-        }
 
         if (categoryName.equals(ALL_CATEGORY))
             return dateExps;
@@ -210,7 +326,33 @@ public final class ExpenditureSystem {
                 return_list.add(exp);
         }
 
+        return return_list;
+    }
 
+    /**
+     * Return userExpenditures sorted by date and time.
+     * @param categoryName
+     * @param start
+     * @param end
+     * @return
+     */
+    public final LinkedList<Expenditure> getUserExpendituresTimeAndCat ( ZonedDateTime start, ZonedDateTime end, String categoryName) {
+
+        if (categoryName == null)
+            return null;
+
+        LinkedList<Expenditure> dateExps = getUserExpendituresByDate(start, end);
+        LinkedList<Expenditure> return_list = new LinkedList<Expenditure>();
+        Iterator expenditures_it = dateExps.iterator();
+
+        if (categoryName.equals(ALL_CATEGORY))
+            return dateExps;
+        while(expenditures_it.hasNext()) {
+            Expenditure exp = (Expenditure)expenditures_it.next();
+
+            if(exp.getCategory().equals(categoryName))
+                return_list.add(exp);
+        }
 
         return return_list;
     }
@@ -228,10 +370,7 @@ public final class ExpenditureSystem {
      */
     public boolean addExpenditure(float inValue, String inCategory, boolean inReoccurring, ReoccurringRate inRate) {
 
-        Log.e("addExpenditure", "adding");
-
         Instant stamp = Instant.now();
-
         long expId = BMSApplication.database.createExpenditure(
                 BMSApplication.account.getUserID(),
                 categories.get(inCategory).getCategoryId(),
@@ -249,6 +388,8 @@ public final class ExpenditureSystem {
 
         return false;
     }
+
+
 
 
     /**
