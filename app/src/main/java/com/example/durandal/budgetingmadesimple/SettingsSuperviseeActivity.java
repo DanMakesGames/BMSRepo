@@ -51,58 +51,14 @@ public class SettingsSuperviseeActivity extends AppCompatActivity {
     private void userListView() {
         setTitle("Supervisees");
 
-        ArrayList<Map<String, Object>> itemDataList = new ArrayList<Map<String, Object>>();
+        final ArrayList<Map<String, Object>> itemDataList = new ArrayList<Map<String, Object>>();
         final UserAccount user = UserAccount.getUserAccount(SettingsSuperviseeActivity.this);
-        ArrayList<LinkedAccount> supervisees = user.getSupervisees();
-        final int userNum = supervisees.size();
+        final ArrayList<LinkedAccount> supervisees = user.getSupervisees();
 
-        for (LinkedAccount supervisee : supervisees) {
-            //create item map for layout
-            Map<String, Object> listItemMap = new HashMap<String, Object>();
-            if (supervisee.isLinked())
-                listItemMap.put("image", R.drawable.account_settings_user_linked);
-            else
-                listItemMap.put("image", R.drawable.account_settings_user_not_linked);
-            listItemMap.put("name", supervisee.getUserName());
-            listItemMap.put("email", supervisee.getUserEmail());
-            listItemMap.put("userid", supervisee.getUserID());
-            String status = "";
-            int statusCode = supervisee.getStatus();
-            switch (statusCode) {
-                case LinkedAccount.REQUEST_SENT:
-                    status = "Request Sent";
-                    break;
-                case LinkedAccount.ACCEPTED:
-                    status = "Linked";
-                    break;
-                case LinkedAccount.DECLINED:
-                    status = "Declined";
-                    break;
-                case LinkedAccount.UNLINK_SENT:
-                    status = "Unlink Request";
-                    break;
-                case LinkedAccount.UNLINK_GRANTED:
-                    status = "Unlinked";
-                    break;
-                case LinkedAccount.UNLINK_DENIED:
-                    status = "Linked";
-            }
-            listItemMap.put("status", status);
-            listItemMap.put("statusCode", statusCode);
-            itemDataList.add(listItemMap);
-        }
-        //add supervisee button
-        Map<String, Object> listItemMap = new HashMap<String, Object>();
-        listItemMap.put("image", R.drawable.account_settings_plus);
-        listItemMap.put("name", "Add");
-        listItemMap.put("email", "Send a link request");
-        listItemMap.put("status", "");
-        listItemMap.put("statusCode", -1);
-        listItemMap.put("userid", -1);
-        itemDataList.add(listItemMap);
+        updateItemDataList(itemDataList, supervisees);
 
 
-        SimpleAdapter simpleAdapter = new SimpleAdapter(this, itemDataList, R.layout.supervisor_list_item,
+        final SimpleAdapter simpleAdapter = new SimpleAdapter(this, itemDataList, R.layout.supervisor_list_item,
                 new String[]{"image", "name", "email", "status"}, new int[]{R.id.userImage, R.id.userName, R.id.userEmail, R.id.linkStatus});
 
         ListView listView = (ListView) findViewById(R.id.settingsList);
@@ -122,7 +78,7 @@ public class SettingsSuperviseeActivity extends AppCompatActivity {
 
                 Toast.makeText(SettingsSuperviseeActivity.this, "You select user " + userName + ", index: " + index + ", status: " + linkStatus, Toast.LENGTH_SHORT).show();
 
-                if (index == userNum) {
+                if (index == supervisees.size()) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(SettingsSuperviseeActivity.this);
                     builder.setTitle("Add Supervisee").setMessage("Input the username to send a link request.")
                             .setPositiveButton("Send", new DialogInterface.OnClickListener() {
@@ -139,6 +95,9 @@ public class SettingsSuperviseeActivity extends AppCompatActivity {
                                             Toast.makeText(SettingsSuperviseeActivity.this, ret + " Please make sure the name you input is valid and not linked.", Toast.LENGTH_SHORT).show();
                                         }
                                     }
+                                    updateItemDataList(itemDataList,supervisees);
+                                    simpleAdapter.notifyDataSetChanged();
+
                                 }
                             })
                             .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -200,6 +159,8 @@ public class SettingsSuperviseeActivity extends AppCompatActivity {
                                         else
                                             Toast.makeText(SettingsSuperviseeActivity.this, "Unlink failed", Toast.LENGTH_SHORT).show();
                                     }
+                                    updateItemDataList(itemDataList,supervisees);
+                                    simpleAdapter.notifyDataSetChanged();
                                 }
                             })
                             .setNegativeButton(negativeButton, new DialogInterface.OnClickListener() {
@@ -212,6 +173,8 @@ public class SettingsSuperviseeActivity extends AppCompatActivity {
                                         else
                                             Toast.makeText(SettingsSuperviseeActivity.this, "Send failed", Toast.LENGTH_SHORT).show();
                                     }
+                                    updateItemDataList(itemDataList,supervisees);
+                                    simpleAdapter.notifyDataSetChanged();
                                 }
                             });
                     builder.create().show();
@@ -220,6 +183,54 @@ public class SettingsSuperviseeActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void updateItemDataList(ArrayList<Map<String, Object>> itemDataList, ArrayList<LinkedAccount> supervisees) {
+        itemDataList.clear();
+        for (LinkedAccount supervisee : supervisees) {
+            //create item map for layout
+            Map<String, Object> listItemMap = new HashMap<String, Object>();
+            if (supervisee.isLinked())
+                listItemMap.put("image", R.drawable.account_settings_user_linked);
+            else
+                listItemMap.put("image", R.drawable.account_settings_user_not_linked);
+            listItemMap.put("name", supervisee.getUserName());
+            listItemMap.put("email", supervisee.getUserEmail());
+            listItemMap.put("userid", supervisee.getUserID());
+            String status = "";
+            int statusCode = supervisee.getStatus();
+            switch (statusCode) {
+                case LinkedAccount.REQUEST_SENT:
+                    status = "Request Sent";
+                    break;
+                case LinkedAccount.ACCEPTED:
+                    status = "Linked";
+                    break;
+                case LinkedAccount.DECLINED:
+                    status = "Declined";
+                    break;
+                case LinkedAccount.UNLINK_SENT:
+                    status = "Unlink Request";
+                    break;
+                case LinkedAccount.UNLINK_GRANTED:
+                    status = "Unlinked";
+                    break;
+                case LinkedAccount.UNLINK_DENIED:
+                    status = "Linked";
+            }
+            listItemMap.put("status", status);
+            listItemMap.put("statusCode", statusCode);
+            itemDataList.add(listItemMap);
+        }
+        //add supervisee button
+        Map<String, Object> listItemMap = new HashMap<String, Object>();
+        listItemMap.put("image", R.drawable.account_settings_plus);
+        listItemMap.put("name", "Add");
+        listItemMap.put("email", "Send a link request");
+        listItemMap.put("status", "");
+        listItemMap.put("statusCode", -1);
+        listItemMap.put("userid", -1);
+        itemDataList.add(listItemMap);
     }
 }
 
