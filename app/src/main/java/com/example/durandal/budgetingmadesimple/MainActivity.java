@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private boolean checked;
     private Spinner timeDropdown;
     private Spinner catDropdown;
+    private Spinner userDropdown;
+    private String prevUser;
     private DrawerLayout mDrawerLayout;
     protected static FloatingActionButton fab;
     protected static FloatingActionButton delFab;
