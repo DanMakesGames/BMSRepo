@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         timeDropdown.bringToFront();
                         userDropdown.bringToFront();
 
+                        expList.bringToFront();
                     }
 
                     @Override

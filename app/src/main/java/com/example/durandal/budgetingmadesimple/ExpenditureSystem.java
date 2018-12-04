@@ -22,7 +22,7 @@ public final class ExpenditureSystem {
     private LinkedList<Expenditure> userExpenditures;
     private HashMap<String,Category> categories;
     private HashMap<String,Category> userCategories;
-    public final static String ALL_CATEGORY = "all categories";
+    public final static String ALL_CATEGORY = "All Categories";
     public final static String SEL_CATEGORY = "Select a category";
     public final static String USERS = "Supervisee(s)";
 
