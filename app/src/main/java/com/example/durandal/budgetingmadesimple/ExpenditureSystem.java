@@ -66,7 +66,6 @@ public final class ExpenditureSystem {
             IdToName.put(catId,name);
         }
 
-
         // Now lets populate the Expenditures.
         Cursor expCursor = BMSApplication.database.getExpenditures(username);
 
@@ -85,7 +84,6 @@ public final class ExpenditureSystem {
             String category = IdToName.get( Integer.parseInt(expCursor.getString(2)) );
             int Id = Integer.parseInt(expCursor.getString(0));
 
-            Log.d("populate", value +", catId: "+expCursor.getString(2));
             // create new expenditure object.
             Expenditure newExp = new Expenditure(
                         value,      //value
@@ -96,11 +94,14 @@ public final class ExpenditureSystem {
             // add to expenditure list.
             expenditures.addFirst(newExp);
         }
-
         return true;
     }
 
     public boolean populateUserFromDatabase(String username) {
+
+        // Reset user instance variables
+        userCategories = new HashMap<String, Category>();
+        userExpenditures = new LinkedList<Expenditure>();
 
         // Populate categories first.
         // Get categories, populate categories list, populate local hasMap
@@ -122,12 +123,15 @@ public final class ExpenditureSystem {
             IdToName.put(catId,name);
         }
 
+
         // Now lets populate the Expenditures.
         Cursor expCursor = BMSApplication.database.getExpenditures(username);
 
         // no expenditures in database to parse.
         if(expCursor.getCount() == 0)
             return false;
+
+        Log.d("Length of userCat: ", Integer.toString(userCategories.size()));
 
         // loop through, turning exp database items into Expenditure objects, and adding them to
         // the linked list.
@@ -137,7 +141,7 @@ public final class ExpenditureSystem {
             // extract expenditure parameters
             float value = Float.parseFloat(expCursor.getString(3));
             Instant timestamp = Instant.ofEpochSecond(Long.parseLong(expCursor.getString(4)));
-            String category = IdToName.get(expCursor.getString(2));
+            String category = IdToName.get( Integer.parseInt(expCursor.getString(2)) );
             int Id = Integer.parseInt(expCursor.getString(0));
 
             // create new expenditure object.
@@ -150,6 +154,9 @@ public final class ExpenditureSystem {
             // add to expenditure list.
             userExpenditures.addFirst(newExp);
         }
+
+        Log.d("Length of userExpen after populate: ", Integer.toString(userExpenditures.size()));
+
 
         return true;
     }
