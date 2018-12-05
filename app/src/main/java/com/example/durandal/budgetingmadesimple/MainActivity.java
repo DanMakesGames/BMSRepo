@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.android.gms.common.util.ArrayUtils;
 
@@ -60,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
         actionbar.setTitle("Expenditures");
-
         //TextView drawer_text = (TextView) findViewById(R.id.drawer_header_text);
         //drawer_text.setText(BMSApplication.account.getUserName());
 
