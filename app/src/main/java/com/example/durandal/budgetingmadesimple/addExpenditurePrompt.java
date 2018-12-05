@@ -52,9 +52,7 @@ public class addExpenditurePrompt extends MainActivity {
                     // make sure that
                     //Expenditure newExpen = new Expenditure(num,categories.getSelectedItem().toString());
                     //BMSApplication.expSystem.addExpenditure(newExpen);
-                    BMSApplication.expSystem.addExpenditure(num,categories.getSelectedItem().toString(),false, ReoccurringRate.NONE);
-
-
+                    Boolean a = BMSApplication.expSystem.addExpenditure(num,categories.getSelectedItem().toString(),false, ReoccurringRate.NONE);
                     startActivity(new Intent(addExpenditurePrompt.this, MainActivity.class));
                 }
                 else {
@@ -68,11 +66,17 @@ public class addExpenditurePrompt extends MainActivity {
                 startActivity(new Intent(addExpenditurePrompt.this, MainActivity.class));
             }
         });
+        /*
+        String[] testCat = new String[2];
+        testCat[0] = ExpenditureSystem.ALL_CATEGORY;
+        testCat[1] = "food";
 
-
+        ArrayAdapter categoryAdapter = new ArrayAdapter(this,R.layout.our_spinner_item, testCat);
+        */
         ArrayAdapter categoryAdapter = new ArrayAdapter(this,R.layout.our_spinner_item,
                 ArrayUtils.concat(selCat,
                         BMSApplication.expSystem.getCategoryNames()));
+
         categoryAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         categories.setAdapter(categoryAdapter);
         categories.setSelection(0);

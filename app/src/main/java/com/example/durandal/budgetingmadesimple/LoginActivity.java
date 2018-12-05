@@ -26,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView textErrorMessage;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,13 +40,6 @@ public class LoginActivity extends AppCompatActivity {
 
         textErrorMessage.setAlpha(0);
 
-        backButton.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, StartActivity.class);
-                startActivity(intent);
-            }
-        });
 
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +94,14 @@ public class LoginActivity extends AppCompatActivity {
                     textErrorMessage.setAlpha(1);
                 }
 
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, StartActivity.class);
+                startActivity(intent);
             }
         });
 
