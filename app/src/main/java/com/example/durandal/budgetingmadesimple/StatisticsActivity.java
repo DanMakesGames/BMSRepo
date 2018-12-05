@@ -50,6 +50,7 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
     private String remaining = "Remaining: N/A"; // Only modified when we check expenditures of the last month
     private String catSelected; // Current category selected
     private DrawerLayout mDrawerLayout;
+    private String prevUser = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,7 +161,10 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
             //users = new String[]{"Current user"};
 
         //else
-            users = populateUsers(BMSApplication.account.getSupervisees());
+        users = populateUsers(BMSApplication.account.getSupervisees());
+
+
+        prevUser = "Current User";
 
         //users = populateUsers(BMSApplication.account.getSupervisees());
         //users = new String[]{"Current User"};
@@ -180,7 +184,7 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         // Set listeners
         categoryDropdown.setOnItemSelectedListener(this);
         timeDropdown.setOnItemSelectedListener(this);
-        //superviseeDropdown.setOnItemSelectedListener(this);
+        superviseeDropdown.setOnItemSelectedListener(this);
 
         // By default, have overall total spent selected
         categoryDropdown.setSelection(0);
@@ -213,12 +217,49 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
 
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch(parent.getId()) {
+            case R.id.supervisee_dropdown:
+                String userSelection = (String) superviseeDropdown.getSelectedItem();
+                if (userSelection.equals(prevUser))
+                    break;
+                if (userSelection.equals("Current User")) {
+                    prevUser = "Current User";
+                    categories = populateCategories(BMSApplication.expSystem.getCategoryNames());
+                    ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.support_simple_spinner_dropdown_item,
+                            categories);
+                    categoryDropdown.setAdapter(catAdapter);
+                    populateTotalSpent(categoryDropdown, timeDropdown, superviseeDropdown);
+                    break;
+                }
+                else {
+
+                    // populate userExpenditures in expSystem
+                    BMSApplication.expSystem.populateUserFromDatabase(userSelection);
+
+                    // Adjust prevUser
+                    prevUser = userSelection;
+
+                    categories = populateCategories(BMSApplication.expSystem.getUserCategoryNames());
+
+                    // Set up categories of user
+                    ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.support_simple_spinner_dropdown_item,
+                                    categories);
+
+                    //catAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                    categoryDropdown.setAdapter(catAdapter);
+                    //catDropdown.setSelection(0);
+                    //catDropdown.setOnItemSelectedListener(this);
+                    populateTotalSpent(categoryDropdown, timeDropdown, superviseeDropdown);
+
+                    break;
+
+                }
+
             case R.id.sort_dropdown:
-                populateTotalSpent(categoryDropdown, timeDropdown);
+                populateTotalSpent(categoryDropdown, timeDropdown, superviseeDropdown);
                 break;
 
             case R.id.time_dropdown:
-                populateTotalSpent(categoryDropdown, timeDropdown);
+                populateTotalSpent(categoryDropdown, timeDropdown, superviseeDropdown);
                 break;
         }
 
@@ -256,52 +297,61 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         return categories;
     }
 
-    private void populateTotalSpent(Spinner catDD, Spinner timeDD) {
+    private void populateTotalSpent(Spinner catDD, Spinner timeDD, Spinner userDD) {
 
         String catSelected = (String) catDD.getSelectedItem();
         String time = (String) timeDD.getSelectedItem();
+        String userSelection = (String) userDD.getSelectedItem();
 
         ZonedDateTime end = ZonedDateTime.now();
         ZonedDateTime start;
         LinkedList<Expenditure> expList;
         float totalSpentValue;
 
+
         if (time.equals("Last 7 Days")) {
             // Set start time to be 7 days ago
             start = end.minusDays(7);
-        }
-
-        else if (time.equals("Last Month")) {
+        } else if (time.equals("Last Month")) {
             // Set start time to be 1 month ago
             start = end.minusMonths(1);
-        }
-
-        else {
+        } else {
             // Set start time to be 3 months ago
             start = end.minusMonths(3);
         }
 
-        // Calculate total spent for all categories if overall is selected
-        if (catSelected.equals("Overall")) {
-            expList = BMSApplication.expSystem.getExpendituresByDate(start, end);
-            totalSpentValue = calcTotalSpent(expList);
+        if (userSelection.equals("Current User")) {
+
+            // Calculate total spent for all categories if overall is selected
+            if (catSelected.equals("Overall"))
+                expList = BMSApplication.expSystem.getExpendituresByDate(start, end);
+
+                // Calculate total spent for the selected category only
+            else
+                expList = BMSApplication.expSystem.getExpendituresTimeAndCat(start, end, catSelected);
+
+        } else {
+
+            // Calculate total spent for all categories if overall is selected
+            if (catSelected.equals("Overall"))
+                expList = BMSApplication.expSystem.getUserExpendituresByDate(start, end);
+
+            // Calculate total spent for the selected category only
+            else
+                expList = BMSApplication.expSystem.getUserExpendituresTimeAndCat(start, end, catSelected);
+
         }
 
-
-        // Calculate total spent for the selected category only
-        else {
-            expList = BMSApplication.expSystem.getExpendituresTimeAndCat(start, end, catSelected);
-            totalSpentValue = calcTotalSpent(expList);
-        }
+        totalSpentValue = calcTotalSpent(expList);
 
         if (totalSpentValue == 0) {
-            totalSpentView.setText(("Total Spent: $0.00"));
+                totalSpentView.setText(("Total Spent: $0.00"));
+        } else {
+                totalSpent = Float.valueOf(totalSpentValue).toString();
+                totalSpentView.setText("Total Spent: $" + totalSpent);
         }
 
-        else {
-            totalSpent = Float.valueOf(totalSpentValue).toString();
-            totalSpentView.setText("Total Spent: $" + totalSpent);
-        }
+
 
     }
 
