@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.common.util.ArrayUtils;
 
@@ -181,12 +182,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         delFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                int[] positions = new int[mainList.size()];
-                for (int i = 0; i < MainActivity.mainList.size(); i++) {
-                    if (mainList.get(i).isChecked()) {
+                String userSelection = (String)userDropdown.getSelectedItem();
+                if (!userSelection.equals(ExpenditureSystem.USERS)) {
+                    Toast.makeText(MainActivity.this,
+                            "You cannot edit supervisee's expenditures!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                int[] positions = new int[BMSApplication.expSystem.getExpendituresAll().size()];
+                for (int i = 0; i < positions.length; i++) {
+                    if (userSelection.equals(ExpenditureSystem.USERS) && mainList.get(i).isChecked()) {
                         positions[i] = 1;
-                        //System.out.println("mainList is checked: ");
-                        //System.out.println(mainList.get(i).getName());
                     }
                     else {
                         positions[i] = 0;
@@ -288,7 +293,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (userSelection.equals(prevUser)) {
                     break;
                 }
-                if (userSelection.equals(userDropdownDefault)) {
+                if (userSelection.equals(ExpenditureSystem.USERS)) {
+                    ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.support_simple_spinner_dropdown_item,
+                            ArrayUtils.concat(categoryDropdownDefault,
+                                    BMSApplication.expSystem.getCategoryNames()));
+                    catDropdown.setAdapter(catAdapter);
+                    prevUser = userSelection;
+                    filterExpenditures(expList, timeDropdown, catDropdown, userDropdown);
                     break;
                 }
                 else {

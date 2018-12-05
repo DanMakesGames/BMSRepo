@@ -468,10 +468,8 @@ public final class ExpenditureSystem {
             }
         }
         if (!BMSApplication.database.deleteExpenditure(inExpenditure.getExpId())) {
-            //System.out.println("database failed to del");
             return false;
         }
-        //System.out.println("Couldn't find expenditure in expednitures");
         return false;
     }
 

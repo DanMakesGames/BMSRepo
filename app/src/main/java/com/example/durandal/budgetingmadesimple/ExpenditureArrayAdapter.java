@@ -44,10 +44,13 @@ public class ExpenditureArrayAdapter extends ArrayAdapter<MainListView> {
                     expenditureView.setChecked(cb.isChecked());
                     System.out.println(expenditureView.getName());
                     if (hasSelected(MainActivity.mainList)) {
+                        System.out.println("hasSelected(MainActivity.mainList): " +hasSelected(MainActivity.mainList));
                         MainActivity.fab.hide();
                         MainActivity.delFab.show();
                     }
                     else {
+                        System.out.println("hasSelected(MainActivity.mainList): " +hasSelected(MainActivity.mainList));
+
                         MainActivity.delFab.hide();
                         MainActivity.fab.show();
                     }
