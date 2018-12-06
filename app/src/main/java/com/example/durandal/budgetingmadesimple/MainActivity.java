@@ -45,11 +45,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     protected static List<MainListView> mainList;
     private ExpenditureArrayAdapter adapter;
-    private ListView expList;
+    protected ListView expList;
     private boolean checked;
-    private Spinner timeDropdown;
-    private Spinner catDropdown;
-    private Spinner userDropdown;
+    protected Spinner timeDropdown;
+    protected Spinner catDropdown;
+    protected Spinner userDropdown;
     private String prevUser;
     private DrawerLayout mDrawerLayout;
 
@@ -152,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         prevUser = ExpenditureSystem.USERS;
 
         // Set up adapter
+
         Object[] expenArray = BMSApplication.expSystem.getExpendituresAll().toArray();
         mainList = new LinkedList<>();
         for (int i = 0; i < expenArray.length; i++) {
@@ -160,7 +161,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         adapter = new ExpenditureArrayAdapter(this, mainList);
         expList.setAdapter(adapter);
-
 
 
         Log.e("Debug: ","LENGTH:" + BMSApplication.expSystem.getExpendituresAll().toArray().length);
@@ -182,13 +182,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         delFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                String timeSelection = (String) timeDropdown.getSelectedItem();
+                String catSelection = (String) catDropdown.getSelectedItem();
                 String userSelection = (String)userDropdown.getSelectedItem();
+
                 if (!userSelection.equals(ExpenditureSystem.USERS)) {
                     Toast.makeText(MainActivity.this,
                             "You cannot edit supervisee's expenditures!", Toast.LENGTH_LONG).show();
                     return;
                 }
-                int[] positions = new int[BMSApplication.expSystem.getExpendituresAll().size()];
+                int[] positions = new int[mainList.size()];
                 for (int i = 0; i < positions.length; i++) {
                     if (userSelection.equals(ExpenditureSystem.USERS) && mainList.get(i).isChecked()) {
                         positions[i] = 1;
@@ -199,6 +202,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
                 Intent in = new Intent(MainActivity.this, delExpenditurePrompt.class);
                 in.putExtra("Positions",positions);
+                in.putExtra("Category", catSelection);
+                in.putExtra("Time",timeSelection);
                 startActivity(in);
 
             }
@@ -220,13 +225,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Set up category drop down
         catDropdown = (Spinner) findViewById(R.id.category_dropdown);
-        /*
-        String[] testCat = new String[2];
-        testCat[0] = ExpenditureSystem.ALL_CATEGORY;
-        testCat[1] = "food";
 
-        ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.our_spinner_item, testCat);
-        */
 
         ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.support_simple_spinner_dropdown_item,
                 ArrayUtils.concat(categoryDropdownDefault,
@@ -254,10 +253,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         else {
             users = new String[0];
         }
-        /*
-        String[] users = new String[1];
-        users[0] = "Dummy";
-        */
+
         ArrayAdapter userAdapter = new ArrayAdapter(this, R.layout.our_spinner_item,
                 ArrayUtils.concat(userDropdownDefault, users));
         userAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -265,7 +261,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         userDropdown.setSelection(0);
         userDropdown.setOnItemSelectedListener(this);
         userDropdown.bringToFront();
-
 
 
         //loop adding
@@ -376,11 +371,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     mainList.add(new MainListView(array.get(i)));
                 }
                 adapter = new ExpenditureArrayAdapter(this, mainList);
-            /*
-            adapter =  new ArrayAdapter(this, R.layout.simple_row, R.id.label,
-                    BMSApplication.expSystem.getExpendituresTimeAndCat(
-                            now.minusDays( 7 ), now, catSelection));
-            */
+
             } else if (timeSelection.equals("this month")) {
                 mainList = new LinkedList<MainListView>();
                 LinkedList<Expenditure> array = BMSApplication.expSystem.getExpendituresTimeAndCat(
