@@ -139,27 +139,7 @@ public class SignUpActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Username and password combo are valid---
-                BMSApplication.database.createUser(username,password,email,secretQuestion,
-                        secretAnswer,0,0,0);
-
-                // now that user is created we need to setup account.
-                // get account
-                Cursor userCursor = BMSApplication.database.getUser(username);
-
-                // create instantiate account.
-                if (userCursor.getCount() == 0)
-                    Log.d("", "No data returned");
-                else{
-                    while (userCursor.moveToNext()) {
-
-                        BMSApplication.account = new UserAccount(
-                                Integer.parseInt(userCursor.getString(0)),
-                                userCursor.getString(1),
-                                userCursor.getString(3),
-                                userCursor.getString(2));
-                    }
-                }
+                BMSApplication.createAccount(username, password, email,secretQuestion,secretAnswer);
 
                 // go to MainPage.
                 // Transition to mainPage.

@@ -1,6 +1,8 @@
 package com.example.durandal.budgetingmadesimple;
 
 import android.app.Application;
+import android.database.Cursor;
+import android.util.Log;
 
 import java.time.ZonedDateTime;
 
@@ -25,6 +27,30 @@ public class BMSApplication extends Application {
 
     // null at startup, instance created during login process.
     public static UserAccount account = null;
+
+    public static void  createAccount(String username, String password, String email, String secretQuestion, String secretAnswer) {
+
+        // create account on database.
+        BMSApplication.database.createUser(username,password,email,secretQuestion, secretAnswer,0,0,0);
+
+        // now that user is created we need to setup account.
+        // get account
+        Cursor userCursor = BMSApplication.database.getUser(username);
+
+        // create instantiate account.
+        if (userCursor.getCount() == 0)
+            Log.d("", "No data returned");
+        else{
+            while (userCursor.moveToNext()) {
+
+                BMSApplication.account = new UserAccount(
+                        Integer.parseInt(userCursor.getString(0)),
+                        userCursor.getString(1),
+                        userCursor.getString(3),
+                        userCursor.getString(2));
+            }
+        }
+    }
 
     @Override
     public void onCreate() {
