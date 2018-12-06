@@ -4,7 +4,7 @@
     <string name="startup"><![CDATA[<username>]]></string>
 
     <string-array name="time_array">
-        <item>all times</item>
+        <item>All Times</item>
         <item>last 7 days</item>
         <item>this month</item>
     </string-array>
