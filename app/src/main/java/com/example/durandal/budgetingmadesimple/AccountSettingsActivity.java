@@ -54,7 +54,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         dataList.add("supervisor");
         dataList.add("supervisee");
         dataList.add("change password");
-        dataList.add("log out");
+        dataList.add("logout");
 
 
         ListView listView = (ListView)findViewById(R.id.listViewExample);
@@ -85,6 +85,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 if(clickItemObj.toString().equals("logout"))
                 {
                     //UserAccount.logout(AccountSettingsActivity.this);
+                    BMSApplication.expSystem = new ExpenditureSystem();
                     Intent intent = new Intent(AccountSettingsActivity.this, StartActivity.class);
                     startActivity(intent);
 
