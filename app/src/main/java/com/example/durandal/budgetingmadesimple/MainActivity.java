@@ -227,9 +227,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         catDropdown = (Spinner) findViewById(R.id.category_dropdown);
 
 
-        ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.support_simple_spinner_dropdown_item,
-                ArrayUtils.concat(categoryDropdownDefault,
-                        BMSApplication.expSystem.getCategoryNames()));
+       // ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.support_simple_spinner_dropdown_item,
+               // ArrayUtils.concat(categoryDropdownDefault, BMSApplication.expSystem.getCategoryNames()));
+
+        ArrayAdapter catAdapter = new ArrayAdapter(this,R.layout.our_spinner_item,
+                 ArrayUtils.concat(categoryDropdownDefault, BMSApplication.expSystem.getCategoryNames()));
+
         catAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         catDropdown.setAdapter(catAdapter);
         catDropdown.setOnItemSelectedListener(this);
