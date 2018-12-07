@@ -70,14 +70,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
         actionbar.setTitle("Expenditures");
 
-        TextView drawer_text = (TextView) findViewById(R.id.drawer_header_text);
-        UserAccount acc = BMSApplication.account;
-        if(acc != null)
-            drawer_text.setText(acc.getUserName());
-
         // Code for navigation drawer
         mDrawerLayout = findViewById(R.id.drawer_layout);
-
         mDrawerLayout.addDrawerListener(
                 new DrawerLayout.DrawerListener() {
                     @Override
@@ -109,6 +103,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         );
 
         NavigationView navigationView = findViewById(R.id.navigation_view);
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUsername = (TextView) headerView.findViewById(R.id.drawer_header_text);
+        navUsername.setText(BMSApplication.account.getUserName());
+
         navigationView.setNavigationItemSelectedListener(
                 new OnNavigationItemSelectedListener() {
                     @Override
