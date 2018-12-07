@@ -347,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void filterExpenditures(ListView target, Spinner timeDD, Spinner catDD, Spinner userDD) {
-        final String allTime = "all times";
+        final String allTime = "All times";
         // get time
         ZonedDateTime now = ZonedDateTime.now();
         ArrayAdapter adapter = null;
@@ -359,14 +359,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         if (userSelection.equals(ExpenditureSystem.USERS)) {
             // Filter by time.
-            if (timeSelection.equals("all times")) {
+            if (timeSelection.equals("All times")) {
                 mainList = new LinkedList<MainListView>();
                 LinkedList<Expenditure> array = BMSApplication.expSystem.getExpendituresByCategory(catSelection);
                 for (int i = 0; i < array.size(); i++) {
                     mainList.add(new MainListView(array.get(i)));
                 }
                 adapter = new ExpenditureArrayAdapter(this, mainList);
-            } else if (timeSelection.equals("last 7 days")) {
+            } else if (timeSelection.equals("Last 7 days")) {
                 mainList = new LinkedList<MainListView>();
                 LinkedList<Expenditure> array = BMSApplication.expSystem.getExpendituresTimeAndCat(
                         now.minusDays(7), now, catSelection);
@@ -375,7 +375,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
                 adapter = new ExpenditureArrayAdapter(this, mainList);
 
-            } else if (timeSelection.equals("this month")) {
+            } else if (timeSelection.equals("This month")) {
                 mainList = new LinkedList<MainListView>();
                 LinkedList<Expenditure> array = BMSApplication.expSystem.getExpendituresTimeAndCat(
                         now.minusDays(now.getDayOfMonth()),
@@ -396,14 +396,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         else {
             // Filter by time.
-            if (timeSelection.equals("all times")) {
+            if (timeSelection.equals("All times")) {
                 mainList = new LinkedList<MainListView>();
                 LinkedList<Expenditure> array = BMSApplication.expSystem.getUserExpendituresByCategory(catSelection);
                 for (int i = 0; i < array.size(); i++) {
                     mainList.add(new MainListView(array.get(i)));
                 }
                 adapter = new ExpenditureArrayAdapter(this, mainList);
-            } else if (timeSelection.equals("last 7 days")) {
+            } else if (timeSelection.equals("Last 7 days")) {
                 mainList = new LinkedList<MainListView>();
                 LinkedList<Expenditure> array = BMSApplication.expSystem.getUserExpendituresTimeAndCat(
                         now.minusDays(7), now, catSelection);
@@ -411,7 +411,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     mainList.add(new MainListView(array.get(i)));
                 }
                 adapter = new ExpenditureArrayAdapter(this, mainList);
-            } else if (timeSelection.equals("this month")) {
+            } else if (timeSelection.equals("This month")) {
                 mainList = new LinkedList<MainListView>();
                 LinkedList<Expenditure> array = BMSApplication.expSystem.getUserExpendituresTimeAndCat(
                         now.minusDays(now.getDayOfMonth()),
