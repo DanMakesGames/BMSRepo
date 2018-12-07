@@ -170,12 +170,14 @@ public class CategoriesActivity extends AppCompatActivity {
                                     else { // set the budget
                                         catSelected.updateBudget(budgetAmnt);
                                         catSelected.setbIsBudgeted(true);
+                                        BMSApplication.database.updateExpCategory(catSelected.getCategoryId(),BMSApplication.account.getUserID(),catSelected.getName(),budgetAmnt);
                                         Toast.makeText(getApplicationContext(), selected+" Budget Set",
                                                 Toast.LENGTH_SHORT).show();
                                     }
                                 }
                                 else { // apply budget box not checked
                                     catSelected.setbIsBudgeted(false);
+                                    BMSApplication.database.updateExpCategory(catSelected.getCategoryId(),BMSApplication.account.getUserID(),catSelected.getName(),0);
                                     Toast.makeText(getApplicationContext(), selected+" Budget Unset",
                                             Toast.LENGTH_SHORT).show();
                                 }
