@@ -26,9 +26,9 @@ import java.util.ListIterator;
 public class StatisticsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     // The app's text vies display total budget, total spent, and the remaining amount available
-    //private TextView totalBudgetView;
+    private TextView totalBudgetView;
     private TextView totalSpentView;
-    //private TextView remainingView;
+    private TextView remainingView;
 
     // The app's dropdowns are populated based on user's categories, it's supervisees, and the
     // times available
@@ -43,12 +43,10 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
     private String[] categories; // Stores the categories of the user
     private String[] times; // Stores the times that we check expenditures for
     private String[] users; // Stores the current user and the supervisees
-    //private Account[] supervisees;
 
-    private String totalbudget = "Total Budget: N/A"; // Only modified when we check expenditures of the last month
+    private String totalBudget = "Total Budget: N/A"; // Only modified when we check expenditures of the last month
     private String totalSpent; // Get total spent based on category selected and
     private String remaining = "Remaining: N/A"; // Only modified when we check expenditures of the last month
-    private String catSelected; // Current category selected
     private DrawerLayout mDrawerLayout;
     private String prevUser = "";
 
@@ -63,7 +61,7 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
         actionbar.setTitle("Statistics");
-        final LinearLayout LL1 = findViewById(R.id.linearLayout);
+        //final LinearLayout LL1 = findViewById(R.id.linearLayout);
         final LinearLayout LL2 = findViewById(R.id.linearLayout3);
         final LinearLayout LL3 = findViewById(R.id.linearLayout6);
 
@@ -90,7 +88,7 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
                     @Override
                     public void onDrawerClosed(View drawerView) {
                         // Respond when the drawer is closed
-                        LL1.bringToFront();
+                        //LL1.bringToFront();
                         LL2.bringToFront();
                         LL3.bringToFront();
 
@@ -137,13 +135,13 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
 
 
         // Buttons
-        personalButton = findViewById(R.id.peronal_button);
-        groupButton = findViewById(R.id.group_button);
+        //personalButton = findViewById(R.id.peronal_button);
+        //groupButton = findViewById(R.id.group_button);
 
         // Text Boxes
-        //totalBudgetView = findViewById(R.id.total_bugdet);
+        totalBudgetView = findViewById(R.id.total_budget);
         totalSpentView = findViewById(R.id.total_spent);
-        //remainingView = findViewById(R.id.remaining);
+        remainingView = findViewById(R.id.remaining);
 
         // Dropdowns
         timeDropdown = findViewById(R.id.time_dropdown);
@@ -156,14 +154,10 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         // Populate categories based on user's categories
         categories = populateCategories(BMSApplication.expSystem.getCategoryNames());
 
-        // Populate the users array with the current user and it's supervisees
-        //if (BMSApplication.account.getSupervisees() == null)
-            //users = new String[]{"Current user"};
-
-        //else
+        // Populate users based on the user's supervisees
         users = populateUsers(BMSApplication.account.getSupervisees());
 
-
+        // Set the prev user to be the current user
         prevUser = "Current User";
 
         //users = populateUsers(BMSApplication.account.getSupervisees());
@@ -199,7 +193,7 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         //totalBudgetView.setText(totalbudget);
         //remainingView.setText(remaining);
 
-        LL1.bringToFront();
+        //LL1.bringToFront();
         LL2.bringToFront();
         LL3.bringToFront();
 
@@ -307,6 +301,7 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         ZonedDateTime start;
         LinkedList<Expenditure> expList;
         float totalSpentValue;
+        float catBudgetvalue = 0;
 
 
         if (time.equals("Last 7 Days")) {
@@ -323,12 +318,17 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         if (userSelection.equals("Current User")) {
 
             // Calculate total spent for all categories if overall is selected
-            if (catSelected.equals("Overall"))
+            if (catSelected.equals("Overall")) {
                 expList = BMSApplication.expSystem.getExpendituresByDate(start, end);
 
+            }
                 // Calculate total spent for the selected category only
-            else
+            else {
                 expList = BMSApplication.expSystem.getExpendituresTimeAndCat(start, end, catSelected);
+                Category cat = BMSApplication.expSystem.getCategory(catSelected);
+                if (cat.isbIsBudgeted())
+                    catBudgetvalue = cat.getBudget();
+            }
 
         } else {
 
@@ -337,21 +337,41 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
                 expList = BMSApplication.expSystem.getUserExpendituresByDate(start, end);
 
             // Calculate total spent for the selected category only
-            else
+            else {
                 expList = BMSApplication.expSystem.getUserExpendituresTimeAndCat(start, end, catSelected);
-
+                Category cat = BMSApplication.expSystem.getUserCategory(catSelected);
+                if (cat.isbIsBudgeted())
+                    catBudgetvalue = cat.getBudget();
+            }
         }
 
         totalSpentValue = calcTotalSpent(expList);
 
         if (totalSpentValue == 0) {
-                totalSpentView.setText(("Total Spent: $0.00"));
+            totalSpentView.setText(("Total Spent: $0.00"));
         } else {
-                totalSpent = Float.valueOf(totalSpentValue).toString();
-                totalSpentView.setText("Total Spent: $" + totalSpent);
+            totalSpent = Float.valueOf(totalSpentValue).toString();
+            totalSpentView.setText("Total Spent: $" + totalSpent);
         }
 
+        if (catBudgetvalue == 0) {
+            totalBudgetView.setText(("Total Budget: N/A"));
+            remainingView.setText("Remaining: N/A");
+        } else {
+            totalBudget = Float.valueOf(catBudgetvalue).toString();
+            totalBudgetView.setText("Total Budget: $" + totalBudget);
 
+            float remainingValue = catBudgetvalue - totalSpentValue;
+            if (remainingValue < 0) {
+                remainingValue *= -1;
+                remaining = Float.valueOf(remainingValue).toString();
+                remainingView.setText("Remaining: -$" + remaining);
+            } else {
+                remaining = Float.valueOf(remainingValue).toString();
+                remainingView.setText("Remaining: $" + remaining);
+            }
+
+        }
 
     }
 

@@ -513,5 +513,5 @@ public final class ExpenditureSystem {
         return categories.get(name);
     }
 
-
+    public Category getUserCategory(String name) { return userCategories.get(name); }
 }
