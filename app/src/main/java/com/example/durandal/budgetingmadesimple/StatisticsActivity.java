@@ -65,8 +65,10 @@ public class StatisticsActivity extends AppCompatActivity implements AdapterView
         final LinearLayout LL2 = findViewById(R.id.linearLayout3);
         final LinearLayout LL3 = findViewById(R.id.linearLayout6);
 
-        //TextView drawer_text = (TextView) findViewById(R.id.drawer_header_text);
-        //drawer_text.setText(BMSApplication.account.getUserName());
+        TextView drawer_text = (TextView) findViewById(R.id.drawer_header_text);
+        UserAccount acc = BMSApplication.account;
+        if(acc != null)
+            drawer_text.setText(acc.getUserName());
 
         // Code for navigation drawer
         mDrawerLayout = findViewById(R.id.drawer_layout);

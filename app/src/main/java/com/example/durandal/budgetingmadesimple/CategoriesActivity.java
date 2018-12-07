@@ -64,6 +64,11 @@ public class CategoriesActivity extends AppCompatActivity {
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
         actionbar.setTitle("Categories");
 
+        TextView drawer_text = (TextView) findViewById(R.id.drawer_header_text);
+        UserAccount acc = BMSApplication.account;
+        if(acc != null)
+            drawer_text.setText(acc.getUserName());
+
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
         mDrawerLayout.addDrawerListener(
@@ -84,7 +89,6 @@ public class CategoriesActivity extends AppCompatActivity {
                     public void onDrawerClosed(View drawerView) {
                         // Respond when the drawer is closed
                         expList.bringToFront();
-
                     }
 
                     @Override

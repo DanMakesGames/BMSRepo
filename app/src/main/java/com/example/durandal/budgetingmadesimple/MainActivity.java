@@ -69,8 +69,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
         actionbar.setTitle("Expenditures");
-        //TextView drawer_text = (TextView) findViewById(R.id.drawer_header_text);
-        //drawer_text.setText(BMSApplication.account.getUserName());
+
+        TextView drawer_text = (TextView) findViewById(R.id.drawer_header_text);
+        UserAccount acc = BMSApplication.account;
+        if(acc != null)
+            drawer_text.setText(acc.getUserName());
 
         // Code for navigation drawer
         mDrawerLayout = findViewById(R.id.drawer_layout);
@@ -95,7 +98,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         catDropdown.bringToFront();
                         timeDropdown.bringToFront();
                         userDropdown.bringToFront();
-
                         expList.bringToFront();
                     }
 
@@ -161,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         adapter = new ExpenditureArrayAdapter(this, mainList);
         expList.setAdapter(adapter);
+        expList.bringToFront();
 
 
         Log.e("Debug: ","LENGTH:" + BMSApplication.expSystem.getExpendituresAll().toArray().length);
