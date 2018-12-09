@@ -1,26 +1,33 @@
-# Budgeting Made Simple Repo
+Budgeting Made Simple, 12/8/2018
+CSE 110, Section A00, Fall Quarter 2018
 
-### How to use:
-For now read https://nvie.com/posts/a-successful-git-branching-model/
-Basically, make a branch off of development when you want to work on a feature, then merge it back into development when you are done.
+Made by:
 
-To make a new branch: 
-####git checkout -b newBranchName
-To merge your branch back into development: 
-####git checkout development
-####git merge --no-ff newBranchName
-####git push origin develop
+Aali Zershad Hakim
+Thomas Gaspar Higginson
+Yuhan Zhang
+Eric M Wei
+Haonan Song
+Daniel Anthony Mann
+Gabriel Kai Pizzolato
+Aaron Trefler
+Ruben A Gonzalez
+Jared Enrique Vitug
 
-// you can delete the old branch
-git branch -d newBranchName
 
-### SQL Database
-#### General Information
-The application uses a local SQLite database to store data.
-If we were to ever release our application to end users, we would refactor our code to ensure that the database resided on a remote server.
-#### Schema
-[Database schema artifact](https://docs.google.com/document/d/1TInMFT6fOzBeCUJQUn9g_RPayWeXGZGJcRjULuhF81c/edit?usp=sharing)
-#### For Developers
-Contained in `MainActivity.java::showcaseDatabase()` you will find example code of how to interact with the SQL database.
-Note that when Database Class methods return data, they do so via a Cursor object. 
-These Curosor objects should be unpacked when creating or updating higher level objects (e.g., account, expenditure, etc.).
+Requirements:
+	This project is a Android Studio project. You must have AndroidStudio in order
+	to use it.
+	
+How To Run:
+	After opening the project in Android Studio, create a new Adroid Virtual Device.
+The device should be a Pixel with API level 28(Pie). Run the app in this device 
+emualtor by clicking the big green play button in Android Studio.
+
+
+Known Bugs:
+	WARNING: When closeing the emualtor, close the app before closing the emualtor or it 
+will cause errors in our database. To close the app, press the big red stop Square 
+button in Android Studio, or back out of the app and make sure it isn't running in
+the background.  
+
