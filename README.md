@@ -1,7 +1,7 @@
 Budgeting Made Simple, 12/8/2018
 CSE 110, Section A00, Fall Quarter 2018
 
-Made by:
+Made by Team BMS:
 
 Aali Zershad Hakim
 Thomas Gaspar Higginson
